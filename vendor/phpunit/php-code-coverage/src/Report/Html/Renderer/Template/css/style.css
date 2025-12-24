@@ -18,6 +18,10 @@ body {
  padding-top: 10px;
 }
 
+a{
+    text-decoration: none;
+}
+
 nav .breadcrumb {
   border-radius: var(--bs-border-radius);
   background-color: var(--phpunit-breadcrumbs);

@@ -1,0 +1,182 @@
+/* Auth Pages Layout */
+.auth-page {
+    background: linear-gradient(135deg, var(--light-gray) 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+/* Auth Card Styling */
+.auth-card {
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eaeaea;
+}
+
+.auth-card .card-body {
+    padding: 2.5rem;
+}
+
+/* Logo Container */
+.auth-logo-container {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-logo {
+    width: 50%;
+    height: 50%;
+    object-fit: contain;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    padding: 10px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Form Elements */
+.auth-form .form-label {
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.auth-form .input-group {
+    margin-bottom: 1.5rem;
+}
+
+.auth-form .input-group-text {
+    background-color: var(--light-gray);
+    border-color: #dee2e6;
+    color: var(--dark-gray);
+}
+
+.auth-form .form-control {
+    border-color: #dee2e6;
+    padding: 0.75rem 1rem;
+}
+
+.auth-form .form-control:focus {
+    border-color: var(--secondary-blue);
+    box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.15);
+}
+
+/* Buttons (General Auth Button) */
+.auth-btn {
+    background: linear-gradient(to right, var(--primary-blue), var(--accent-blue));
+    border: none;
+    padding: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(44, 62, 80, 0.15);
+    background: linear-gradient(to right, var(--accent-blue), var(--secondary-blue));
+}
+
+/* Password Toggle Button */
+.password-toggle {
+    background-color: var(--light-gray);
+    border-color: #dee2e6;
+    color: var(--dark-gray);
+    transition: all 0.2s ease;
+}
+
+.password-toggle:hover {
+    background-color: #e9ecef;
+    color: var(--text-color);
+}
+
+/* --- REGISTER PAGE SPECIFIC STYLES --- */
+
+.role-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-color: #eaeaea;
+}
+
+.role-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    border-color: var(--secondary-blue);
+}
+
+.role-card .card-body {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.icon-wrapper {
+    transition: transform 0.3s ease;
+}
+
+.role-card:hover .icon-wrapper {
+    transform: scale(1.1);
+}
+
+.role-card .btn-info {
+    background: linear-gradient(to right, var(--info-blue), var(--primary-blue));
+    border: none;
+    color: white;
+}
+
+.role-card .btn-info:hover {
+    background: linear-gradient(to right, #138496, var(--secondary-blue));
+    color: white;
+}
+
+.role-card .feature-list li {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+
+/* Responsive Adjustments (Applied to all auth pages) */
+@media (max-width: 992px) {
+    /* Adjust logo size on medium screens */
+    .auth-logo {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    .auth-card .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Smallest logo size */
+    .auth-logo {
+        width: 100px;
+        height: 100px;
+    }
+
+    /* Register page role card adjustments */
+    .role-card {
+        margin-bottom: 1.5rem;
+    }
+
+    .role-card:last-child {
+        margin-bottom: 0;
+    }
+
+    .role-icon .icon-wrapper {
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    .role-icon i {
+        font-size: 1.75rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .auth-card .card-body {
+        padding: 1.5rem !important;
+    }
+}
