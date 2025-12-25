@@ -2,8 +2,12 @@
 
 @section('title', 'Login')
 
+@section('hideNavbar', true)
+
+@section('hideFooter', true)
+
 @section('additionalCSS')
-    <link rel="stylesheet" href="styles/auth.css">
+    <link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
 @endsection
 
 @section('content')
@@ -74,36 +78,40 @@
         </div>
     </div>
 
-    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content text-center p-4">
 
-                <div class="modal-body">
-                    <div class="mb-3 text-success">
-                        <i class="bi bi-check-circle-fill" style="font-size: 3rem;"></i>
+    @if (session('success'))
+        <div class="modal fade custom-modal-backdrop" id="statusModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content custom-modal-content type-success text-center p-4">
+
+                    <div class="modal-body px-4 py-4">
+
+                        <div class="modal-icon-wrapper mb-4 mx-auto">
+                            <i class="bi bi-check-lg custom-icon"></i>
+                        </div>
+
+                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
+
+                        <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm" data-bs-dismiss="modal">
+                            CONTINUE
+                        </button>
                     </div>
 
-                    <h4 class="mb-2">Success!</h4>
-                    <p class="mb-4">{{ session('success') }}</p>
-
-                    <button type="button" class="btn btn-success w-100" data-bs-dismiss="modal">OK</button>
                 </div>
-
             </div>
         </div>
-    </div>
 
-    @push('scripts')
-        @if (session('success'))
+        @push('scripts')
             <script type="module">
-                // "type=module" ensures this runs after Vite is done
                 if (window.bootstrap) {
-                    var myModal = new bootstrap.Modal(document.getElementById('successModal'));
-                    myModal.show();
-                } else {
-                    console.error("Bootstrap is still not loaded!");
+                    setTimeout(() => {
+                        var myModal = new bootstrap.Modal(document.getElementById('statusModal'));
+                        myModal.show();
+                    }, 300);
                 }
             </script>
-        @endif
-    @endpush
+        @endpush
+    @endif
 @endsection

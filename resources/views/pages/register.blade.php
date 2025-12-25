@@ -2,6 +2,10 @@
 
 @section('title', 'Register')
 
+@section('hideNavbar', true)
+
+@section('hideFooter', true)
+
 @section('additionalCSS')
 
     <link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
@@ -162,10 +166,10 @@
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="bi bi-grid-fill"></i></span>
                                             <select name="province" id="province" class="form-select" required>
-                                                <option value="">Select Your Province...</option>
+                                                <option value="" disabled selected>Select Your Province...</option>
                                                 @foreach ($provinces as $province)
-                                                    <option value="{{ $province->name }}" {{ old('province') === $province->name ? 'selected' : '' }}>
-                                                        {{ $province->getDisplayName() }}
+                                                    <option value="{{ $province->provinceId }}" {{ old('province') === $province->provinceId ? 'selected' : '' }}>
+                                                        {{ $province->name }}
                                                     </option>
                                                 @endforeach
                                             </select>

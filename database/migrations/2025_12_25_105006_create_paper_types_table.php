@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('provinces', function (Blueprint $table) {
+        Schema::create('paper_types', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('provinceId')->unique();
+            $table->string('paperTypeId')->unique();
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('provinces');
+        Schema::dropIfExists('paper_types');
     }
 };

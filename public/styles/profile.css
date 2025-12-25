@@ -1,0 +1,301 @@
+/* --- Paper Showcase System --- */
+
+/* 1. Control Bar & Search */
+.paper-showcase-control-bar {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    transition: box-shadow 0.2s;
+}
+
+.paper-showcase-control-bar:focus-within {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    border-color: #2563eb;
+}
+
+.paper-showcase-search-input {
+    border: none;
+    font-size: 0.95rem;
+    padding: 12px 0;
+    font-weight: 500;
+    color: #1f2937;
+    background: transparent;
+    box-shadow: none !important;
+}
+
+.paper-showcase-search-input::placeholder {
+    color: #9ca3af;
+}
+
+/* The New Filter Trigger Button */
+.paper-showcase-filter-trigger {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    color: #374151;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 8px 20px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.paper-showcase-filter-trigger:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+    border-color: #d1d5db;
+}
+
+/* 2. Create Button (Gradient) */
+.paper-showcase-create-action {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: white !important;
+    padding: 8px 20px 8px 8px;
+    border-radius: 50px;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.paper-showcase-create-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+}
+
+.paper-showcase-create-action .icon-box {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* --- 3. The Paper Card (Requested styles applied) --- */
+.paper-showcase-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    position: relative;
+    /* Smooth Transition for the hover */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 4px solid transparent;
+    /* Invisible left border by default */
+}
+
+/* HOVER EFFECT */
+.paper-showcase-card:hover {
+    transform: translateY(-4px);
+    /* Lifts up */
+    border-color: #d1d5db;
+    /* Border gets darker */
+    border-left-color: #2563eb;
+    /* Blue accent on left appears */
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+    /* Deep shadow */
+    background-color: #fcfcfc;
+}
+
+/* Title Hover */
+.paper-showcase-title {
+    font-size: 1.2rem;
+}
+
+.paper-showcase-title a {
+    color: #111827;
+    transition: color 0.2s;
+}
+
+.paper-showcase-card:hover .paper-showcase-title a {
+    color: #2563eb;
+}
+
+.paper-showcase-description {
+    color: #6b7280;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 90%;
+}
+
+/* Badges & Pills */
+.paper-status-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+}
+
+.paper-status-badge.public {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+.paper-status-badge.private {
+    background: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid rgba(75, 85, 99, 0.2);
+}
+
+.paper-status-badge.finalized {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid rgba(29, 78, 216, 0.2);
+}
+
+.paper-status-badge.draft {
+    background: #fffbeb;
+    color: #b45309;
+    border: 1px solid rgba(180, 83, 9, 0.2);
+}
+
+/* Paper Type Pill */
+.paper-type-pill {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #374151;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.paper-type-pill .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.paper-type-pill.journal-article .dot {
+    background-color: #9333ea;
+}
+
+.paper-type-pill.conference-paper .dot {
+    background-color: #f59e0b;
+}
+
+.paper-type-pill.undergraduate-thesis .dot {
+    background-color: #3b82f6;
+}
+
+.paper-type-pill.master-thesis .dot {
+    background-color: #10b981;
+}
+
+.paper-type-pill.doctoral-dissertation .dot {
+    background-color: #e11d48;
+}
+
+.paper-meta-text {
+    font-size: 0.85rem;
+}
+
+/* Star Action Button */
+.paper-action-star-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    color: #9ca3af;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+}
+
+.paper-action-star-btn:hover {
+    background: #fffbeb;
+    color: #fbbf24;
+    border-color: #fcd34d;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(251, 191, 36, 0.2);
+}
+
+
+/* --- 4. The New Offcanvas Filter System --- */
+
+.paper-filter-offcanvas {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+}
+
+.filter-section-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #9ca3af;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.filter-chip {
+    border: 1px solid #e5e7eb;
+    background-color: #ffffff;
+    color: #4b5563;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 50px;
+    transition: all 0.2s ease;
+}
+
+.filter-chip:hover {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.btn-check:checked+.filter-chip {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border-color: #2563eb;
+    box-shadow: 0 2px 5px rgba(37, 99, 235, 0.15);
+}
+
+.filter-modern-select {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    color: #1f2937;
+    cursor: pointer;
+    background-color: #f9fafb;
+}
+
+.filter-modern-select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+/* --- Empty State Styling --- */
+.paper-empty-state {
+    background-color: #f9fafb;
+    border: 2px dashed #d1d5db;
+    border-radius: 16px;
+    padding: 3rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.paper-empty-state:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.empty-state-icon {
+    font-size: 3.5rem;
+    color: #9ca3af;
+    margin-bottom: 1rem;
+}

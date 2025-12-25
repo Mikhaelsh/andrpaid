@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Province;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -14,18 +15,50 @@ class ProvinceSeeder extends Seeder
     public function run(): void
     {
         $provinces = [
-            'aceh', 'sumatera_utara', 'sumatera_barat', 'riau', 'kepulauan_riau',
-            'jambi', 'sumatera_selatan', 'kepulauan_bangka_belitung', 'bengkulu', 'lampung',
-            'dki_jakarta', 'jawa_barat', 'banten', 'jawa_tengah', 'di_yogyakarta', 'jawa_timur',
-            'bali', 'nusa_tenggara_barat', 'nusa_tenggara_timur',
-            'kalimantan_barat', 'kalimantan_tengah', 'kalimantan_selatan', 'kalimantan_timur', 'kalimantan_utara',
-            'sulawesi_utara', 'sulawesi_tengah', 'sulawesi_selatan', 'sulawesi_tenggara', 'gorontalo', 'sulawesi_barat',
-            'maluku', 'maluku_utara', 'papua', 'papua_barat', 'papua_tengah', 'papua_pegunungan', 'papua_selatan', 'papua_barat_daya'
+            'aceh' => 'Aceh',
+            'bali' => 'Bali',
+            'banten' => 'Banten',
+            'bengkulu' => 'Bengkulu',
+            'di_yogyakarta' => 'DI Yogyakarta',
+            'dki_jakarta' => 'DKI Jakarta',
+            'gorontalo' => 'Gorontalo',
+            'jambi' => 'Jambi',
+            'jawa_barat' => 'Jawa Barat',
+            'jawa_tengah' => 'Jawa Tengah',
+            'jawa_timur' => 'Jawa Timur',
+            'kalimantan_barat' => 'Kalimantan Barat',
+            'kalimantan_selatan' => 'Kalimantan Selatan',
+            'kalimantan_tengah' => 'Kalimantan Tengah',
+            'kalimantan_timur' => 'Kalimantan Timur',
+            'kalimantan_utara' => 'Kalimantan Utara',
+            'kepulauan_bangka_belitung' => 'Kepulauan Bangka Belitung',
+            'kepulauan_riau' => 'Kepulauan Riau',
+            'lampung' => 'Lampung',
+            'maluku' => 'Maluku',
+            'maluku_utara' => 'Maluku Utara',
+            'nusa_tenggara_barat' => 'Nusa Tenggara Barat',
+            'nusa_tenggara_timur' => 'Nusa Tenggara Timur',
+            'papua' => 'Papua',
+            'papua_barat' => 'Papua Barat',
+            'papua_barat_daya' => 'Papua Barat Daya',
+            'papua_pegunungan' => 'Papua Pegunungan',
+            'papua_selatan' => 'Papua Selatan',
+            'papua_tengah' => 'Papua Tengah',
+            'riau' => 'Riau',
+            'sulawesi_barat' => 'Sulawesi Barat',
+            'sulawesi_selatan' => 'Sulawesi Selatan',
+            'sulawesi_tengah' => 'Sulawesi Tengah',
+            'sulawesi_tenggara' => 'Sulawesi Tenggara',
+            'sulawesi_utara' => 'Sulawesi Utara',
+            'sumatera_barat' => 'Sumatera Barat',
+            'sumatera_selatan' => 'Sumatera Selatan',
+            'sumatera_utara' => 'Sumatera Utara',
         ];
 
-        foreach($provinces as $province) {
-            DB::table('provinces')->insert([
-                'name' => $province
+        foreach($provinces as $id => $name) {
+            Province::create([
+                'name' => $name,
+                'provinceId' => $id
             ]);
         }
     }

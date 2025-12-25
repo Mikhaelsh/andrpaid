@@ -1,7 +1,11 @@
 <?php $__env->startSection('title', 'Login'); ?>
 
+<?php $__env->startSection('hideNavbar', true); ?>
+
+<?php $__env->startSection('hideFooter', true); ?>
+
 <?php $__env->startSection('additionalCSS'); ?>
-    <link rel="stylesheet" href="styles/auth.css">
+    <link rel="stylesheet" href="<?php echo e(asset('styles/auth.css')); ?>">
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -72,38 +76,42 @@
         </div>
     </div>
 
-    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content text-center p-4">
 
-                <div class="modal-body">
-                    <div class="mb-3 text-success">
-                        <i class="bi bi-check-circle-fill" style="font-size: 3rem;"></i>
+    <?php if(session('success')): ?>
+        <div class="modal fade custom-modal-backdrop" id="statusModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content custom-modal-content type-success text-center p-4">
+
+                    <div class="modal-body px-4 py-4">
+
+                        <div class="modal-icon-wrapper mb-4 mx-auto">
+                            <i class="bi bi-check-lg custom-icon"></i>
+                        </div>
+
+                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <p class="text-muted mb-4 fs-5"><?php echo e(session('success')); ?></p>
+
+                        <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm" data-bs-dismiss="modal">
+                            CONTINUE
+                        </button>
                     </div>
 
-                    <h4 class="mb-2">Success!</h4>
-                    <p class="mb-4"><?php echo e(session('success')); ?></p>
-
-                    <button type="button" class="btn btn-success w-100" data-bs-dismiss="modal">OK</button>
                 </div>
-
             </div>
         </div>
-    </div>
 
-    <?php $__env->startPush('scripts'); ?>
-        <?php if(session('success')): ?>
+        <?php $__env->startPush('scripts'); ?>
             <script type="module">
-                // "type=module" ensures this runs after Vite is done
                 if (window.bootstrap) {
-                    var myModal = new bootstrap.Modal(document.getElementById('successModal'));
-                    myModal.show();
-                } else {
-                    console.error("Bootstrap is still not loaded!");
+                    setTimeout(() => {
+                        var myModal = new bootstrap.Modal(document.getElementById('statusModal'));
+                        myModal.show();
+                    }, 300);
                 }
             </script>
-        <?php endif; ?>
-    <?php $__env->stopPush(); ?>
+        <?php $__env->stopPush(); ?>
+    <?php endif; ?>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Tempat Coding\web programming\andrpaid\resources\views/pages/login.blade.php ENDPATH**/ ?>

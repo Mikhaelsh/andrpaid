@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PaperController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,7 +11,7 @@ Route::get("/", function () {
 });
 
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'index']);
+    Route::get('/login', [LoginController::class, 'index'])->name("login");
 
     Route::post('/login', [LoginController::class, 'loginUser']);
 
@@ -24,5 +25,17 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class,'index']);
+    Route::get('/dashboard', [DashboardController::class,'index'])->name("dashboard");
+
+    Route::post("/logout", [LoginController::class,"logoutUser"] );
+
+    Route::prefix("/{profileId}")->group(function(){
+        Route::get("/papers", [PaperController::class,"indexPapers"]);
+    });
+
+    Route::prefix("/papers")->group(function () {
+        Route::get("/create", [PaperController::class,"indexCreatePaper"]);
+
+        Route::post("/create-new-paper", [PaperController::class,"createNewPaper"]);
+    });
 });

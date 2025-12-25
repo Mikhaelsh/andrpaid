@@ -38,10 +38,10 @@ class RegisterController extends Controller
             'name'=> $validated['name'],
             'email'=> $validated['email'],
             'password' => bcrypt($validated['password']),
-            'description'=> $validated['description'],
+            'description'=> $validated['description']
         ]);
 
-        $province = Province::where('name', $validated['province'] )->first();
+        $province = Province::where('provinceId', $validated['province'] )->first();
 
         if($role === "lecturer"){
             Lecturer::create([
@@ -55,6 +55,6 @@ class RegisterController extends Controller
             ]);
         }
 
-        return redirect("/login")->with('success', 'Your account has been created successfully!');;
+        return redirect("/login")->with('success', 'Your account has been created successfully!');
     }
 }

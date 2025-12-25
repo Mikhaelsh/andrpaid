@@ -15,8 +15,8 @@ class LoginController extends Controller
 
     public function loginUser(Request $request){
         $validated = $request->validate([
-            'email'            => 'required',
-            'password'         => 'required'
+            'email'     => 'required',
+            'password'  => 'required'
         ]);
 
         $user = User::where('email',$validated['email'])->first();
@@ -30,5 +30,14 @@ class LoginController extends Controller
         }
 
         return redirect('/login')->with('errorLogin','Invalid username or password.');
+    }
+
+    public function logoutUser(Request $request) {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 }

@@ -1,5 +1,9 @@
 <?php $__env->startSection('title', 'Register'); ?>
 
+<?php $__env->startSection('hideNavbar', true); ?>
+
+<?php $__env->startSection('hideFooter', true); ?>
+
 <?php $__env->startSection('additionalCSS'); ?>
 
     <link rel="stylesheet" href="<?php echo e(asset('styles/auth.css')); ?>">
@@ -205,10 +209,10 @@ unset($__errorArgs, $__bag); ?>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="bi bi-grid-fill"></i></span>
                                             <select name="province" id="province" class="form-select" required>
-                                                <option value="">Select Your Province...</option>
+                                                <option value="" disabled selected>Select Your Province...</option>
                                                 <?php $__currentLoopData = $provinces; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $province): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <option value="<?php echo e($province->name); ?>" <?php echo e(old('province') === $province->name ? 'selected' : ''); ?>>
-                                                        <?php echo e($province->getDisplayName()); ?>
+                                                    <option value="<?php echo e($province->provinceId); ?>" <?php echo e(old('province') === $province->provinceId ? 'selected' : ''); ?>>
+                                                        <?php echo e($province->name); ?>
 
                                                     </option>
                                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

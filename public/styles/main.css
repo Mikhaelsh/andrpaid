@@ -26,3 +26,503 @@ body {
     color: var(--accent-blue);
     text-decoration: underline;
 }
+
+
+/* Navbar */
+/* --- 1. Navbar Glass Effect & Base --- */
+.modern-navbar {
+    /* Deep dark blue/grey background with transparency */
+    background-color: rgba(22, 27, 34, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.75rem 0;
+    transition: all 0.3s ease;
+}
+
+/* --- 2. Brand & Logo Styling --- */
+.brand-logo-container {
+    background: white;
+    padding: 2px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.brand-logo {
+    height: 38px;
+    width: 38px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.brand-text {
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.5px;
+    background: linear-gradient(45deg, #fff, #a5b4fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Logo hover effect */
+.navbar-brand:hover .brand-logo-container {
+    transform: rotate(15deg) scale(1.05);
+}
+
+/* --- 3. Navigation Links --- */
+.modern-navbar .nav-link {
+    color: #8b949e !important;
+    font-weight: 500;
+    font-size: 0.95rem;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.modern-navbar .nav-link:hover {
+    color: #ffffff !important;
+}
+
+.modern-navbar .nav-link.active {
+    color: #ffffff !important;
+}
+
+/* The "Glow" line under active link */
+.modern-navbar .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 15px;
+    right: 15px;
+    height: 2px;
+    background: #28a745;
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(40, 167, 69, 0.6);
+}
+
+/* --- 4. User Profile & Avatar --- */
+.avatar-container {
+    position: relative;
+    padding: 2px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transition: border-color 0.3s ease;
+}
+
+.navbar-nav .dropdown:hover .avatar-container {
+    border-color: #28a745;
+}
+
+.avatar-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: block;
+}
+
+/* Small Green "Online" Dot */
+.status-indicator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background-color: #28a745;
+    border: 2px solid #161b22;
+    border-radius: 50%;
+}
+
+/* --- 5. Custom Dropdown Menu --- */
+.custom-dropdown {
+    background-color: #1f2630 !important;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    padding: 0.75rem;
+    min-width: 240px;
+    margin-top: 15px !important;
+}
+
+/* Dropdown Header */
+.custom-dropdown .dropdown-header {
+    color: #8b949e;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+/* Dropdown Items (The Links) */
+.custom-dropdown .dropdown-item {
+    color: #e6edf3 !important;
+    font-size: 1.05rem;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 10px 16px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+/* Hover Effect */
+.custom-dropdown .dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff !important;
+    transform: translateX(5px);
+}
+
+/* The Icons inside the dropdown */
+.custom-dropdown .dropdown-item i {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+/* Divider Line */
+.custom-dropdown .dropdown-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+
+
+/* --- Modal System --- */
+/* 1. DEFINE THE THEMES  */
+
+/* Success Theme (Green) */
+.type-success {
+    --theme-color: #28a745;
+    --theme-light: rgba(40, 167, 69, 0.12);
+    --theme-gradient: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    --button-shadow: rgba(40, 167, 69, 0.4);
+}
+
+/* Error Theme (Red) */
+.type-error {
+    --theme-color: #dc3545;
+    --theme-light: rgba(220, 53, 69, 0.12);
+    --theme-gradient: linear-gradient(135deg, #dc3545 0%, #ff6b6b 100%);
+    --button-shadow: rgba(220, 53, 69, 0.4);
+}
+
+/* 2. The Modal Box */
+.custom-modal-content {
+    border: none;
+    border-radius: 28px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    background: #ffffff;
+}
+
+/* 3. The Icon Wrapper */
+.modal-icon-wrapper {
+    width: 100px;
+    height: 100px;
+    background: var(--theme-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+/* The Icon */
+.custom-icon {
+    font-size: 3.5rem;
+    color: var(--theme-color);
+}
+
+/* The Pulsing Ring Animation */
+.modal-icon-wrapper::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--theme-color);
+    animation: pulse-ring 2s infinite;
+    opacity: 0;
+}
+
+/* 4. The Flexible Button */
+.btn-custom {
+    background: var(--theme-gradient);
+    border: none;
+    color: #ffffff !important;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-custom:hover {
+    color: #ffffff !important;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px var(--button-shadow);
+}
+
+.btn-custom:active {
+    transform: translateY(-1px);
+}
+
+/* 5. Typography */
+.heading-text {
+    color: #1f2937;
+    font-size: 1.75rem;
+}
+
+/* --- Animation Keyframes --- */
+@keyframes pulse-ring {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* Darker Backdrop */
+.custom-modal-backdrop + .modal-backdrop {
+    opacity: 0.7;
+}
+
+
+/* --- Footer Section --- */
+/* --- 1. Glass Footer Styles --- */
+.glass-footer {
+    background: linear-gradient(to right, #161b22, #1f2630);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    z-index: 10;
+}
+
+/* The Feedback Button */
+.btn-glass-feedback {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e6edf3 !important;
+    padding: 6px 16px 6px 6px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-glass-feedback:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff !important;
+    transform: translateY(-2px);
+}
+
+/* The Icon Circle inside button */
+.btn-glass-feedback .icon-circle {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: white;
+}
+
+
+/* --- Sophisticated Card System --- */
+/* 1. The Container (Flexible) */
+.sophisticated-card {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 2. The Decorative Gradient Strip */
+.card-gradient-strip {
+    height: 6px;
+    width: 100%;
+    background: linear-gradient(90deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+}
+
+/* 3. The "Velvet" Inputs */
+.input-velvet {
+    background-color: #f3f4f6;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #1f2937;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    resize: none;
+}
+
+/* Input Focus State */
+.input-velvet:focus {
+    background-color: #ffffff;
+    border-color: #a855f7;
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.1);
+    outline: none;
+}
+
+.input-velvet.file-input-fix {
+    padding: 9px 12px;
+    line-height: 1.5;
+}
+
+/* Style the "Choose File" button */
+.input-velvet::file-selector-button {
+    background-color: #e5e7eb;
+    color: #374151;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 6px;
+    margin-right: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.input-velvet::file-selector-button:hover {
+    background-color: #d1d5db;
+    color: #111827;
+}
+
+/* Custom Dropdown Arrow */
+select.input-velvet {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%234b5563' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-position: right 1rem center;
+    background-size: 16px 12px;
+}
+
+/* 4. The "Sophisticated" Button */
+.btn-sophisticated-primary {
+    background: #111827;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-sophisticated-primary:hover {
+    background: #000000;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* 5. Custom Close Button */
+.btn-close-sophisticated {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 1.1rem;
+}
+
+.btn-close-sophisticated:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+    transform: rotate(90deg);
+}
+
+/* 6. Typography Utility */
+.ls-1 {
+    letter-spacing: 0.05em;
+}
+
+/* 7. Modal Backdrop Blur */
+.modal-backdrop.show {
+    opacity: 0.5;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+
+/* --- Profile Sub-Navbar (GitHub Style) --- */
+
+.profile-subnav {
+    background-color: #161b22; /* Matches your main navbar background */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtle divider */
+    padding-top: 1rem; /* Space from the main navbar */
+    z-index: 990; /* Slightly lower than main navbar (1020+) */
+}
+
+/* THE STICKY MAGIC:
+   Assuming your main navbar is approx 70px tall.
+   We stick this one 70px from the top so it sits UNDER the main one.
+*/
+.sticky-subnav {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 68px; /* Adjust this number based on your actual Main Navbar height */
+}
+
+/* The Tab Container */
+.profile-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto; /* Allows scrolling on small mobile screens */
+    flex-wrap: nowrap;
+}
+
+/* The Links (Tabs) */
+.profile-tabs .nav-link {
+    color: #8b949e; /* Muted Text */
+    font-size: 0.95rem;
+    padding: 8px 16px 12px 16px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent; /* Invisible border by default */
+    border-radius: 6px 6px 0 0; /* Rounded top corners */
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+/* Hover State */
+.profile-tabs .nav-link:hover {
+    color: #d0d7de;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Active State (The Green Line) */
+.profile-tabs .nav-link.active {
+    color: #ffffff; /* Bright White Text */
+    font-weight: 600;
+    border-bottom-color: #28a745; /* YOUR BRAND GREEN */
+}
+
+/* The Icons */
+.profile-tabs .nav-link i {
+    font-size: 1rem;
+    color: #6e7681; /* Dimmed icon */
+}
+.profile-tabs .nav-link.active i {
+    color: #ffffff; /* Bright icon when active */
+}
+
+/* The Counter Badge (e.g., "12") */
+.badge-counter {
+    background-color: rgba(110, 118, 129, 0.4); /* Dark gray pill */
+    color: #e6edf3;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+}
+.profile-tabs .nav-link.active .badge-counter {
+    background-color: #28a745; /* Green pill when active */
+    color: white;
+}

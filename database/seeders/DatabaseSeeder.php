@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Lecturer;
+use App\Models\Paper;
+use App\Models\Province;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -24,6 +27,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             ProvinceSeeder::class,
+            ResearchFieldSeeder::class,
+            PaperTypeSeeder::class,
+            LecturerSeeder::class,
         ]);
     }
 }
