@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lecturer;
 use App\Models\Paper;
+use App\Models\PaperStar;
 use App\Models\PaperType;
 use App\Models\ResearchField;
 use App\Models\User;
@@ -62,5 +63,36 @@ class PaperController extends Controller
         $paper->researchFields()->attach($fieldIds);
 
         return redirect("/" . $user->profileId . "/papers")->with('successNewPaper', 'Your new paper has been created successfully!');
+    }
+
+    public function toggleStar($paperId){
+        $user = Auth::user();
+        $paper = Paper::where("paperId", $paperId)->first();
+
+        $paperStar = PaperStar::where([
+            ['user_id', '=', $user->id],
+            ['paper_id', '=', $paper->id]
+        ])->first();
+
+        if($paperStar){
+            PaperStar::where([
+                ['user_id', '=', $user->id],
+                ['paper_id', '=', $paper->id]
+            ])->delete();
+            $isStarred = false;
+        } else{
+            PaperStar::create([
+                "user_id" => $user->id,
+                "paper_id"=> $paper->id
+            ]);
+            $isStarred = true;
+        }
+
+        $newCount = PaperStar::where('paper_id', $paper->id)->count();
+
+        return response()->json([
+            'is_starred' => $isStarred,
+            'new_count' => $newCount,
+        ]);
     }
 }

@@ -58,4 +58,8 @@ class User extends Authenticatable
     public function university(){
         return $this->hasOne(University::class);
     }
+
+    public function paperStars(){
+        return $this->hasMany(PaperStar::class);
+    }
 }

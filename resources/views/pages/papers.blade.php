@@ -12,7 +12,7 @@
     <div style="background-color: #0d1117; padding-top: 2rem;">
         <div class="container text-white pb-3">
             <h3>{{ $user->name }}'s Papers</h3>
-            <p>{{ $papers->count() ?? "No" }} Paper{{ $papers->count() <= 1 ? "" : "s" }}</p>
+            <p>{{ $papers->count() ?? 'No' }} Paper{{ $papers->count() <= 1 ? '' : 's' }}</p>
         </div>
     </div>
 
@@ -160,12 +160,14 @@
 
                             <div class="d-flex align-items-center gap-3 mt-1 flex-wrap border-top pt-3">
 
-                                <span class="paper-type-pill {{ Str::replace("_", "-", $paper->paperType->paperTypeId) }}">
+                                <span
+                                    class="paper-type-pill {{ Str::replace('_', '-', $paper->paperType->paperTypeId) }}">
                                     <span class="dot"></span> {{ $paper->paperType->name }}
                                 </span>
 
                                 <span class="paper-meta-text text-dark fw-medium">
-                                    <i class="bi bi-star-fill text-warning"></i> 12
+                                    <i class="bi bi-star-fill text-warning"></i> <span
+                                        id="star-count-{{ $paper->paperId }}">{{ $paper->paperStars->count() }}</span>
                                 </span>
 
                                 <span class="paper-meta-text text-muted">Updated 2 days ago</span>
@@ -173,8 +175,16 @@
                         </div>
 
                         <div class="position-relative z-2 ms-3">
-                            <button class="btn paper-action-star-btn" title="Star this paper">
-                                <i class="bi bi-star"></i>
+                            @php
+                                $isStarred = Auth::check() && $paper->paperStars->contains('user_id', Auth::user()->id);
+                            @endphp
+
+                            <button class="btn {{ $isStarred ? 'btn-warning' : 'paper-action-star-btn' }}"
+                                id="star-btn-{{ $paper->paperId }}" onclick="toggleStar(`{{ $paper->paperId }}`)"
+                                title="Star this paper">
+
+                                <i class="bi {{ $isStarred ? 'bi-star-fill' : 'bi-star' }}"
+                                    id="star-icon-{{ $paper->paperId }}"></i>
                             </button>
                         </div>
                     </div>
@@ -201,7 +211,7 @@
                 </div>
             @endforelse
 
-            <div class="paper-showcase-card p-4">
+            {{-- <div class="paper-showcase-card p-4">
                 <div class="d-flex justify-content-between align-items-start">
 
                     <div class="d-flex flex-column gap-2 col-md-10">
@@ -259,9 +269,9 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
-            <div class="paper-showcase-card p-4">
+            {{-- <div class="paper-showcase-card p-4">
                 <div class="d-flex justify-content-between align-items-start">
 
                     <div class="d-flex flex-column gap-2 col-md-10">
@@ -312,7 +322,7 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
         </div>
     </div>
@@ -354,5 +364,48 @@
             </script>
         @endpush
     @endif
+
+
+    @push('scripts')
+        <script>
+            async function toggleStar(paperId) {
+                const btn = document.getElementById(`star-btn-${paperId}`);
+                const icon = document.getElementById(`star-icon-${paperId}`);
+                const countSpan = document.getElementById(`star-count-${paperId}`);
+
+                try {
+                    const response = await fetch(`/papers/${paperId}/star`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                    });
+
+                    const data = await response.json();
+
+                    // Update UI based on server response
+                    if (data.is_starred) {
+                        btn.classList.remove('paper-action-star-btn');
+                        btn.classList.add('btn-warning');
+                        icon.classList.remove('bi-star');
+                        icon.classList.add('bi-star-fill');
+                    } else {
+                        btn.classList.remove('btn-warning');
+                        btn.classList.add('paper-action-star-btn');
+                        icon.classList.remove('bi-star-fill');
+                        icon.classList.add('bi-star');
+                    }
+
+                    // Update the number
+                    countSpan.innerText = data.new_count;
+
+                } catch (error) {
+                    console.error('Error toggling star:', error);
+                }
+            }
+        </script>
+    @endpush
 
 @endsection

@@ -27,4 +27,8 @@ class Paper extends Model
     public function lecturer(){
         return $this->belongsTo(Lecturer::class);
     }
+
+    public function paperStars(){
+        return $this->hasMany(PaperStar::class);
+    }
 }

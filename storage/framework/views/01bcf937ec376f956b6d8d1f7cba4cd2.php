@@ -10,7 +10,7 @@
     <div style="background-color: #0d1117; padding-top: 2rem;">
         <div class="container text-white pb-3">
             <h3><?php echo e($user->name); ?>'s Papers</h3>
-            <p><?php echo e($papers->count() ?? "No"); ?> Paper<?php echo e($papers->count() <= 1 ? "" : "s"); ?></p>
+            <p><?php echo e($papers->count() ?? 'No'); ?> Paper<?php echo e($papers->count() <= 1 ? '' : 's'); ?></p>
         </div>
     </div>
 
@@ -161,13 +161,15 @@
 
                             <div class="d-flex align-items-center gap-3 mt-1 flex-wrap border-top pt-3">
 
-                                <span class="paper-type-pill <?php echo e(Str::replace("_", "-", $paper->paperType->paperTypeId)); ?>">
+                                <span
+                                    class="paper-type-pill <?php echo e(Str::replace('_', '-', $paper->paperType->paperTypeId)); ?>">
                                     <span class="dot"></span> <?php echo e($paper->paperType->name); ?>
 
                                 </span>
 
                                 <span class="paper-meta-text text-dark fw-medium">
-                                    <i class="bi bi-star-fill text-warning"></i> 12
+                                    <i class="bi bi-star-fill text-warning"></i> <span
+                                        id="star-count-<?php echo e($paper->paperId); ?>"><?php echo e($paper->paperStars->count()); ?></span>
                                 </span>
 
                                 <span class="paper-meta-text text-muted">Updated 2 days ago</span>
@@ -175,8 +177,16 @@
                         </div>
 
                         <div class="position-relative z-2 ms-3">
-                            <button class="btn paper-action-star-btn" title="Star this paper">
-                                <i class="bi bi-star"></i>
+                            <?php
+                                $isStarred = Auth::check() && $paper->paperStars->contains('user_id', Auth::user()->id);
+                            ?>
+
+                            <button class="btn <?php echo e($isStarred ? 'btn-warning' : 'paper-action-star-btn'); ?>"
+                                id="star-btn-<?php echo e($paper->paperId); ?>" onclick="toggleStar(`<?php echo e($paper->paperId); ?>`)"
+                                title="Star this paper">
+
+                                <i class="bi <?php echo e($isStarred ? 'bi-star-fill' : 'bi-star'); ?>"
+                                    id="star-icon-<?php echo e($paper->paperId); ?>"></i>
                             </button>
                         </div>
                     </div>
@@ -203,118 +213,9 @@
                 </div>
             <?php endif; ?>
 
-            <div class="paper-showcase-card p-4">
-                <div class="d-flex justify-content-between align-items-start">
+            
 
-                    <div class="d-flex flex-column gap-2 col-md-10">
-
-                        <div class="d-flex align-items-center gap-2 flex-wrap">
-                            <h5 class="mb-0 fw-bold paper-showcase-title me-2">
-                                <a href="#" class="text-decoration-none stretched-link">Analysis of AI
-                                    Transformers (Dummy)</a>
-                            </h5>
-
-                            <span class="paper-status-badge public">
-                                <i class="bi bi-globe-americas me-1"></i> Public
-                            </span>
-
-                            <span class="paper-status-badge finalized">
-                                <i class="bi bi-check-circle-fill me-1"></i> Finalized
-                            </span>
-                        </div>
-
-                        <p class="paper-showcase-description mb-1">
-                            A deep dive into the attention mechanism and self-supervised learning efficiency in modern NLP
-                            tasks. A deep dive into the attention mechanism and self-supervised learning efficiency in
-                            modern NLP
-                            tasks. A deep dive into the attention mechanism and self-supervised learning efficiency in
-                            modern NLP
-                            tasks. A deep dive into the attention mechanism and self-supervised learning efficiency in
-                            modern NLP
-                            tasks.
-                        </p>
-
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                            <span class="small text-muted fw-bold text-uppercase"
-                                style="font-size: 0.7rem; letter-spacing: 0.05em;">Fields:</span>
-                            <span class="badge bg-light text-secondary border fw-bold">Artificial Intelligence</span>
-                            <span class="badge bg-light text-secondary border fw-bold">NLP</span>
-                        </div>
-
-                        <div class="d-flex align-items-center gap-3 mt-1 flex-wrap border-top pt-3">
-
-                            <span class="paper-type-pill journal">
-                                <span class="dot"></span> Journal Article
-                            </span>
-
-                            <span class="paper-meta-text text-dark fw-medium">
-                                <i class="bi bi-star-fill text-warning"></i> 12
-                            </span>
-
-                            <span class="paper-meta-text text-muted">Updated 2 days ago</span>
-                        </div>
-                    </div>
-
-                    <div class="position-relative z-2 ms-3">
-                        <button class="btn paper-action-star-btn" title="Star this paper">
-                            <i class="bi bi-star"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="paper-showcase-card p-4">
-                <div class="d-flex justify-content-between align-items-start">
-
-                    <div class="d-flex flex-column gap-2 col-md-10">
-
-                        <div class="d-flex align-items-center gap-2 flex-wrap">
-                            <h5 class="mb-0 fw-bold paper-showcase-title me-2">
-                                <a href="#" class="text-decoration-none stretched-link">Lip-Sync Forgery
-                                    Detection (Dummy)</a>
-                            </h5>
-
-                            <span class="paper-status-badge private">
-                                <i class="bi bi-lock-fill me-1"></i> Private
-                            </span>
-
-                            <span class="paper-status-badge draft">
-                                <i class="bi bi-pencil-fill me-1"></i> Draft
-                            </span>
-                        </div>
-
-                        <p class="paper-showcase-description mb-1">
-                            Computer vision model detecting fake lip movements in video streams using Haar Cascades.
-                        </p>
-
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                            <span class="small text-muted fw-bold text-uppercase"
-                                style="font-size: 0.7rem; letter-spacing: 0.05em;">Fields:</span>
-                            <span class="badge bg-light text-secondary border fw-bold">Computer Vision</span>
-                            <span class="badge bg-light text-secondary border fw-bold">Security</span>
-                        </div>
-
-                        <div class="d-flex align-items-center gap-3 mt-1 flex-wrap border-top pt-3">
-
-                            <span class="paper-type-pill conference">
-                                <span class="dot"></span> Conference Paper
-                            </span>
-
-                            <span class="paper-meta-text text-dark fw-medium">
-                                <i class="bi bi-star"></i> 4
-                            </span>
-
-                            <span class="paper-meta-text text-muted">Updated yesterday</span>
-                        </div>
-                    </div>
-
-                    <div class="position-relative z-2 ms-3">
-                        <button class="btn paper-action-star-btn" title="Star this paper">
-                            <i class="bi bi-star"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            
 
         </div>
     </div>
@@ -356,6 +257,49 @@
             </script>
         <?php $__env->stopPush(); ?>
     <?php endif; ?>
+
+
+    <?php $__env->startPush('scripts'); ?>
+        <script>
+            async function toggleStar(paperId) {
+                const btn = document.getElementById(`star-btn-${paperId}`);
+                const icon = document.getElementById(`star-icon-${paperId}`);
+                const countSpan = document.getElementById(`star-count-${paperId}`);
+
+                try {
+                    const response = await fetch(`/papers/${paperId}/star`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                    });
+
+                    const data = await response.json();
+
+                    // Update UI based on server response
+                    if (data.is_starred) {
+                        btn.classList.remove('paper-action-star-btn');
+                        btn.classList.add('btn-warning');
+                        icon.classList.remove('bi-star');
+                        icon.classList.add('bi-star-fill');
+                    } else {
+                        btn.classList.remove('btn-warning');
+                        btn.classList.add('paper-action-star-btn');
+                        icon.classList.remove('bi-star-fill');
+                        icon.classList.add('bi-star');
+                    }
+
+                    // Update the number
+                    countSpan.innerText = data.new_count;
+
+                } catch (error) {
+                    console.error('Error toggling star:', error);
+                }
+            }
+        </script>
+    <?php $__env->stopPush(); ?>
 
 <?php $__env->stopSection(); ?>
 

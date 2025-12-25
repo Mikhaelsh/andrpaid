@@ -37,5 +37,7 @@ Route::middleware('auth')->group(function () {
         Route::get("/create", [PaperController::class,"indexCreatePaper"]);
 
         Route::post("/create-new-paper", [PaperController::class,"createNewPaper"]);
+
+        Route::post('/{paperId}/star', [PaperController::class, 'toggleStar']);
     });
 });
