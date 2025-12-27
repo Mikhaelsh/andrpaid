@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PaperController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +45,12 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix("/{profileId}")->group(function(){
         Route::get("/papers", [PaperController::class,"indexPapers"]);
+
+        Route::get("/stars", [PaperController::class,"indexStars"]);
+
+        Route::get("/overview", [ProfileController::class,"indexOverview"]);
+
+        Route::get("/followers", [ProfileController::class,"indexFollowers"]);
     });
 
     Route::prefix("/papers")->group(function () {

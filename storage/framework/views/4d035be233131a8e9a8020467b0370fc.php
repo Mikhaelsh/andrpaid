@@ -46,10 +46,10 @@
                             <h6 class="dropdown-header text-uppercase fw-bold">My Account</h6>
                         </li>
 
-                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-person me-3"></i> Profile</a>
+                        <li><a class="dropdown-item py-2" href="/<?php echo e(Auth::user()->profileId); ?>/overview"><i class="bi bi-person me-3"></i> Profile</a>
                         </li>
-                        <li><a class="dropdown-item py-2" href="<?php echo e(Auth::user()->profileId); ?>/papers"><i class="bi bi-journal-code me-3"></i> Papers</a></li>
-                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-star me-3"></i> Stars</a></li>
+                        <li><a class="dropdown-item py-2" href="/<?php echo e(Auth::user()->profileId); ?>/papers"><i class="bi bi-journal-code me-3"></i> Papers</a></li>
+                        <li><a class="dropdown-item py-2" href="/<?php echo e(Auth::user()->profileId); ?>/stars"><i class="bi bi-star me-3"></i> Stars</a></li>
 
                         <li>
                             <hr class="dropdown-divider my-2">

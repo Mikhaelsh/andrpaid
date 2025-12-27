@@ -54,6 +54,15 @@
 
                 <form>
                     <div class="mb-4">
+                        <label class="filter-section-label">Sort By</label>
+                        <select class="form-select filter-modern-select">
+                            <option selected>Newest First</option>
+                            <option>Oldest First</option>
+                            <option>Most Stars</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
                         <label class="filter-section-label">Visibility</label>
                         <div class="d-flex flex-wrap gap-2">
                             <input type="checkbox" class="btn-check" id="vis-public" checked>
@@ -72,41 +81,21 @@
                         <label class="filter-section-label">Paper Type</label>
                         <div class="d-flex flex-wrap gap-2">
 
-                            <input type="checkbox" class="btn-check" id="type-journal" checked>
-                            <label class="btn filter-chip" for="type-journal">Journal Article</label>
-
-                            <input type="checkbox" class="btn-check" id="type-conf">
-                            <label class="btn filter-chip" for="type-conf">Conference</label>
-
-                            <input type="checkbox" class="btn-check" id="type-thesis">
-                            <label class="btn filter-chip" for="type-thesis">Thesis</label>
-
-                            <input type="checkbox" class="btn-check" id="type-draft">
-                            <label class="btn filter-chip" for="type-draft">Draft</label>
+                            @foreach ($paperTypes as $paperType)
+                                <input type="checkbox" class="btn-check" id="{{ $paperType->paperTypeId }}" checked>
+                                <label class="btn filter-chip" for="{{ $paperType->paperTypeId }}">{{ $paperType->name }}</label>
+                            @endforeach
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="filter-section-label">Sort By</label>
-                        <select class="form-select filter-modern-select">
-                            <option selected>Newest First</option>
-                            <option>Oldest First</option>
-                            <option>Most Stars</option>
-                            <option>Most Citations</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="filter-section-label">Timeframe</label>
+                        <label class="filter-section-label">Research Field</label>
                         <div class="d-flex flex-wrap gap-2">
-                            <input type="radio" class="btn-check" name="date-radio" id="date-any" checked>
-                            <label class="btn filter-chip" for="date-any">Anytime</label>
 
-                            <input type="radio" class="btn-check" name="date-radio" id="date-year">
-                            <label class="btn filter-chip" for="date-year">Past Year</label>
-
-                            <input type="radio" class="btn-check" name="date-radio" id="date-month">
-                            <label class="btn filter-chip" for="date-month">Past Month</label>
+                            @foreach ($researchFields as $researchField)
+                                <input type="checkbox" class="btn-check" id="{{ $researchField->researchFieldId }}" checked>
+                                <label class="btn filter-chip" for="{{ $researchField->researchFieldId }}">{{ $researchField->name }}</label>
+                            @endforeach
                         </div>
                     </div>
                 </form>
@@ -158,19 +147,29 @@
                                 @endforeach
                             </div>
 
-                            <div class="d-flex align-items-center gap-3 mt-1 flex-wrap border-top pt-3">
+                            <div class="row align-items-center mt-1 border-top pt-3 gy-2">
 
-                                <span
-                                    class="paper-type-pill {{ Str::replace('_', '-', $paper->paperType->paperTypeId) }}">
-                                    <span class="dot"></span> {{ $paper->paperType->name }}
-                                </span>
+                                <div class="col-5 col-md-4 col-lg-3">
+                                    <span
+                                        class="paper-type-pill {{ Str::replace('_', '-', $paper->paperType->paperTypeId) }} d-block w-100">
+                                        <span class="dot"></span> {{ $paper->paperType->name }}
+                                    </span>
+                                </div>
 
-                                <span class="paper-meta-text text-dark fw-medium">
-                                    <i class="bi bi-star-fill text-warning"></i> <span
-                                        id="star-count-{{ $paper->paperId }}">{{ $paper->paperStars->count() }}</span>
-                                </span>
+                                <div class="col-auto">
+                                    <span class="paper-meta-text text-dark fw-medium">
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                        <span
+                                            id="star-count-{{ $paper->paperId }}">{{ $paper->paperStars->count() }}</span>
+                                    </span>
+                                </div>
 
-                                <span class="paper-meta-text text-muted">Updated 2 days ago</span>
+                                <div class="col-auto">
+                                    <span class="paper-meta-text text-muted">
+                                        Updated {{ $paper->updated_at->diffForHumans() }}
+                                    </span>
+                                </div>
+
                             </div>
                         </div>
 
@@ -372,6 +371,7 @@
                 const btn = document.getElementById(`star-btn-${paperId}`);
                 const icon = document.getElementById(`star-icon-${paperId}`);
                 const countSpan = document.getElementById(`star-count-${paperId}`);
+                const navbarProfileStarsCount = document.getElementById(`navbarProfileStarsCount`)
 
                 try {
                     const response = await fetch(`/papers/${paperId}/star`, {
@@ -391,11 +391,13 @@
                         btn.classList.add('btn-warning');
                         icon.classList.remove('bi-star');
                         icon.classList.add('bi-star-fill');
+                        navbarProfileStarsCount.innerText = parseInt(navbarProfileStarsCount.innerText) + 1;
                     } else {
                         btn.classList.remove('btn-warning');
                         btn.classList.add('paper-action-star-btn');
                         icon.classList.remove('bi-star-fill');
                         icon.classList.add('bi-star');
+                        navbarProfileStarsCount.innerText = parseInt(navbarProfileStarsCount.innerText) - 1;
                     }
 
                     // Update the number

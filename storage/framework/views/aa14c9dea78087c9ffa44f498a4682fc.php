@@ -1,20 +1,17 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Stars'); ?>
 
-{{-- 1. CHANGED: Title --}}
-@section('title', 'Stars')
+<?php $__env->startSection('additionalCSS'); ?>
+    <link rel="stylesheet" href="<?php echo e(asset('styles/profile.css')); ?>">
+<?php $__env->stopSection(); ?>
 
-@section('additionalCSS')
-    <link rel="stylesheet" href="{{ asset('styles/profile.css') }}">
-@endsection
-
-@section('content')
-    @include('partials.navbarProfile')
+<?php $__env->startSection('content'); ?>
+    <?php echo $__env->make('partials.navbarProfile', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <div style="background-color: #0d1117; padding-top: 2rem;">
         <div class="container text-white pb-3">
-            {{-- 2. CHANGED: Header Text --}}
-            <h3>{{ $user->name }}'s Starred Papers</h3>
-            <p>{{ $papers->count() ?? '0' }} Starred Paper{{ $papers->count() == 1 ? '' : 's' }}</p>
+            
+            <h3><?php echo e($user->name); ?>'s Starred Papers</h3>
+            <p><?php echo e($papers->count() ?? '0'); ?> Starred Paper<?php echo e($papers->count() == 1 ? '' : 's'); ?></p>
         </div>
     </div>
 
@@ -27,7 +24,7 @@
                 <div class="position-relative flex-grow-1">
                     <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary opacity-75"></i>
                     <input type="text" class="form-control paper-showcase-search-input ps-5"
-                        placeholder="Search {{ $user->name }}'s' starred papers...">
+                        placeholder="Search <?php echo e($user->name); ?>'s' starred papers...">
                 </div>
 
                 <button class="btn paper-showcase-filter-trigger d-flex align-items-center gap-2" type="button"
@@ -83,7 +80,7 @@
 
         <div class="d-flex flex-column gap-3">
 
-            @forelse ($papers as $paper)
+            <?php $__empty_1 = true; $__currentLoopData = $papers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $paper): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                 <div class="paper-showcase-card p-4">
                     <div class="d-flex justify-content-between align-items-start">
 
@@ -91,37 +88,41 @@
 
                             <div class="d-flex align-items-center gap-2 flex-wrap">
                                 <h5 class="mb-0 fw-bold paper-showcase-title me-2">
-                                    <a href="#" class="text-decoration-none stretched-link">{{ $paper->title }}</a>
+                                    <a href="#" class="text-decoration-none stretched-link"><?php echo e($paper->title); ?></a>
                                 </h5>
 
-                                <span class="paper-status-badge {{ $paper->visibility }}">
-                                    <i class="bi bi-globe-americas me-1"></i> {{ $paper->visibility }}
+                                <span class="paper-status-badge <?php echo e($paper->visibility); ?>">
+                                    <i class="bi bi-globe-americas me-1"></i> <?php echo e($paper->visibility); ?>
+
                                 </span>
 
-                                <span class="paper-status-badge {{ $paper->status }}">
-                                    <i class="bi bi-check-circle-fill me-1"></i> {{ $paper->status }}
+                                <span class="paper-status-badge <?php echo e($paper->status); ?>">
+                                    <i class="bi bi-check-circle-fill me-1"></i> <?php echo e($paper->status); ?>
+
                                 </span>
                             </div>
 
                             <p class="paper-showcase-description mb-1">
-                                {{ $paper->description }}
+                                <?php echo e($paper->description); ?>
+
                             </p>
 
                             <div class="d-flex align-items-center gap-2 mb-2">
                                 <span class="small text-muted fw-bold text-uppercase"
                                     style="font-size: 0.7rem; letter-spacing: 0.05em;">Fields:</span>
-                                @foreach ($paper->researchFields as $researchField)
+                                <?php $__currentLoopData = $paper->researchFields; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $researchField): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <span
-                                        class="badge bg-light text-secondary border fw-bold">{{ $researchField->name }}</span>
-                                @endforeach
+                                        class="badge bg-light text-secondary border fw-bold"><?php echo e($researchField->name); ?></span>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
 
                             <div class="row align-items-center mt-1 border-top pt-3 gy-2">
 
                                 <div class="col-5 col-md-4 col-lg-3">
                                     <span
-                                        class="paper-type-pill {{ Str::replace('_', '-', $paper->paperType->paperTypeId) }} d-block w-100">
-                                        <span class="dot"></span> {{ $paper->paperType->name }}
+                                        class="paper-type-pill <?php echo e(Str::replace('_', '-', $paper->paperType->paperTypeId)); ?> d-block w-100">
+                                        <span class="dot"></span> <?php echo e($paper->paperType->name); ?>
+
                                     </span>
                                 </div>
 
@@ -129,13 +130,14 @@
                                     <span class="paper-meta-text text-dark fw-medium">
                                         <i class="bi bi-star-fill text-warning"></i>
                                         <span
-                                            id="star-count-{{ $paper->paperId }}">{{ $paper->paperStars->count() }}</span>
+                                            id="star-count-<?php echo e($paper->paperId); ?>"><?php echo e($paper->paperStars->count()); ?></span>
                                     </span>
                                 </div>
 
                                 <div class="col-auto">
                                     <span class="paper-meta-text text-muted">
-                                        Updated {{ $paper->updated_at->diffForHumans() }}
+                                        Updated <?php echo e($paper->updated_at->diffForHumans()); ?>
+
                                     </span>
                                 </div>
 
@@ -143,21 +145,21 @@
                         </div>
 
                         <div class="position-relative z-2 ms-3">
-                            @php
+                            <?php
                                 $isStarred = Auth::check() && $paper->paperStars->contains('user_id', Auth::user()->id);
-                            @endphp
+                            ?>
 
-                            <button class="btn {{ $isStarred ? 'btn-warning' : 'paper-action-star-btn' }}"
-                                id="star-btn-{{ $paper->paperId }}" onclick="toggleStar(`{{ $paper->paperId }}`)"
+                            <button class="btn <?php echo e($isStarred ? 'btn-warning' : 'paper-action-star-btn'); ?>"
+                                id="star-btn-<?php echo e($paper->paperId); ?>" onclick="toggleStar(`<?php echo e($paper->paperId); ?>`)"
                                 title="Unstar this paper">
 
-                                <i class="bi {{ $isStarred ? 'bi-star-fill' : 'bi-star' }}"
-                                    id="star-icon-{{ $paper->paperId }}"></i>
+                                <i class="bi <?php echo e($isStarred ? 'bi-star-fill' : 'bi-star'); ?>"
+                                    id="star-icon-<?php echo e($paper->paperId); ?>"></i>
                             </button>
                         </div>
                     </div>
                 </div>
-            @empty
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <div class="paper-empty-state text-center d-flex flex-column align-items-center justify-content-center">
 
                     <div class="empty-state-icon">
@@ -177,12 +179,12 @@
                     </a>
 
                 </div>
-            @endforelse
+            <?php endif; ?>
         </div>
     </div>
 
-    @push('scripts')
-        {{-- Javascript remains the same --}}
+    <?php $__env->startPush('scripts'); ?>
+        
         <script>
             async function toggleStar(paperId) {
                 const btn = document.getElementById(`star-btn-${paperId}`);
@@ -194,7 +196,7 @@
                     const response = await fetch(`/papers/${paperId}/star`, {
                         method: 'POST',
                         headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
                             'Content-Type': 'application/json',
                             'Accept': 'application/json'
                         },
@@ -219,6 +221,8 @@
                 }
             }
         </script>
-    @endpush
+    <?php $__env->stopPush(); ?>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Tempat Coding\web programming\andrpaid\resources\views/pages/stars.blade.php ENDPATH**/ ?>

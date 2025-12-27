@@ -20,9 +20,16 @@ class PaperController extends Controller
 
         $papers = Paper::where("lecturer_id",$lecturer->id)->latest()->get();
 
+        $paperTypes = PaperType::all();
+
+        $researchFields = ResearchField::all();
+
         return view("pages.papers", [
+            "navbarProfileData" => ProfileController::getNavbarProfileData($profileId),
             "user" => $user,
             "papers" => $papers,
+            "paperTypes"=> $paperTypes,
+            "researchFields"=> $researchFields,
         ]);
     }
 
@@ -93,6 +100,19 @@ class PaperController extends Controller
         return response()->json([
             'is_starred' => $isStarred,
             'new_count' => $newCount,
+        ]);
+    }
+
+    public function indexStars($profileId){
+        $user = User::where("profileId",$profileId)->first();
+        $user->load('paperStars.paper');
+
+        $papers = $user->paperStars->pluck('paper');
+
+        return view("pages.stars", [
+            "navbarProfileData" => ProfileController::getNavbarProfileData($profileId),
+            "user" => $user,
+            "papers" => $papers,
         ]);
     }
 }

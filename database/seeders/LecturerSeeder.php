@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Lecturer;
+use App\Models\Paper;
 use App\Models\Province;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -24,9 +25,19 @@ class LecturerSeeder extends Seeder
 
         $province = Province::where('provinceId', "banten" )->first();
 
-        Lecturer::create([
+        $lecturer = Lecturer::create([
             "user_id"=> $user->id,
             "province_id" => $province->id
         ]);
+
+        Paper::factory()->count(10)->create([
+            'lecturer_id' => $lecturer->id,
+        ]);
+
+        // 3 lecturers with 2 papers each
+        Lecturer::factory()->count(3)->has(
+            Paper::factory()->count(2),
+            'papers'
+        )->create();
     }
 }

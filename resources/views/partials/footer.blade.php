@@ -21,47 +21,55 @@
 <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
 
-        <div class="modal-content sophisticated-card border-0">
+        <div class="modal-content">
 
-            <div class="card-gradient-strip"></div>
+            <div class="horizon-card">
 
-            <div class="p-4 pt-3">
-                <div class="d-flex justify-content-between align-items-start mb-4">
-                    <div>
-                        <h5 class="fw-bold mb-1 text-dark" style="letter-spacing: -0.5px;">Feedback & Ideas</h5>
-                        <p class="text-muted small mb-0">Help us improve the AndRPaid experience.</p>
+                <div class="horizon-sidebar">
+                    <div class="horizon-sidebar-icon">
+                        <i class="bi bi-chat-heart-fill"></i>
                     </div>
-                    <button type="button" class="btn-close-sophisticated" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="bi bi-x-lg"></i>
-                    </button>
+                    <div>
+                        <h4 class="horizon-sidebar-title">We Listen</h4>
+                        <p class="horizon-sidebar-text">Your feedback directly shapes the future of AndRPaid.</p>
+                    </div>
                 </div>
 
-                <form action="/feedback/submit" method="POST">
-                    @csrf
+                <div class="horizon-main">
 
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-uppercase text-secondary ls-1">Category</label>
-                        <select class="form-select input-velvet" name="type" required>
-                            <option value="" selected disabled>Select...</option>
-                            <option value="bug">Bug Report</option>
-                            <option value="feature">New Feature</option>
-                            <option value="ui">Design / UI</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
+                    <button type="button" class="horizon-close-btn" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
 
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-uppercase text-secondary ls-1">Description</label>
-                        <textarea class="form-control input-velvet" name="description" rows="4" placeholder="What's on your mind? Be specific!" required></textarea>
-                    </div>
+                    <h3 class="fw-bold text-dark mb-4">Share Thoughts</h3>
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-sophisticated-primary">
-                            Submit Feedback
+                    <form action="/feedback/submit" method="POST">
+                        @csrf
+
+                        <div class="mb-3">
+                            <label class="horizon-label">Topic</label>
+                            <select class="horizon-input" name="type" required>
+                                <option value="" selected disabled>Select...</option>
+                                <option value="bug">Report a Bug</option>
+                                <option value="feature">Request Feature</option>
+                                <option value="ui">UI Polish</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="horizon-label">Message</label>
+                            <textarea class="horizon-input" name="description" rows="3"
+                                placeholder="What's on your mind?" required></textarea>
+                        </div>
+
+                        <button type="submit" class="horizon-submit-btn">
+                            Send Feedback
                         </button>
-                    </div>
-                </form>
+                    </form>
+
+                </div>
             </div>
-        </div>
+            </div>
     </div>
 </div>

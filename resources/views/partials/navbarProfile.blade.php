@@ -3,27 +3,27 @@
         <ul class="nav profile-tabs">
 
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('*/overview') ? 'active' : '' }}" href="#">
+                <a class="nav-link {{ request()->is('*/overview') ? 'active' : '' }}" href="/{{ $navbarProfileData["profileId"] }}/overview">
                     <i class="bi bi-book me-2"></i>Overview
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('*/papers') ? 'active' : '' }}" href="#">
+                <a class="nav-link {{ request()->is('*/papers') ? 'active' : '' }}" href="/{{ $navbarProfileData["profileId"] }}/papers">
                     <i class="bi bi-journal-code me-2"></i>Papers
-                    <span class="badge-counter">12</span>
+                    <span class="badge-counter">{{ $navbarProfileData["papersCount"] }}</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('*/stars') ? 'active' : '' }}" href="#">
+                <a class="nav-link {{ request()->is('*/stars') ? 'active' : '' }}" href="/{{ $navbarProfileData["profileId"] }}/stars">
                     <i class="bi bi-star me-2"></i>Stars
-                    <span class="badge-counter">8</span>
+                    <span class="badge-counter" id="navbarProfileStarsCount">{{ $navbarProfileData["starsCount"] }}</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('*/followers') ? 'active' : '' }}" href="#">
+                <a class="nav-link {{ request()->is('*/followers') ? 'active' : '' }}" href="/{{ $navbarProfileData["profileId"] }}/followers">
                     <i class="bi bi-people me-2"></i>Followers
                     <span class="badge-counter">1.2k</span>
                 </a>

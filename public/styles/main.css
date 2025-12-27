@@ -186,8 +186,6 @@ body {
 
 
 /* --- Modal System --- */
-/* 1. DEFINE THE THEMES  */
-
 /* Success Theme (Green) */
 .type-success {
     --theme-color: #28a745;
@@ -325,164 +323,206 @@ body {
 }
 
 
-/* --- Sophisticated Card System --- */
-/* 1. The Container (Flexible) */
-.sophisticated-card {
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    position: relative;
-    overflow: hidden;
+/* =========================================
+   THEME: HORIZON SPLIT (Light & Clean)
+   ========================================= */
+
+/* 1. RESET: Hide default Bootstrap styles */
+#feedbackModal .modal-content {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
-/* 2. The Decorative Gradient Strip */
-.card-gradient-strip {
-    height: 6px;
-    width: 100%;
-    background: linear-gradient(90deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+#feedbackModal .modal-dialog {
+    max-width: 700px; /* Wider to accommodate the split layout */
 }
 
-/* 3. The "Velvet" Inputs */
-.input-velvet {
-    background-color: #f3f4f6;
-    border: 2px solid transparent;
-    border-radius: 12px;
-    padding: 12px 16px;
-    color: #1f2937;
-    font-size: 0.95rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    resize: none;
-}
-
-/* Input Focus State */
-.input-velvet:focus {
+/* 2. LAYOUT: The Main Flex Container */
+.horizon-card {
     background-color: #ffffff;
-    border-color: #a855f7;
-    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.1);
-    outline: none;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); /* Soft shadow */
+    display: flex; /* This creates the split layout */
+    overflow: hidden; /* Keeps the sidebar inside the rounded corners */
+    min-height: 400px;
 }
 
-.input-velvet.file-input-fix {
-    padding: 9px 12px;
-    line-height: 1.5;
+/* 3. LEFT PANEL: The Visual Sidebar */
+.horizon-sidebar {
+    width: 35%; /* Takes up 35% of the width */
+    background: linear-gradient(180deg, #e0e7ff 0%, #fae8ff 100%); /* Soft Pastel Gradient */
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-right: 1px solid #f1f5f9;
 }
 
-/* Style the "Choose File" button */
-.input-velvet::file-selector-button {
-    background-color: #e5e7eb;
-    color: #374151;
-    border: none;
-    padding: 4px 12px;
-    border-radius: 6px;
-    margin-right: 12px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: all 0.2s;
-    cursor: pointer;
-}
-
-.input-velvet::file-selector-button:hover {
-    background-color: #d1d5db;
-    color: #111827;
-}
-
-/* Custom Dropdown Arrow */
-select.input-velvet {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%234b5563' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
-    background-position: right 1rem center;
-    background-size: 16px 12px;
-}
-
-/* 4. The "Sophisticated" Button */
-.btn-sophisticated-primary {
-    background: #111827;
-    color: #ffffff;
-    font-weight: 600;
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
-    letter-spacing: 0.5px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.btn-sophisticated-primary:hover {
-    background: #000000;
-    color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
-}
-
-/* 5. Custom Close Button */
-.btn-close-sophisticated {
-    background: transparent;
-    border: none;
-    color: #9ca3af;
-    width: 32px;
-    height: 32px;
+.horizon-sidebar-icon {
+    font-size: 3rem;
+    color: #4f46e5; /* Indigo */
+    margin-bottom: 15px;
+    background: #ffffff;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.horizon-sidebar-title {
     font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
 }
 
-.btn-close-sophisticated:hover {
-    background-color: #f3f4f6;
-    color: #111827;
-    transform: rotate(90deg);
+.horizon-sidebar-text {
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.5;
 }
 
-/* 6. Typography Utility */
-.ls-1 {
+/* 4. RIGHT PANEL: The Form Area */
+.horizon-main {
+    flex: 1; /* Takes up the remaining space */
+    padding: 40px;
+    position: relative;
+}
+
+/* 5. INPUTS: Clean & Light */
+.horizon-input {
+    background-color: #f8fafc; /* Very light grey */
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    color: #334155;
+    width: 100%;
+    transition: all 0.2s;
+    outline: none;
+    margin-bottom: 15px;
+}
+
+.horizon-input:focus {
+    background-color: #ffffff;
+    border-color: #c7d2fe; /* Soft Indigo Border */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+/* Select Arrow Fix */
+select.horizon-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 14px 10px;
+}
+
+/* 6. LABELS */
+.horizon-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
     letter-spacing: 0.05em;
+    color: #94a3b8;
+    margin-bottom: 6px;
 }
 
-/* 7. Modal Backdrop Blur */
-.modal-backdrop.show {
-    opacity: 0.5;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+/* 7. BUTTONS */
+.horizon-submit-btn {
+    background-color: #1e293b; /* Dark Navy for contrast */
+    color: white;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.horizon-submit-btn:hover {
+    background-color: #0f172a;
+    transform: translateY(-2px);
+}
+
+.horizon-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    color: #cbd5e1;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.horizon-close-btn:hover {
+    color: #ef4444; /* Red on hover */
+}
+
+/* MOBILE FIX: Stack columns on small screens */
+@media (max-width: 768px) {
+    .horizon-card {
+        flex-direction: column;
+    }
+    .horizon-sidebar {
+        width: 100%;
+        padding: 20px;
+        flex-direction: row;
+        gap: 20px;
+        text-align: left;
+    }
+    .horizon-sidebar-icon {
+        margin-bottom: 0;
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
 }
 
 
-/* --- Profile Sub-Navbar (GitHub Style) --- */
+/* --- Profile Sub-Navbar  --- */
 
 .profile-subnav {
-    background-color: #161b22; /* Matches your main navbar background */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtle divider */
-    padding-top: 1rem; /* Space from the main navbar */
-    z-index: 990; /* Slightly lower than main navbar (1020+) */
+    background-color: #161b22;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
+    z-index: 990;
 }
 
-/* THE STICKY MAGIC:
-   Assuming your main navbar is approx 70px tall.
-   We stick this one 70px from the top so it sits UNDER the main one.
-*/
 .sticky-subnav {
     position: -webkit-sticky;
     position: sticky;
-    top: 68px; /* Adjust this number based on your actual Main Navbar height */
+    top: 68px;
 }
 
 /* The Tab Container */
 .profile-tabs {
     display: flex;
     gap: 8px;
-    overflow-x: auto; /* Allows scrolling on small mobile screens */
+    overflow-x: auto;
     flex-wrap: nowrap;
 }
 
 /* The Links (Tabs) */
 .profile-tabs .nav-link {
-    color: #8b949e; /* Muted Text */
+    color: #8b949e;
     font-size: 0.95rem;
     padding: 8px 16px 12px 16px;
     background: transparent;
     border: none;
-    border-bottom: 2px solid transparent; /* Invisible border by default */
-    border-radius: 6px 6px 0 0; /* Rounded top corners */
+    border-bottom: 2px solid transparent;
+    border-radius: 6px 6px 0 0;
     transition: all 0.2s ease;
     white-space: nowrap;
     display: flex;
@@ -496,25 +536,25 @@ select.input-velvet {
     border-bottom-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Active State (The Green Line) */
+/* Active State */
 .profile-tabs .nav-link.active {
-    color: #ffffff; /* Bright White Text */
+    color: #ffffff;
     font-weight: 600;
-    border-bottom-color: #28a745; /* YOUR BRAND GREEN */
+    border-bottom-color: #28a745;
 }
 
 /* The Icons */
 .profile-tabs .nav-link i {
     font-size: 1rem;
-    color: #6e7681; /* Dimmed icon */
+    color: #6e7681;
 }
 .profile-tabs .nav-link.active i {
-    color: #ffffff; /* Bright icon when active */
+    color: #ffffff;
 }
 
-/* The Counter Badge (e.g., "12") */
+/* The Counter Badge */
 .badge-counter {
-    background-color: rgba(110, 118, 129, 0.4); /* Dark gray pill */
+    background-color: rgba(110, 118, 129, 0.4);
     color: #e6edf3;
     font-size: 0.75rem;
     font-weight: 500;
@@ -523,6 +563,6 @@ select.input-velvet {
     margin-left: 8px;
 }
 .profile-tabs .nav-link.active .badge-counter {
-    background-color: #28a745; /* Green pill when active */
+    background-color: #28a745;
     color: white;
 }
