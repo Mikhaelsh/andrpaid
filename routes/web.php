@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PaperController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function () {
@@ -27,7 +28,19 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class,'index'])->name("dashboard");
 
-    Route::post("/logout", [LoginController::class,"logoutUser"] );
+    Route::post("/logout", [LoginController::class,"logoutUser"]);
+
+    Route::prefix("/settings")->group(function(){
+        Route::get("/", [SettingController::class,"index"]);
+
+        Route::post("/update-public-profile", [SettingController::class,"updatePublicProfile"]);
+
+        Route::post("/update-email", [SettingController::class,"updateEmail"]);
+
+        Route::post("/update-password", [SettingController::class,"updatePassword"]);
+
+        Route::post("/delete-account", [SettingController::class,"deleteAccount"]);
+    });
 
     Route::prefix("/{profileId}")->group(function(){
         Route::get("/papers", [PaperController::class,"indexPapers"]);

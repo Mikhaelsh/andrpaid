@@ -43,12 +43,21 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'latest_password_updated_at' => 'datetime',
         ];
     }
 
     public function uniqueIds()
     {
         return ['profileId'];
+    }
+
+    public function isLecturer(){
+        return $this->lecturer !== null;
+    }
+
+    public function isUniversity(){
+        return $this->university !== null;
     }
 
     public function lecturer(){

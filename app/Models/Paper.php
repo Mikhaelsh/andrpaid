@@ -11,6 +11,8 @@ class Paper extends Model
 
     protected $guarded = ["id"];
 
+    protected $with = ["paperStars"];
+
     public function uniqueIds()
     {
         return ['paperId'];

@@ -322,12 +322,38 @@ namespace App\Models {
     /**
      * App\Models\Paper
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property mixed $paper_type_id
+     * @property mixed $lecturer_id
+     * @property string|null $originalFilename
+     * @property string|null $filePath
+     * @property string|null $externalLink
+     * @property string $status
+     * @property string $visibility
+     * @property string|null $description
+     * @property string $title
+     * @property string $paperId
+     * @property int $id
      * @property-read \App\Models\PaperType $paperType
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ResearchField> $researchFields
      * @property-read int|null $researchFields_count
      * @property-read \App\Models\Lecturer $lecturer
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PaperStar> $paperStars
      * @property-read int|null $paperStars_count
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper wherePaperid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereTitle($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereDescription($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereVisibility($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereStatus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereExternallink($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereFilepath($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereOriginalfilename($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereLecturerId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper wherePaperTypeId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper query()
@@ -2826,6 +2852,7 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
+     * @property \Illuminate\Support\Carbon $latest_password_updated_at
      * @property string $password
      * @property string $profileId
      * @property string|null $description
@@ -2844,6 +2871,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereDescription($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereProfileid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePassword($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereLatestPasswordUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User newModelQuery()
