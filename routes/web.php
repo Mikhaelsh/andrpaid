@@ -36,6 +36,10 @@ Route::middleware('auth')->group(function () {
 
         Route::post("/update-public-profile", [SettingController::class,"updatePublicProfile"]);
 
+        Route::post("/request-affiliation", [SettingController::class,"requestAffiliation"]);
+
+        Route::post("/update-interests", [SettingController::class,"updateInterests"]);
+
         Route::post("/update-email", [SettingController::class,"updateEmail"]);
 
         Route::post("/update-password", [SettingController::class,"updatePassword"]);

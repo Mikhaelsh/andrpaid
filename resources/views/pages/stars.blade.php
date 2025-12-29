@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-{{-- 1. CHANGED: Title --}}
 @section('title', 'Stars')
 
 @section('additionalCSS')
@@ -12,7 +11,6 @@
 
     <div style="background-color: #0d1117; padding-top: 2rem;">
         <div class="container text-white pb-3">
-            {{-- 2. CHANGED: Header Text --}}
             <h3>{{ $user->name }}'s Starred Papers</h3>
             <p>{{ $papers->count() ?? '0' }} Starred Paper{{ $papers->count() == 1 ? '' : 's' }}</p>
         </div>
@@ -25,9 +23,10 @@
             <div class="paper-showcase-control-bar d-flex flex-grow-1 gap-2 w-90 p-2">
 
                 <div class="position-relative flex-grow-1">
-                    <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary opacity-75"></i>
-                    <input type="text" class="form-control paper-showcase-search-input ps-5"
-                        placeholder="Search {{ $user->name }}'s' starred papers...">
+                    <i
+                        class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary opacity-75"></i>
+                    <input type="text" id="clientSearchInput" class="form-control paper-showcase-search-input ps-5"
+                        placeholder="Search starred titles or authors..." name="search" value="{{ request('search') }}">
                 </div>
 
                 <button class="btn paper-showcase-filter-trigger d-flex align-items-center gap-2" type="button"
@@ -46,35 +45,104 @@
             </div>
 
             <div class="offcanvas-body p-4">
-                <form>
+                <form id="filterForm" action="{{ url()->current() }}" method="GET">
+
                     <div class="mb-4">
-                        <label class="filter-section-label">Paper Type</label>
+                        <label class="filter-section-label fw-bold mb-2">Sort By</label>
+                        <select class="form-select filter-modern-select" name="sort">
+                            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest First</option>
+                            <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest First</option>
+                            <option value="stars" {{ request('sort') == 'stars' ? 'selected' : '' }}>Most Stars</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="filter-section-label fw-bold mb-2">Status</label>
                         <div class="d-flex flex-wrap gap-2">
-                            <input type="checkbox" class="btn-check" id="type-journal" checked>
-                            <label class="btn filter-chip" for="type-journal">Journal Article</label>
-                            <input type="checkbox" class="btn-check" id="type-conf">
-                            <label class="btn filter-chip" for="type-conf">Conference</label>
-                            <input type="checkbox" class="btn-check" id="type-thesis">
-                            <label class="btn filter-chip" for="type-thesis">Thesis</label>
+                            <input type="checkbox" class="btn-check" id="status-draft" name="status[]" value="draft"
+                                {{ in_array('draft', request('status', [])) ? 'checked' : '' }}>
+                            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="status-draft">
+                                <i class="bi bi-pencil-square me-1"></i> Draft
+                            </label>
+
+                            <input type="checkbox" class="btn-check" id="status-finalized" name="status[]" value="finalized"
+                                {{ in_array('finalized', request('status', [])) ? 'checked' : '' }}>
+                            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="status-finalized">
+                                <i class="bi bi-check-circle-fill me-1"></i> Finalized
+                            </label>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="filter-section-label">Sort By</label>
-                        <select class="form-select filter-modern-select">
-                            <option selected>Newest First</option>
-                            <option>Oldest First</option>
-                            <option>Most Stars</option>
-                        </select>
+                        <label class="filter-section-label fw-bold mb-2">Visibility</label>
+                        <div class="d-flex flex-wrap gap-2">
+                            <input type="checkbox" class="btn-check" id="vis-public" name="visibility[]" value="public"
+                                {{ in_array('public', request('visibility', [])) ? 'checked' : '' }}>
+                            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="vis-public">
+                                <i class="bi bi-globe-americas me-1"></i> Public
+                            </label>
+
+                            <input type="checkbox" class="btn-check" id="vis-private" name="visibility[]" value="private"
+                                {{ in_array('private', request('visibility', [])) ? 'checked' : '' }}>
+                            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="vis-private">
+                                <i class="bi bi-lock-fill me-1"></i> Private
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="filter-section-label fw-bold mb-2">Open Collaboration</label>
+                        <div class="d-flex flex-wrap gap-2">
+                            <input type="checkbox" class="btn-check" id="collab-yes" name="collab[]" value="1"
+                                {{ in_array('1', request('collab', [])) ? 'checked' : '' }}>
+                            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="collab-yes">Yes</label>
+
+                            <input type="checkbox" class="btn-check" id="collab-no" name="collab[]" value="0"
+                                {{ in_array('0', request('collab', [])) ? 'checked' : '' }}>
+                            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="collab-no">No</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="filter-section-label fw-bold mb-2">Paper Type</label>
+                        <div class="multi-select-wrapper" id="paper-type-wrapper">
+                            <div class="multi-select-box">
+                                <input type="text" class="search-input-tag" placeholder="Search types..."
+                                    autocomplete="off">
+                            </div>
+                            <div class="multi-select-dropdown"></div>
+                            <div class="hidden-inputs"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="filter-section-label fw-bold mb-2">Research Field</label>
+                        <div class="multi-select-wrapper" id="research-field-wrapper">
+                            <div class="multi-select-box">
+                                <input type="text" class="search-input-tag" placeholder="Search fields..."
+                                    autocomplete="off">
+                            </div>
+                            <div class="multi-select-dropdown"></div>
+                            <div class="hidden-inputs"></div>
+                        </div>
                     </div>
                 </form>
             </div>
 
+            <script>
+                window.paperTypesData = @json($paperTypes->map(fn($t) => ['id' => $t->paperTypeId, 'name' => $t->name]));
+                window.researchFieldsData = @json($researchFields->map(fn($f) => ['id' => $f->researchFieldId, 'name' => $f->name]));
+            </script>
+
             <div class="offcanvas-footer p-3 border-top bg-light">
                 <div class="d-flex gap-2">
-                    <button class="btn btn-light flex-grow-1 border fw-bold" data-bs-dismiss="offcanvas">Clear</button>
-                    <button class="btn paper-showcase-create-action flex-grow-1 w-100 justify-content-center"
-                        data-bs-dismiss="offcanvas">
+                    <a href="{{ url()->current() }}"
+                        class="btn btn-light flex-grow-1 border fw-bold text-decoration-none text-center pt-2">
+                        Clear
+                    </a>
+                    <button type="button"
+                        class="btn paper-showcase-create-action flex-grow-1 w-100 justify-content-center"
+                        onclick="document.getElementById('filterForm').submit();">
                         Apply Filters
                     </button>
                 </div>
@@ -101,6 +169,13 @@
                                 <span class="paper-status-badge {{ $paper->status }}">
                                     <i class="bi bi-check-circle-fill me-1"></i> {{ $paper->status }}
                                 </span>
+
+                                @if ($paper->openCollaboration)
+                                    <span class="paper-status-badge collab-open"
+                                        title="This author is looking for collaborators">
+                                        <i class="bi bi-people-fill me-1"></i> Open Collab
+                                    </span>
+                                @endif
                             </div>
 
                             <p class="paper-showcase-description mb-1">
@@ -123,6 +198,18 @@
                                         class="paper-type-pill {{ Str::replace('_', '-', $paper->paperType->paperTypeId) }} d-block w-100">
                                         <span class="dot"></span> {{ $paper->paperType->name }}
                                     </span>
+                                </div>
+
+                                <div class="col-auto position-relative z-2">
+                                    <a href="/{{ $paper->lecturer->user->profileId }}/papers"
+                                        class="text-decoration-none author-hover-link"
+                                        title="View all papers by {{ $paper->lecturer->user->name }}">
+
+                                        <span class="paper-meta-text fw-medium">
+                                            <i class="bi bi-person-circle me-1"></i>
+                                            {{ $paper->lecturer->user->name }}
+                                        </span>
+                                    </a>
                                 </div>
 
                                 <div class="col-auto">
@@ -159,30 +246,188 @@
                 </div>
             @empty
                 <div class="paper-empty-state text-center d-flex flex-column align-items-center justify-content-center">
-
                     <div class="empty-state-icon">
                         <i class="bi bi-star"></i>
                     </div>
-
                     <h4 class="fw-bold text-dark mb-2">No Starred Papers Yet</h4>
-
                     <p class="text-muted mb-4 col-md-8 mx-auto" style="font-size: 0.95rem; line-height: 1.6;">
-                        You haven't starred any papers yet.
-                        Browse the repository to find research you want to save for later access.
+                        You haven't starred any papers yet (or no papers match your filters).
                     </p>
-
                     <a href="/" class="btn paper-showcase-create-action d-flex align-items-center gap-2">
                         <i class="bi bi-compass"></i>
                         Explore Papers
                     </a>
-
                 </div>
             @endforelse
+
+            <div id="no-search-results" class="text-center py-5 d-none">
+                <div class="text-muted opacity-50 mb-2">
+                    <i class="bi bi-search" style="font-size: 3rem;"></i>
+                </div>
+                <h5 class="fw-bold text-muted">No matching papers found</h5>
+                <p class="text-muted small">Try adjusting your search terms.</p>
+            </div>
         </div>
     </div>
 
     @push('scripts')
-        {{-- Javascript remains the same --}}
+        {{-- Client Side Search Logic --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const searchInput = document.getElementById('clientSearchInput');
+                const paperCards = document.querySelectorAll('.paper-showcase-card');
+                const noResultsMsg = document.getElementById('no-search-results');
+
+                if (searchInput && paperCards.length > 0) {
+                    searchInput.addEventListener('input', function(e) {
+                        const query = e.target.value.toLowerCase().trim();
+                        let visibleCount = 0;
+
+                        paperCards.forEach(card => {
+                            const titleEl = card.querySelector('.paper-showcase-title');
+                            const titleText = titleEl ? titleEl.innerText.toLowerCase() : '';
+
+                            const authorEl = card.querySelector('.author-hover-link');
+                            const authorText = authorEl ? authorEl.innerText.toLowerCase() : '';
+
+                            if (titleText.includes(query) || authorText.includes(query)) {
+                                card.classList.remove('d-none');
+                                visibleCount++;
+                            } else {
+                                card.classList.add('d-none');
+                            }
+                        });
+
+                        if (visibleCount === 0) {
+                            noResultsMsg.classList.remove('d-none');
+                        } else {
+                            noResultsMsg.classList.add('d-none');
+                        }
+                    });
+                }
+            });
+        </script>
+
+        {{-- Multi-Select Dropdown Logic --}}
+        <script type="module">
+            document.addEventListener('DOMContentLoaded', function() {
+                function initMultiSelect(wrapperId, data, inputName) {
+                    const wrapper = document.getElementById(wrapperId);
+                    if (!wrapper) return;
+
+                    const visualBox = wrapper.querySelector('.multi-select-box');
+                    const searchInput = wrapper.querySelector('.search-input-tag');
+                    const dropdown = wrapper.querySelector('.multi-select-dropdown');
+                    const hiddenContainer = wrapper.querySelector('.hidden-inputs');
+
+                    let selectedIds = [];
+
+                    renderDropdown(data);
+
+                    visualBox.addEventListener('click', () => {
+                        searchInput.focus();
+                        dropdown.classList.add('show');
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        if (!wrapper.contains(e.target)) {
+                            dropdown.classList.remove('show');
+                        }
+                    });
+
+                    searchInput.addEventListener('input', (e) => {
+                        const query = e.target.value.toLowerCase();
+                        const filtered = data.filter(item => item.name.toLowerCase().includes(query));
+                        renderDropdown(filtered);
+                        dropdown.classList.add('show');
+                    });
+
+                    searchInput.addEventListener('keydown', (e) => {
+                        if (e.key === 'Backspace' && searchInput.value === '' && selectedIds.length > 0) {
+                            removeSelection(selectedIds[selectedIds.length - 1]);
+                        }
+                    });
+
+                    function renderDropdown(items) {
+                        dropdown.innerHTML = '';
+                        if (items.length === 0) {
+                            dropdown.innerHTML = '<div class="p-2 text-muted small text-center">No results</div>';
+                            return;
+                        }
+
+                        items.forEach(item => {
+                            const div = document.createElement('div');
+                            div.className = 'dropdown-option';
+                            div.textContent = item.name;
+
+                            if (selectedIds.includes(String(item.id))) {
+                                div.classList.add('selected');
+                            }
+
+                            div.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                addSelection(item);
+                                searchInput.value = '';
+                                searchInput.focus();
+                                renderDropdown(data);
+                            });
+
+                            dropdown.appendChild(div);
+                        });
+                    }
+
+                    function addSelection(item) {
+                        const id = String(item.id);
+                        if (selectedIds.includes(id)) return;
+                        selectedIds.push(id);
+                        updateUI();
+                    }
+
+                    function removeSelection(id) {
+                        selectedIds = selectedIds.filter(i => i !== id);
+                        updateUI();
+                    }
+
+                    function updateUI() {
+                        const existingTags = visualBox.querySelectorAll('.selected-tag');
+                        existingTags.forEach(t => t.remove());
+
+                        selectedIds.forEach(id => {
+                            const item = data.find(d => String(d.id) === id);
+                            if (item) {
+                                const tag = document.createElement('div');
+                                tag.className = 'selected-tag';
+                                tag.innerHTML = `${item.name} <span class="remove-tag">&times;</span>`;
+                                tag.querySelector('.remove-tag').addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    removeSelection(id);
+                                });
+                                visualBox.insertBefore(tag, searchInput);
+                            }
+                        });
+
+                        hiddenContainer.innerHTML = '';
+                        selectedIds.forEach(id => {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = inputName;
+                            input.value = id;
+                            hiddenContainer.appendChild(input);
+                        });
+                        renderDropdown(data);
+                    }
+                }
+
+                if (window.paperTypesData) {
+                    initMultiSelect('paper-type-wrapper', window.paperTypesData, 'paper_type_id[]');
+                }
+                if (window.researchFieldsData) {
+                    initMultiSelect('research-field-wrapper', window.researchFieldsData, 'research_field_id[]');
+                }
+            });
+        </script>
+
+        {{-- Star Toggle Logic --}}
         <script>
             async function toggleStar(paperId) {
                 const btn = document.getElementById(`star-btn-${paperId}`);
@@ -203,15 +448,8 @@
                     const data = await response.json();
 
                     if (!data.is_starred) {
-                        btn.classList.remove('btn-warning');
-                        btn.classList.add('paper-action-star-btn');
-                        icon.classList.remove('bi-star-fill');
-                        icon.classList.add('bi-star');
-                        navbarProfileStarsCount.innerText = parseInt(navbarProfileStarsCount.innerText) - 1;
-
                         window.location.reload();
                     }
-
                     countSpan.innerText = data.new_count;
 
                 } catch (error) {
@@ -220,5 +458,4 @@
             }
         </script>
     @endpush
-
 @endsection

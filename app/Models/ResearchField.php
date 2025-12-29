@@ -11,4 +11,8 @@ class ResearchField extends Model
     public function papers(){
         return $this->belongsToMany(Paper::class);
     }
+
+    public function lecturers(){
+        return $this->belongsToMany(Lecturer::class);
+    }
 }

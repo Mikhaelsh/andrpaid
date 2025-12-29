@@ -22,4 +22,12 @@ class Lecturer extends Model
     public function papers(){
         return $this->hasMany(Paper::class);
     }
+
+    public function affiliation(){
+        return $this->hasOne(Affiliation::class);
+    }
+
+    public function researchFields(){
+        return $this->belongsToMany(ResearchField::class);
+    }
 }

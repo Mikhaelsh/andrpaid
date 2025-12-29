@@ -27,6 +27,12 @@
                         <i class="bi bi-search me-1"></i> Find
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link px-3 {{ request()->is('messages') ? 'active' : '' }}" href="/messages">
+                        <i class="bi bi-chat-dots-fill me-1"></i> Messages
+                    </a>
+                </li>
             </ul>
 
             <ul class="navbar-nav ms-auto align-items-center">

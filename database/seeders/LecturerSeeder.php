@@ -30,7 +30,7 @@ class LecturerSeeder extends Seeder
             "province_id" => $province->id
         ]);
 
-        Paper::factory()->count(10)->create([
+        Paper::factory()->count(20)->create([
             'lecturer_id' => $lecturer->id,
         ]);
 

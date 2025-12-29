@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('filePath')->nullable(); //for file
             $table->string('originalFilename')->nullable();
 
+            $table->boolean("openCollaboration");
+
             $table->foreignId('lecturer_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('paper_type_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();

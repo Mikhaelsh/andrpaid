@@ -13,23 +13,68 @@ use Illuminate\Support\Facades\Auth;
 
 class PaperController extends Controller
 {
-    public function indexPapers($profileId){
-        $user = User::where("profileId",$profileId)->first();
+    public function indexPapers(Request $request, $profileId){
+        $user = User::where("profileId", $profileId)->first();
+        $lecturer = Lecturer::where("user_id", $user->id)->first();
 
-        $lecturer = Lecturer::where("user_id",$user->id)->first();
+        $query = Paper::where("lecturer_id", $lecturer->id);
 
-        $papers = Paper::where("lecturer_id",$lecturer->id)->latest()->get();
+        // Status (Draft / Finalized)
+        if ($request->filled('status')) {
+            $query->whereIn('status', $request->status);
+        }
+
+        // Visibility (Public / Private)
+        if ($request->filled('visibility')) {
+            $query->whereIn('visibility', $request->visibility);
+        }
+
+        // Open Collaboration (1 or 0)
+        if ($request->filled('collab')) {
+            $query->whereIn('openCollaboration', $request->collab);
+        }
+
+        // Paper Type
+        if ($request->filled('paper_type_id')) {
+            $query->whereHas('paperType', function ($q) use ($request) {
+                $q->whereIn('paperTypeId', $request->paper_type_id);
+            });
+        }
+
+        // Research Field
+        if ($request->filled('research_field_id')) {
+            $query->whereHas('researchFields', function ($q) use ($request) {
+                $q->whereIn('researchFieldId', $request->research_field_id);
+            });
+        }
+
+        // SORTING
+        $sort = $request->input('sort', 'newest');
+
+        switch ($sort) {
+            case 'oldest':
+                $query->oldest();
+                break;
+            case 'stars':
+                $query->withCount('paperStars')->orderByDesc('paper_stars_count');
+                break;
+            case 'newest':
+            default:
+                $query->latest();
+                break;
+        }
+
+        $papers = $query->with(['paperType', 'researchFields', 'paperStars', 'lecturer.user'])->get();
 
         $paperTypes = PaperType::all();
-
         $researchFields = ResearchField::all();
 
         return view("pages.papers", [
             "navbarProfileData" => ProfileController::getNavbarProfileData($profileId),
             "user" => $user,
             "papers" => $papers,
-            "paperTypes"=> $paperTypes,
-            "researchFields"=> $researchFields,
+            "paperTypes" => $paperTypes,
+            "researchFields" => $researchFields,
         ]);
     }
 
@@ -103,16 +148,76 @@ class PaperController extends Controller
         ]);
     }
 
-    public function indexStars($profileId){
-        $user = User::where("profileId",$profileId)->first();
-        $user->load('paperStars.paper');
+    public function indexStars(Request $request, $profileId){
+        $user = User::where("profileId", $profileId)->firstOrFail();
 
-        $papers = $user->paperStars->pluck('paper');
+        $query = Paper::whereHas('paperStars', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        });
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Status
+        if ($request->filled('status')) {
+            $query->whereIn('status', (array) $request->status);
+        }
+
+        // Visibility
+        if ($request->filled('visibility')) {
+            $query->whereIn('visibility', (array) $request->visibility);
+        }
+
+        // Open Collaboration
+        if ($request->filled('collab')) {
+            $query->whereIn('openCollaboration', (array) $request->collab);
+        }
+
+        // Paper Type
+        if ($request->filled('paper_type_id')) {
+            $query->whereHas('paperType', function ($q) use ($request) {
+                $q->whereIn('paperTypeId', (array) $request->paper_type_id);
+            });
+        }
+
+        // Research Field
+        if ($request->filled('research_field_id')) {
+            $query->whereHas('researchFields', function ($q) use ($request) {
+                $q->whereIn('researchFieldId', (array) $request->research_field_id);
+            });
+        }
+
+        // Sorting
+        $sort = $request->input('sort', 'newest');
+        switch ($sort) {
+            case 'oldest':
+                $query->oldest();
+                break;
+            case 'stars':
+                $query->withCount('paperStars')->orderByDesc('paper_stars_count');
+                break;
+            case 'newest':
+            default:
+                $query->latest();
+                break;
+        }
+
+        $papers = $query->with(['paperType', 'researchFields', 'paperStars', 'lecturer.user'])->get();
+
+        $paperTypes = PaperType::all();
+        $researchFields = ResearchField::all();
 
         return view("pages.stars", [
             "navbarProfileData" => ProfileController::getNavbarProfileData($profileId),
             "user" => $user,
             "papers" => $papers,
+            "paperTypes" => $paperTypes,
+            "researchFields" => $researchFields,
         ]);
     }
 }

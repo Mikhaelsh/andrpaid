@@ -42,7 +42,6 @@ body {
     scroll-margin-top: 100px;
 }
 
-/* Profile Image Wrapper */
 .profile-avatar-wrapper {
     width: 80px;
     height: 80px;
@@ -57,7 +56,6 @@ body {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* Form Controls */
 .form-label {
     color: #334155;
     font-size: 0.9rem;
@@ -68,9 +66,105 @@ body {
     box-shadow: 0 0 0 0.25rem rgba(168, 85, 247, 0.15);
 }
 
-/* Read-Only Input Styling */
 .form-control:disabled, .form-control[readonly] {
     background-color: #f1f5f9;
     opacity: 1;
     border-color: #e2e8f0;
+}
+
+.multi-select-wrapper {
+    position: relative;
+}
+
+.multi-select-box {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 6px 10px;
+    background-color: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    cursor: text;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.multi-select-box:focus-within {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.search-input-tag {
+    border: none;
+    outline: none;
+    background: transparent;
+    flex-grow: 1;
+    min-width: 80px;
+    font-size: 0.9rem;
+    padding: 2px 0;
+    color: #495057;
+}
+
+/* The selected item (Tag) */
+.selected-tag {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.selected-tag .remove-tag {
+    cursor: pointer;
+    font-size: 1.1em;
+    line-height: 0.8;
+    color: #adb5bd;
+}
+
+.selected-tag .remove-tag:hover {
+    color: #dc3545;
+}
+
+/* The Dropdown List */
+.multi-select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    z-index: 1050;
+    display: none;
+    margin-top: 4px;
+}
+
+.multi-select-dropdown.show {
+    display: block;
+}
+
+.dropdown-option {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #212529;
+}
+
+.dropdown-option:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-option.selected {
+    background-color: #e9ecef;
+    color: #adb5bd;
+    pointer-events: none;
 }

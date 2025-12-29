@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             ResearchFieldSeeder::class,
             PaperTypeSeeder::class,
             LecturerSeeder::class,
+            UniversitySeeder::class,
         ]);
     }
 }

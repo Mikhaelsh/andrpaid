@@ -15,4 +15,8 @@ class University extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    public function affiliations(){
+        return $this->hasMany(Affiliation::class);
+    }
 }

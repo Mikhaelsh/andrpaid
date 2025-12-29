@@ -42,6 +42,7 @@ class PaperFactory extends Factory
             'externalLink' => null,
             'filePath' => null,
             'originalFilename' => null,
+            'openCollaboration' => $this->faker->randomElement([true, false]),
 
             'lecturer_id' => Lecturer::factory(),
             'paper_type_id' => PaperType::inRandomOrder()->first()->id ?? 1
