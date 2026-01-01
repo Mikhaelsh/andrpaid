@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('universities', function (Blueprint $table) {
             $table->id();
+            $table->string('websiteUrl')->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('province_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();

@@ -34,15 +34,18 @@
                 </button>
             </div>
 
-            <a href="/papers/create" class="btn paper-showcase-create-action d-flex align-items-center gap-2">
-                <div class="icon-box"><i class="bi bi-plus-lg"></i></div>
-                <span>New Paper</span>
-            </a>
+            <?php if (\Illuminate\Support\Facades\Blade::check('lecturer')): ?>
+                <?php if($user->lecturer->id === Auth::user()->lecturer->id): ?>
+                    <a href="/papers/create" class="btn paper-showcase-create-action d-flex align-items-center gap-2">
+                        <div class="icon-box"><i class="bi bi-plus-lg"></i></div>
+                        <span>New Paper</span>
+                    </a>
+                <?php endif; ?>
+            <?php endif; ?>
         </div>
 
 
         <div class="offcanvas offcanvas-end paper-filter-offcanvas" tabindex="-1" id="filterOffcanvas">
-
             <div class="offcanvas-header border-bottom">
                 <h5 class="offcanvas-title fw-bold">Refine Results</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -154,16 +157,14 @@
         </div>
 
         <div class="d-flex flex-column gap-3">
-
             <?php $__empty_1 = true; $__currentLoopData = $papers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $paper): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                 <div class="paper-showcase-card p-4">
                     <div class="d-flex justify-content-between align-items-start">
-
                         <div class="d-flex flex-column gap-2 col-md-10">
-
                             <div class="d-flex align-items-center gap-2 flex-wrap">
                                 <h5 class="mb-0 fw-bold paper-showcase-title me-2">
-                                    <a href="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/overview" class="text-decoration-none stretched-link"><?php echo e($paper->title); ?></a>
+                                    <a href="/<?php echo e($paper->lecturer->user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/overview"
+                                        class="text-decoration-none stretched-link"><?php echo e($paper->title); ?></a>
                                 </h5>
 
                                 <span class="paper-status-badge <?php echo e($paper->visibility); ?>">
@@ -177,8 +178,7 @@
                                 </span>
 
                                 <?php if($paper->openCollaboration): ?>
-                                    <span class="paper-status-badge collab-open"
-                                        title="This author is looking for collaborators">
+                                    <span class="paper-status-badge collab-open" title="Looking for collaborators">
                                         <i class="bi bi-people-fill me-1"></i> Open Collab
                                     </span>
                                 <?php endif; ?>
@@ -199,7 +199,6 @@
                             </div>
 
                             <div class="row align-items-center mt-1 border-top pt-3 gy-2">
-
                                 <div class="col-5 col-md-4 col-lg-3">
                                     <span
                                         class="paper-type-pill <?php echo e(Str::replace('_', '-', $paper->paperType->paperTypeId)); ?> d-block w-100">
@@ -208,16 +207,13 @@
                                     </span>
                                 </div>
 
-                                <div class="col-auto position-relative z-2">
-                                    <a href="/<?php echo e($paper->lecturer->user->profileId); ?>/papers"
-                                        class="text-decoration-none author-hover-link"
-                                        title="View all papers by <?php echo e($paper->lecturer->user->name); ?>">
+                                <div class="col-auto position-relative z-2 d-flex align-items-center gap-2">
+                                    <img src="https://ui-avatars.com/api/?name=<?php echo e($paper->lecturer->user->name); ?>&background=random&size=20"
+                                        class="rounded-circle">
+                                    <a href="/<?php echo e($paper->lecturer->user->profileId); ?>/overview"
+                                        class="text-decoration-none author-hover-link fw-bold text-dark small">
+                                        <?php echo e($paper->lecturer->user->name); ?>
 
-                                        <span class="paper-meta-text fw-medium">
-                                            <i class="bi bi-person-circle me-1"></i>
-                                            <?php echo e($paper->lecturer->user->name); ?>
-
-                                        </span>
                                     </a>
                                 </div>
 
@@ -239,19 +235,22 @@
                             </div>
                         </div>
 
-                        <div class="position-relative z-2 ms-3">
-                            <?php
-                                $isStarred = Auth::check() && $paper->paperStars->contains('user_id', Auth::user()->id);
-                            ?>
+                        <?php if (\Illuminate\Support\Facades\Blade::check('lecturer')): ?>
+                            <div class="position-relative z-2 ms-3">
+                                <?php
+                                    $isStarred =
+                                        Auth::check() && $paper->paperStars->contains('user_id', Auth::user()->id);
+                                ?>
 
-                            <button class="btn <?php echo e($isStarred ? 'btn-warning' : 'paper-action-star-btn'); ?>"
-                                id="star-btn-<?php echo e($paper->paperId); ?>" onclick="toggleStar(`<?php echo e($paper->paperId); ?>`)"
-                                title="Star this paper">
+                                <button class="btn <?php echo e($isStarred ? 'btn-warning' : 'paper-action-star-btn'); ?>"
+                                    id="star-btn-<?php echo e($paper->paperId); ?>" onclick="toggleStar(`<?php echo e($paper->paperId); ?>`)"
+                                    title="Star this paper">
 
-                                <i class="bi <?php echo e($isStarred ? 'bi-star-fill' : 'bi-star'); ?>"
-                                    id="star-icon-<?php echo e($paper->paperId); ?>"></i>
-                            </button>
-                        </div>
+                                    <i class="bi <?php echo e($isStarred ? 'bi-star-fill' : 'bi-star'); ?>"
+                                        id="star-icon-<?php echo e($paper->paperId); ?>"></i>
+                                </button>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
@@ -261,13 +260,22 @@
                     </div>
                     <h4 class="fw-bold text-dark mb-2">No Research Papers Yet</h4>
                     <p class="text-muted mb-4 col-md-8 mx-auto" style="font-size: 0.95rem; line-height: 1.6;">
-                        It looks like you haven't created any paper repositories.
-                        Start documenting your research, manage drafts, and collaborate with another lecturer here.
+                        <?php if($user->isLecturer()): ?>
+                            It looks like you haven't created any paper repositories.
+                            Start documenting your research, manage drafts, and collaborate with another lecturer here.
+                        <?php else: ?>
+                            No publications have been uploaded by affiliated researchers yet.
+                            <?php endif; ?>
                     </p>
-                    <a href="/papers/create" class="btn paper-showcase-create-action d-flex align-items-center gap-2">
-                        <i class="bi bi-plus-lg"></i>
-                        Create New Paper Repository
-                    </a>
+
+                    <?php if (\Illuminate\Support\Facades\Blade::check('lecturer')): ?>
+                        <?php if($user->lecturer->id === Auth::user()->lecturer->id): ?>
+                            <a href="/papers/create" class="btn paper-showcase-create-action d-flex align-items-center gap-2">
+                                <i class="bi bi-plus-lg"></i>
+                                Create New Paper Repository
+                            </a>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
             <?php endif; ?>
 
@@ -495,50 +503,59 @@
     <?php $__env->stopPush(); ?>
 
 
-    <?php $__env->startPush('scripts'); ?>
-        <script>
-            async function toggleStar(paperId) {
-                const btn = document.getElementById(`star-btn-${paperId}`);
-                const icon = document.getElementById(`star-icon-${paperId}`);
-                const countSpan = document.getElementById(`star-count-${paperId}`);
-                const navbarProfileStarsCount = document.getElementById(`navbarProfileStarsCount`)
+    <?php if (\Illuminate\Support\Facades\Blade::check('lecturer')): ?>
+        <?php $__env->startPush('scripts'); ?>
+            <script>
+                async function toggleStar(paperId) {
+                    const btn = document.getElementById(`star-btn-${paperId}`);
+                    const icon = document.getElementById(`star-icon-${paperId}`);
+                    const countSpan = document.getElementById(`star-count-${paperId}`);
+                    const navbarProfileStarsCount = document.getElementById(`navbarProfileStarsCount`)
 
-                try {
-                    const response = await fetch(`/papers/${paperId}/star`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                    });
+                    const userId = "<?php echo e($user->id); ?>"
+                    const currentUserId = "<?php echo e(Auth::user()->id); ?>"
 
-                    const data = await response.json();
+                    try {
+                        const response = await fetch(`/papers/${paperId}/star`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                        });
 
-                    // Update UI based on server response
-                    if (data.is_starred) {
-                        btn.classList.remove('paper-action-star-btn');
-                        btn.classList.add('btn-warning');
-                        icon.classList.remove('bi-star');
-                        icon.classList.add('bi-star-fill');
-                        navbarProfileStarsCount.innerText = parseInt(navbarProfileStarsCount.innerText) + 1;
-                    } else {
-                        btn.classList.remove('btn-warning');
-                        btn.classList.add('paper-action-star-btn');
-                        icon.classList.remove('bi-star-fill');
-                        icon.classList.add('bi-star');
-                        navbarProfileStarsCount.innerText = parseInt(navbarProfileStarsCount.innerText) - 1;
+                        const data = await response.json();
+
+                        // Update UI based on server response
+                        if (data.is_starred) {
+                            btn.classList.remove('paper-action-star-btn');
+                            btn.classList.add('btn-warning');
+                            icon.classList.remove('bi-star');
+                            icon.classList.add('bi-star-fill');
+                            if (userId === currentUserId) {
+                                navbarProfileStarsCount.innerText = parseInt(navbarProfileStarsCount.innerText) + 1;
+                            }
+                        } else {
+                            btn.classList.remove('btn-warning');
+                            btn.classList.add('paper-action-star-btn');
+                            icon.classList.remove('bi-star-fill');
+                            icon.classList.add('bi-star');
+                            if (userId === currentUserId) {
+                                navbarProfileStarsCount.innerText = parseInt(navbarProfileStarsCount.innerText) - 1;
+                            }
+                        }
+
+                        // Update the number
+                        countSpan.innerText = data.new_count;
+
+                    } catch (error) {
+                        console.error('Error toggling star:', error);
                     }
-
-                    // Update the number
-                    countSpan.innerText = data.new_count;
-
-                } catch (error) {
-                    console.error('Error toggling star:', error);
                 }
-            }
-        </script>
-    <?php $__env->stopPush(); ?>
+            </script>
+        <?php $__env->stopPush(); ?>
+    <?php endif; ?>
 
 <?php $__env->stopSection(); ?>
 

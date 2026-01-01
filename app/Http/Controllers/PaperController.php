@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Collaboration;
-use App\Models\Lecturer;
 use App\Models\Paper;
 use App\Models\PaperStar;
 use App\Models\PaperType;
@@ -15,41 +13,49 @@ use Illuminate\Support\Facades\Auth;
 class PaperController extends Controller
 {
     public function indexPapers(Request $request, $profileId){
-        $user = User::where("profileId", $profileId)->first();
-        $lecturer = Lecturer::where("user_id", $user->id)->first();
+        $user = User::where("profileId", $profileId)->with(['lecturer', 'university'])->firstOrFail();
 
-        $query = Paper::where("lecturer_id", $lecturer->id);
+        if ($user->university) {
+            $universityId = $user->university->id;
 
-        // Status (Draft / Finalized)
+            $query = Paper::whereHas('lecturer.affiliation', function ($q) use ($universityId) {
+                $q->where('university_id', $universityId);
+            });
+
+            $navbarProfileData = ProfileController::getNavbarProfileUniversityData($profileId);
+
+        } elseif ($user->lecturer) {
+            $query = Paper::where("lecturer_id", $user->lecturer->id);
+
+            $navbarProfileData = ProfileController::getNavbarProfileLecturerData($profileId);
+
+        }
+
+
         if ($request->filled('status')) {
             $query->whereIn('status', $request->status);
         }
 
-        // Visibility (Public / Private)
         if ($request->filled('visibility')) {
             $query->whereIn('visibility', $request->visibility);
         }
 
-        // Open Collaboration (1 or 0)
         if ($request->filled('collab')) {
             $query->whereIn('openCollaboration', $request->collab);
         }
 
-        // Paper Type
         if ($request->filled('paper_type_id')) {
             $query->whereHas('paperType', function ($q) use ($request) {
                 $q->whereIn('paperTypeId', $request->paper_type_id);
             });
         }
 
-        // Research Field
         if ($request->filled('research_field_id')) {
             $query->whereHas('researchFields', function ($q) use ($request) {
                 $q->whereIn('researchFieldId', $request->research_field_id);
             });
         }
 
-        // SORTING
         $sort = $request->input('sort', 'newest');
 
         switch ($sort) {
@@ -71,7 +77,7 @@ class PaperController extends Controller
         $researchFields = ResearchField::all();
 
         return view("pages.papers", [
-            "navbarProfileData" => ProfileController::getNavbarProfileData($profileId),
+            "navbarProfileData" => $navbarProfileData,
             "user" => $user,
             "papers" => $papers,
             "paperTypes" => $paperTypes,
@@ -214,7 +220,7 @@ class PaperController extends Controller
         $researchFields = ResearchField::all();
 
         return view("pages.stars", [
-            "navbarProfileData" => ProfileController::getNavbarProfileData($profileId),
+            "navbarProfileData" => ProfileController::getNavbarProfileLecturerData($profileId),
             "user" => $user,
             "papers" => $papers,
             "paperTypes" => $paperTypes,

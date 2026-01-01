@@ -15,9 +15,11 @@
                         <a href="#profile" class="list-group-item list-group-item-action active border-0 rounded-3 mb-1">
                             <i class="bi bi-person-circle me-2"></i> Public Profile
                         </a>
-                        <a href="#academic" class="list-group-item list-group-item-action border-0 rounded-3 mb-1">
-                            <i class="bi bi-mortarboard me-2"></i> Academic Info
-                        </a>
+                        <?php if (\Illuminate\Support\Facades\Blade::check('lecturer')): ?>
+                            <a href="#academic" class="list-group-item list-group-item-action border-0 rounded-3 mb-1">
+                                <i class="bi bi-mortarboard me-2"></i> Academic Info
+                            </a>
+                        <?php endif; ?>
                         <a href="#account" class="list-group-item list-group-item-action border-0 rounded-3 mb-1">
                             <i class="bi bi-shield-lock me-2"></i> Account & Security
                         </a>
@@ -86,23 +88,42 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold">LinkedIn URL</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-white text-muted"><i class="bi bi-linkedin"></i></span>
-                                            <input type="url" class="form-control" name="linkedin_url"
-                                                placeholder="https://linkedin.com/in/..." value="<?php echo e($user->lecturer->linkedinUrl); ?>">
+                                    <?php if (\Illuminate\Support\Facades\Blade::check('lecturer')): ?>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">LinkedIn URL</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white text-muted"><i
+                                                        class="bi bi-linkedin"></i></span>
+                                                <input type="url" class="form-control" name="linkedin_url"
+                                                    placeholder="https://linkedin.com/in/..."
+                                                    value="<?php echo e($user->lecturer->linkedinUrl); ?>">
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Portfolio URL</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-white text-muted"><i class="bi bi-globe"></i></span>
-                                            <input type="url" class="form-control" name="portfolio_url"
-                                                placeholder="https://mywebsite.com" value="<?php echo e($user->lecturer->portfolioUrl); ?>">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Portfolio URL</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white text-muted"><i
+                                                        class="bi bi-globe"></i></span>
+                                                <input type="url" class="form-control" name="portfolio_url"
+                                                    placeholder="https://mywebsite.com"
+                                                    value="<?php echo e($user->lecturer->portfolioUrl); ?>">
+                                            </div>
                                         </div>
-                                    </div>
+                                    <?php endif; ?>
+
+                                    <?php if (\Illuminate\Support\Facades\Blade::check('university')): ?>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Website URL</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white text-muted"><i
+                                                        class="bi bi-globe"></i></span>
+                                                <input type="url" class="form-control" name="website_url"
+                                                    placeholder="https://university.ac.id/..."
+                                                    value="<?php echo e($user->university->websiteUrl); ?>">
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
 
                                 <div class="d-flex justify-content-end mt-4">
@@ -113,215 +134,218 @@
                     </div>
                 </section>
 
-                <section id="academic" class="mb-5 settings-section">
-                    <h3 class="fw-bold mb-4">Academic Information</h3>
+                <?php if (\Illuminate\Support\Facades\Blade::check('lecturer')): ?>
+                    <section id="academic" class="mb-5 settings-section">
+                        <h3 class="fw-bold mb-4">Academic Information</h3>
 
-                    <div class="card settings-card border-0 shadow-sm p-4">
-                        <div class="card-body">
+                        <div class="card settings-card border-0 shadow-sm p-4">
+                            <div class="card-body">
 
-                            <?php
-                                $affiliation = optional($user->lecturer)->affiliation;
-                            ?>
+                                <?php
+                                    $affiliation = optional($user->lecturer)->affiliation;
+                                ?>
 
-                            <?php if($affiliation && $affiliation->status === 'verified'): ?>
+                                <?php if($affiliation && $affiliation->status === 'verified'): ?>
 
-                                <div class="d-flex align-items-center gap-4 mb-4">
-                                    <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                        style="width: 70px; height: 70px;">
-                                        <i class="bi bi-bank2 text-primary fs-2"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="fw-bold mb-1"><?php echo e($affiliation->university->user->name); ?></h5>
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <span
-                                                class="badge bg-success bg-opacity-10 text-success border border-success px-2 rounded-pill">
-                                                <i class="bi bi-patch-check-fill me-1"></i> Verified Affiliation
-                                            </span>
+                                    <div class="d-flex align-items-center gap-4 mb-4">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                                            style="width: 70px; height: 70px;">
+                                            <i class="bi bi-bank2 text-primary fs-2"></i>
                                         </div>
-                                        <p class="text-muted small mb-0">
-                                            <strong>NIDN:</strong> <?php echo e($affiliation->nidn); ?>
+                                        <div>
+                                            <h5 class="fw-bold mb-1"><?php echo e($affiliation->university->user->name); ?></h5>
+                                            <div class="d-flex align-items-center gap-2 mb-2">
+                                                <span
+                                                    class="badge bg-success bg-opacity-10 text-success border border-success px-2 rounded-pill">
+                                                    <i class="bi bi-patch-check-fill me-1"></i> Verified Affiliation
+                                                </span>
+                                            </div>
+                                            <p class="text-muted small mb-0">
+                                                <strong>NIDN:</strong> <?php echo e($affiliation->nidn); ?>
 
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="alert alert-light border d-flex gap-3 align-items-start" role="alert">
+                                        <i class="bi bi-info-circle-fill text-secondary mt-1"></i>
+                                        <div class="small text-muted">
+                                            <strong>Affiliation Locked.</strong> Since your account is officially verified by
+                                            the university,
+                                            you cannot leave or change institutions manually. Please contact your university
+                                            administrator
+                                            if you need to revoke this status.
+                                        </div>
+                                    </div>
+                                <?php elseif($affiliation && $affiliation->status === 'pending'): ?>
+                                    <div class="text-center py-4">
+                                        <div class="mb-3 position-relative d-inline-block">
+                                            <i class="bi bi-building text-muted opacity-25" style="font-size: 4rem;"></i>
+                                            <div class="position-absolute bottom-0 end-0 bg-warning rounded-circle p-2 d-flex align-items-center justify-content-center shadow-sm"
+                                                style="width: 32px; height: 32px;">
+                                                <i class="bi bi-hourglass-split text-white small"></i>
+                                            </div>
+                                        </div>
+
+                                        <h5 class="fw-bold">Verification In Progress</h5>
+                                        <p class="text-muted col-md-8 mx-auto mb-4">
+                                            You have requested to join
+                                            <strong><?php echo e($affiliation->university->user->name ?? 'your university'); ?></strong>.
+                                            We are waiting for their confirmation.
+                                        </p>
+
+                                        <form action="/settings/cancel-affiliation" method="POST">
+                                            <?php echo csrf_field(); ?>
+                                            <button type="submit"
+                                                class="btn btn-outline-danger btn-sm px-4 fw-bold rounded-pill">
+                                                <i class="bi bi-x-lg me-1"></i> Cancel Request
+                                            </button>
+                                        </form>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="mb-4 pb-3 border-bottom">
+                                        <h5 class="fw-bold mb-1">Connect Institution</h5>
+                                        <p class="text-muted small mb-0">Link your account to unlock verified lecturer
+                                            features.
                                         </p>
                                     </div>
-                                </div>
 
-                                <div class="alert alert-light border d-flex gap-3 align-items-start" role="alert">
-                                    <i class="bi bi-info-circle-fill text-secondary mt-1"></i>
-                                    <div class="small text-muted">
-                                        <strong>Affiliation Locked.</strong> Since your account is officially verified by
-                                        the university,
-                                        you cannot leave or change institutions manually. Please contact your university
-                                        administrator
-                                        if you need to revoke this status.
-                                    </div>
-                                </div>
-                            <?php elseif($affiliation && $affiliation->status === 'pending'): ?>
-                                <div class="text-center py-4">
-                                    <div class="mb-3 position-relative d-inline-block">
-                                        <i class="bi bi-building text-muted opacity-25" style="font-size: 4rem;"></i>
-                                        <div class="position-absolute bottom-0 end-0 bg-warning rounded-circle p-2 d-flex align-items-center justify-content-center shadow-sm"
-                                            style="width: 32px; height: 32px;">
-                                            <i class="bi bi-hourglass-split text-white small"></i>
-                                        </div>
-                                    </div>
-
-                                    <h5 class="fw-bold">Verification In Progress</h5>
-                                    <p class="text-muted col-md-8 mx-auto mb-4">
-                                        You have requested to join
-                                        <strong><?php echo e($affiliation->university->user->name ?? 'your university'); ?></strong>.
-                                        We are waiting for their confirmation.
-                                    </p>
-
-                                    <form action="/settings/cancel-affiliation" method="POST">
-                                        <?php echo csrf_field(); ?>
-                                        <button type="submit"
-                                            class="btn btn-outline-danger btn-sm px-4 fw-bold rounded-pill">
-                                            <i class="bi bi-x-lg me-1"></i> Cancel Request
-                                        </button>
-                                    </form>
-                                </div>
-                            <?php else: ?>
-                                <div class="mb-4 pb-3 border-bottom">
-                                    <h5 class="fw-bold mb-1">Connect Institution</h5>
-                                    <p class="text-muted small mb-0">Link your account to unlock verified lecturer features.
-                                    </p>
-                                </div>
-
-                                <?php if($affiliation && $affiliation->status === 'rejected'): ?>
-                                    <div
-                                        class="alert alert-danger border-danger bg-danger bg-opacity-10 d-flex align-items-start gap-3 mb-4 rounded-3">
-                                        <i class="bi bi-x-circle-fill text-danger fs-5 mt-1"></i>
-                                        <div class="w-100">
-                                            <div class="d-flex justify-content-between align-items-start">
-                                                <h6 class="fw-bold text-danger mb-1">Request Rejected</h6>
-                                                <span class="badge bg-danger text-white rounded-pill"
-                                                    style="font-size: 0.7rem;"><?php echo e($affiliation->updated_at->diffForHumans()); ?></span>
+                                    <?php if($affiliation && $affiliation->status === 'rejected'): ?>
+                                        <div
+                                            class="alert alert-danger border-danger bg-danger bg-opacity-10 d-flex align-items-start gap-3 mb-4 rounded-3">
+                                            <i class="bi bi-x-circle-fill text-danger fs-5 mt-1"></i>
+                                            <div class="w-100">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <h6 class="fw-bold text-danger mb-1">Request Rejected</h6>
+                                                    <span class="badge bg-danger text-white rounded-pill"
+                                                        style="font-size: 0.7rem;"><?php echo e($affiliation->updated_at->diffForHumans()); ?></span>
+                                                </div>
+                                                <p class="small text-dark mb-1">
+                                                    Your request to join
+                                                    <strong><?php echo e($affiliation->university->user->name); ?></strong> was declined.
+                                                </p>
+                                                <?php if($affiliation->rejection_reason): ?>
+                                                    <div
+                                                        class="bg-white bg-opacity-50 p-2 rounded border border-danger border-opacity-25 mt-2">
+                                                        <p class="small text-danger mb-0 fst-italic">
+                                                            <strong>Reason:</strong> "<?php echo e($affiliation->rejection_reason); ?>"
+                                                        </p>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <p class="small text-muted mt-2 mb-0">You can submit a new request below.</p>
                                             </div>
-                                            <p class="small text-dark mb-1">
-                                                Your request to join
-                                                <strong><?php echo e($affiliation->university->user->name); ?></strong> was declined.
-                                            </p>
-                                            <?php if($affiliation->rejection_reason): ?>
-                                                <div
-                                                    class="bg-white bg-opacity-50 p-2 rounded border border-danger border-opacity-25 mt-2">
-                                                    <p class="small text-danger mb-0 fst-italic">
-                                                        <strong>Reason:</strong> "<?php echo e($affiliation->rejection_reason); ?>"
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <form action="/settings/request-affiliation" method="POST">
+                                        <?php echo csrf_field(); ?>
+
+                                        <div class="row g-4">
+                                            <div class="col-md-7">
+                                                <label class="form-label fw-bold small text-uppercase text-muted"
+                                                    style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                                                    University / Institution
+                                                </label>
+
+                                                <select class="form-select border-2 py-2 bg-light" name="university_id"
+                                                    required style="border-radius: 8px;">
+                                                    <option value="" selected disabled>Select your university...</option>
+                                                    <?php $__currentLoopData = $allUniversities ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $university): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($university->id); ?>"
+                                                            <?php echo e($affiliation && $affiliation->university_id == $university->id ? 'selected' : ''); ?>>
+                                                            <?php echo e($university->user->name); ?>
+
+                                                        </option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                </select>
+
+                                                <div class="d-flex align-items-start gap-2 mt-2">
+                                                    <i class="bi bi-info-circle-fill text-muted mt-1"
+                                                        style="font-size: 0.8rem;"></i>
+                                                    <p class="form-text small text-muted mb-0" style="line-height: 1.4;">
+                                                        Universities listed here are registered partners.
+                                                        If yours is not listed, your institution has not registered an account
+                                                        yet.
                                                     </p>
                                                 </div>
-                                            <?php endif; ?>
-                                            <p class="small text-muted mt-2 mb-0">You can submit a new request below.</p>
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
+                                            </div>
 
-                                <form action="/settings/request-affiliation" method="POST">
+                                            <div class="col-md-5">
+                                                <label class="form-label fw-bold small text-uppercase text-muted"
+                                                    style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                                                    Lecturer ID (NIDN)
+                                                </label>
+                                                <input type="text" class="form-control border-2 py-2 bg-light"
+                                                    name="nidn" placeholder="e.g. 00123456"
+                                                    value="<?php echo e($affiliation && $affiliation->status === 'rejected' ? $affiliation->nidn : ''); ?>"
+                                                    required style="border-radius: 8px;">
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="alert alert-warning bg-warning bg-opacity-10 border-warning border-opacity-25 d-flex gap-3 align-items-start rounded-3"
+                                                    role="alert">
+                                                    <i class="bi bi-exclamation-triangle-fill text-warning mt-1 fs-5"></i>
+                                                    <div>
+                                                        <h6 class="fw-bold text-dark mb-1" style="font-size: 0.9rem;">
+                                                            Important Notice</h6>
+                                                        <p class="small text-muted mb-0">
+                                                            Once your request is <strong>accepted</strong>, you cannot change
+                                                            affiliation manually.
+                                                            Only the university administrator can remove or update your status.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-primary px-4 py-2 rounded-3">
+                                                    <?php echo e($affiliation && $affiliation->status === 'rejected' ? 'Resubmit Request' : 'Send Affiliation Request'); ?>
+
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <div class="card settings-card border-0 shadow-sm p-4">
+                            <div class="card-body">
+                                <h5 class="fw-bold mb-1">Research Interests</h5>
+                                <p class="text-muted small mb-4">Select the fields that best describe your research focus.
+                                    These appear on your public profile.</p>
+
+                                <form id="interestsForm" action="/settings/update-interests" method="POST">
                                     <?php echo csrf_field(); ?>
 
-                                    <div class="row g-4">
-                                        <div class="col-md-7">
-                                            <label class="form-label fw-bold small text-uppercase text-muted"
-                                                style="font-size: 0.75rem; letter-spacing: 0.5px;">
-                                                University / Institution
-                                            </label>
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold small text-uppercase text-muted">
+                                            Select Fields (Max 5) <span class="text-danger">*</span>
+                                        </label>
 
-                                            <select class="form-select border-2 py-2 bg-light" name="university_id"
-                                                required style="border-radius: 8px;">
-                                                <option value="" selected disabled>Select your university...</option>
-                                                <?php $__currentLoopData = $allUniversities ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $university): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <option value="<?php echo e($university->id); ?>"
-                                                        <?php echo e($affiliation && $affiliation->university_id == $university->id ? 'selected' : ''); ?>>
-                                                        <?php echo e($university->user->name); ?>
-
-                                                    </option>
-                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                            </select>
-
-                                            <div class="d-flex align-items-start gap-2 mt-2">
-                                                <i class="bi bi-info-circle-fill text-muted mt-1"
-                                                    style="font-size: 0.8rem;"></i>
-                                                <p class="form-text small text-muted mb-0" style="line-height: 1.4;">
-                                                    Universities listed here are registered partners.
-                                                    If yours is not listed, your institution has not registered an account
-                                                    yet.
-                                                </p>
+                                        <div class="multi-select-wrapper" id="settings-interests-wrapper">
+                                            <div class="multi-select-box">
+                                                <input type="text" class="search-input-tag" placeholder="Search fields..."
+                                                    autocomplete="off">
                                             </div>
+                                            <div class="multi-select-dropdown"></div>
+                                            <div class="hidden-inputs"></div>
                                         </div>
 
-                                        <div class="col-md-5">
-                                            <label class="form-label fw-bold small text-uppercase text-muted"
-                                                style="font-size: 0.75rem; letter-spacing: 0.5px;">
-                                                Lecturer ID (NIDN)
-                                            </label>
-                                            <input type="text" class="form-control border-2 py-2 bg-light"
-                                                name="nidn" placeholder="e.g. 00123456"
-                                                value="<?php echo e($affiliation && $affiliation->status === 'rejected' ? $affiliation->nidn : ''); ?>"
-                                                required style="border-radius: 8px;">
+                                        <div id="interests-error" class="text-danger small mt-2 d-none">
+                                            <i class="bi bi-exclamation-circle me-1"></i> Please select at least one research
+                                            interest.
                                         </div>
+                                    </div>
 
-                                        <div class="col-12">
-                                            <div class="alert alert-warning bg-warning bg-opacity-10 border-warning border-opacity-25 d-flex gap-3 align-items-start rounded-3"
-                                                role="alert">
-                                                <i class="bi bi-exclamation-triangle-fill text-warning mt-1 fs-5"></i>
-                                                <div>
-                                                    <h6 class="fw-bold text-dark mb-1" style="font-size: 0.9rem;">
-                                                        Important Notice</h6>
-                                                    <p class="small text-muted mb-0">
-                                                        Once your request is <strong>accepted</strong>, you cannot change
-                                                        affiliation manually.
-                                                        Only the university administrator can remove or update your status.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <button type="submit" class="btn btn-primary px-4 py-2 rounded-3">
-                                                <?php echo e($affiliation && $affiliation->status === 'rejected' ? 'Resubmit Request' : 'Send Affiliation Request'); ?>
-
-                                            </button>
-                                        </div>
+                                    <div class="d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-primary px-4">Save Interests</button>
                                     </div>
                                 </form>
-                            <?php endif; ?>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="card settings-card border-0 shadow-sm p-4">
-                        <div class="card-body">
-                            <h5 class="fw-bold mb-1">Research Interests</h5>
-                            <p class="text-muted small mb-4">Select the fields that best describe your research focus.
-                                These appear on your public profile.</p>
-
-                            <form id="interestsForm" action="/settings/update-interests" method="POST">
-                                <?php echo csrf_field(); ?>
-
-                                <div class="mb-4">
-                                    <label class="form-label fw-bold small text-uppercase text-muted">
-                                        Select Fields (Max 5) <span class="text-danger">*</span>
-                                    </label>
-
-                                    <div class="multi-select-wrapper" id="settings-interests-wrapper">
-                                        <div class="multi-select-box">
-                                            <input type="text" class="search-input-tag" placeholder="Search fields..."
-                                                autocomplete="off">
-                                        </div>
-                                        <div class="multi-select-dropdown"></div>
-                                        <div class="hidden-inputs"></div>
-                                    </div>
-
-                                    <div id="interests-error" class="text-danger small mt-2 d-none">
-                                        <i class="bi bi-exclamation-circle me-1"></i> Please select at least one research
-                                        interest.
-                                    </div>
-                                </div>
-
-                                <div class="d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary px-4">Save Interests</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </section>
+                    </section>
+                <?php endif; ?>
 
                 <section id="account" class="mb-5 settings-section">
                     <h3 class="fw-bold mb-4">Account & Security</h3>
@@ -559,11 +583,215 @@
                         </div>
                     </div>
                 </section>
-
             </div>
         </div>
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const sections = document.querySelectorAll(".settings-section");
+            const navLi = document.querySelectorAll(".settings-sidebar .list-group-item");
+
+            window.onscroll = () => {
+                var current = "";
+                sections.forEach((section) => {
+                    const sectionTop = section.offsetTop;
+                    if (scrollY >= sectionTop - 200) {
+                        current = section.getAttribute("id");
+                    }
+                });
+
+                navLi.forEach((li) => {
+                    li.classList.remove("active");
+                    if (li.getAttribute("href").includes(current)) {
+                        li.classList.add("active");
+                    }
+                });
+            };
+
+
+            const deleteInput = document.getElementById('deleteConfirmationInput');
+            const deleteBtn = document.getElementById('finalDeleteBtn');
+            const confirmationPhrase = "DELETE ACCOUNT";
+
+            if (deleteInput && deleteBtn) {
+                deleteInput.addEventListener('input', function() {
+                    if (this.value === confirmationPhrase) {
+                        deleteBtn.removeAttribute('disabled');
+                    } else {
+                        deleteBtn.setAttribute('disabled', 'true');
+                    }
+                });
+            }
+        });
+    </script>
+
+    <?php if (\Illuminate\Support\Facades\Blade::check('lecturer')): ?>
+        <script>
+            window.researchFieldsData = <?php echo json_encode(
+                $allResearchFields->map(fn($f) => [
+                        'id' => $f->id, 'name' => $f->name, ])) ?>;
+
+            window.currentInterests = <?php echo json_encode($user->lecturer ? $user->lecturer->researchFields->pluck('id') : [], 15, 512) ?>;
+        </script>
+
+        <?php $__env->startPush('scripts'); ?>
+            <script type="module">
+                document.addEventListener('DOMContentLoaded', function() {
+
+                    function initMultiSelect(wrapperId, data, inputName, initialIds = []) {
+                        const wrapper = document.getElementById(wrapperId);
+                        if (!wrapper) return;
+
+                        const visualBox = wrapper.querySelector('.multi-select-box');
+                        const searchInput = wrapper.querySelector('.search-input-tag');
+                        const dropdown = wrapper.querySelector('.multi-select-dropdown');
+                        const hiddenContainer = wrapper.querySelector('.hidden-inputs');
+
+                        let selectedIds = initialIds.map(String);
+
+                        renderDropdown(data);
+                        updateUI();
+
+                        visualBox.addEventListener('click', () => {
+                            searchInput.focus();
+                            dropdown.classList.add('show');
+                        });
+
+                        document.addEventListener('click', (e) => {
+                            if (!wrapper.contains(e.target)) {
+                                dropdown.classList.remove('show');
+                            }
+                        });
+
+                        searchInput.addEventListener('input', (e) => {
+                            const query = e.target.value.toLowerCase();
+                            const filtered = data.filter(item => item.name.toLowerCase().includes(query));
+                            renderDropdown(filtered);
+                            dropdown.classList.add('show');
+                        });
+
+                        searchInput.addEventListener('keydown', (e) => {
+                            if (e.key === 'Backspace' && searchInput.value === '' && selectedIds.length > 0) {
+                                removeSelection(selectedIds[selectedIds.length - 1]);
+                            }
+                        });
+
+                        function renderDropdown(items) {
+                            dropdown.innerHTML = '';
+                            if (items.length === 0) {
+                                dropdown.innerHTML = '<div class="p-2 text-muted small text-center">No results</div>';
+                                return;
+                            }
+
+                            items.forEach(item => {
+                                const div = document.createElement('div');
+                                div.className = 'dropdown-option';
+                                div.textContent = item.name;
+
+                                if (selectedIds.includes(String(item.id))) {
+                                    div.classList.add('selected');
+                                }
+
+                                div.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    addSelection(item);
+                                    searchInput.value = '';
+                                    searchInput.focus();
+                                    renderDropdown(data);
+                                });
+
+                                dropdown.appendChild(div);
+                            });
+                        }
+
+                        function addSelection(item) {
+                            const id = String(item.id);
+                            if (selectedIds.includes(id)) return;
+                            if (selectedIds.length >= 5) return;
+
+                            selectedIds.push(id);
+                            updateUI();
+                        }
+
+                        function removeSelection(id) {
+                            selectedIds = selectedIds.filter(i => i !== id);
+                            updateUI();
+                        }
+
+                        function updateUI() {
+                            const existingTags = visualBox.querySelectorAll('.selected-tag');
+                            existingTags.forEach(t => t.remove());
+
+                            selectedIds.forEach(id => {
+                                const item = data.find(d => String(d.id) === id);
+                                if (item) {
+                                    const tag = document.createElement('div');
+                                    tag.className = 'selected-tag';
+                                    tag.innerHTML = `${item.name} <span class="remove-tag">&times;</span>`;
+
+                                    tag.querySelector('.remove-tag').addEventListener('click', (e) => {
+                                        e.stopPropagation();
+                                        removeSelection(id);
+                                    });
+                                    visualBox.insertBefore(tag, searchInput);
+                                }
+                            });
+
+                            hiddenContainer.innerHTML = '';
+                            selectedIds.forEach(id => {
+                                const input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = inputName;
+                                input.value = id;
+                                hiddenContainer.appendChild(input);
+                            });
+                            renderDropdown(data);
+                        }
+                    }
+
+                    if (window.researchFieldsData) {
+                        initMultiSelect(
+                            'settings-interests-wrapper',
+                            window.researchFieldsData,
+                            'research_fields[]',
+                            window.currentInterests
+                        );
+                    }
+
+
+                    const form = document.getElementById('interestsForm');
+                    const errorMsg = document.getElementById('interests-error');
+                    const wrapper = document.getElementById('settings-interests-wrapper');
+                    const visualBox = wrapper.querySelector('.multi-select-box');
+
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            const selectedCount = form.querySelectorAll('input[name="research_fields[]"]').length;
+
+                            if (selectedCount === 0) {
+                                e.preventDefault();
+
+                                errorMsg.classList.remove('d-none');
+                                visualBox.style.borderColor = '#dc3545';
+
+                                visualBox.classList.add('shake-animation');
+                                setTimeout(() => visualBox.classList.remove('shake-animation'), 500);
+                            } else {
+                                errorMsg.classList.add('d-none');
+                                visualBox.style.borderColor = '';
+                            }
+                        });
+
+                        wrapper.addEventListener('click', function() {
+                            errorMsg.classList.add('d-none');
+                            visualBox.style.borderColor = '';
+                        });
+                    }
+                });
+            </script>
+        <?php $__env->stopPush(); ?>
+    <?php endif; ?>
 
     
     <?php if(session('success')): ?>
@@ -641,246 +869,6 @@
             </script>
         <?php $__env->stopPush(); ?>
     <?php endif; ?>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const sections = document.querySelectorAll(".settings-section");
-            const navLi = document.querySelectorAll(".settings-sidebar .list-group-item");
-
-            window.onscroll = () => {
-                var current = "";
-                sections.forEach((section) => {
-                    const sectionTop = section.offsetTop;
-                    if (scrollY >= sectionTop - 200) {
-                        current = section.getAttribute("id");
-                    }
-                });
-
-                navLi.forEach((li) => {
-                    li.classList.remove("active");
-                    if (li.getAttribute("href").includes(current)) {
-                        li.classList.add("active");
-                    }
-                });
-            };
-
-
-            // DELETE ACCOUNT
-            const deleteInput = document.getElementById('deleteConfirmationInput');
-            const deleteBtn = document.getElementById('finalDeleteBtn');
-            const confirmationPhrase = "DELETE ACCOUNT";
-
-            if (deleteInput && deleteBtn) {
-                deleteInput.addEventListener('input', function() {
-                    // Check if input matches exactly
-                    if (this.value === confirmationPhrase) {
-                        deleteBtn.removeAttribute('disabled');
-                    } else {
-                        deleteBtn.setAttribute('disabled', 'true');
-                    }
-                });
-            }
-        });
-    </script>
-
-    <script>
-        window.researchFieldsData = <?php echo json_encode($allResearchFields->map(fn($f) => [
-            'id' => $f->id, 'name' => $f->name
-        ]), 512) ?>;
-
-        window.currentInterests = <?php echo json_encode($user->lecturer ? $user->lecturer->researchFields->pluck('id') : [], 15, 512) ?>;
-    </script>
-
-    <?php $__env->startPush('scripts'); ?>
-        <script type="module">
-            document.addEventListener('DOMContentLoaded', function() {
-
-                function initMultiSelect(wrapperId, data, inputName, initialIds = []) {
-                    const wrapper = document.getElementById(wrapperId);
-                    if (!wrapper) return;
-
-                    const visualBox = wrapper.querySelector('.multi-select-box');
-                    const searchInput = wrapper.querySelector('.search-input-tag');
-                    const dropdown = wrapper.querySelector('.multi-select-dropdown');
-                    const hiddenContainer = wrapper.querySelector('.hidden-inputs');
-
-                    let selectedIds = initialIds.map(String);
-
-                    renderDropdown(data);
-                    updateUI();
-
-                    visualBox.addEventListener('click', () => {
-                        searchInput.focus();
-                        dropdown.classList.add('show');
-                    });
-
-                    document.addEventListener('click', (e) => {
-                        if (!wrapper.contains(e.target)) {
-                            dropdown.classList.remove('show');
-                        }
-                    });
-
-                    searchInput.addEventListener('input', (e) => {
-                        const query = e.target.value.toLowerCase();
-                        const filtered = data.filter(item => item.name.toLowerCase().includes(query));
-                        renderDropdown(filtered);
-                        dropdown.classList.add('show');
-                    });
-
-                    searchInput.addEventListener('keydown', (e) => {
-                        if (e.key === 'Backspace' && searchInput.value === '' && selectedIds.length > 0) {
-                            removeSelection(selectedIds[selectedIds.length - 1]);
-                        }
-                    });
-
-                    function renderDropdown(items) {
-                        dropdown.innerHTML = '';
-                        if (items.length === 0) {
-                            dropdown.innerHTML = '<div class="p-2 text-muted small text-center">No results</div>';
-                            return;
-                        }
-
-                        items.forEach(item => {
-                            const div = document.createElement('div');
-                            div.className = 'dropdown-option';
-                            div.textContent = item.name;
-
-                            if (selectedIds.includes(String(item.id))) {
-                                div.classList.add('selected');
-                            }
-
-                            div.addEventListener('click', (e) => {
-                                e.stopPropagation();
-                                addSelection(item);
-                                searchInput.value = '';
-                                searchInput.focus();
-                                renderDropdown(data);
-                            });
-
-                            dropdown.appendChild(div);
-                        });
-                    }
-
-                    function addSelection(item) {
-                        const id = String(item.id);
-                        if (selectedIds.includes(id)) return;
-                        if (selectedIds.length >= 5) return;
-
-                        selectedIds.push(id);
-                        updateUI();
-                    }
-
-                    function removeSelection(id) {
-                        selectedIds = selectedIds.filter(i => i !== id);
-                        updateUI();
-                    }
-
-                    function updateUI() {
-                        const existingTags = visualBox.querySelectorAll('.selected-tag');
-                        existingTags.forEach(t => t.remove());
-
-                        selectedIds.forEach(id => {
-                            const item = data.find(d => String(d.id) === id);
-                            if (item) {
-                                const tag = document.createElement('div');
-                                tag.className = 'selected-tag';
-                                tag.innerHTML = `${item.name} <span class="remove-tag">&times;</span>`;
-
-                                tag.querySelector('.remove-tag').addEventListener('click', (e) => {
-                                    e.stopPropagation();
-                                    removeSelection(id);
-                                });
-                                visualBox.insertBefore(tag, searchInput);
-                            }
-                        });
-
-                        hiddenContainer.innerHTML = '';
-                        selectedIds.forEach(id => {
-                            const input = document.createElement('input');
-                            input.type = 'hidden';
-                            input.name = inputName;
-                            input.value = id;
-                            hiddenContainer.appendChild(input);
-                        });
-                        renderDropdown(data);
-                    }
-                }
-
-                if (window.researchFieldsData) {
-                    initMultiSelect(
-                        'settings-interests-wrapper',
-                        window.researchFieldsData,
-                        'research_fields[]',
-                        window.currentInterests
-                    );
-                }
-            });
-        </script>
-    <?php $__env->stopPush(); ?>
-
-    <?php $__env->startPush('scripts'); ?>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const form = document.getElementById('interestsForm');
-                const errorMsg = document.getElementById('interests-error');
-                const wrapper = document.getElementById('settings-interests-wrapper');
-                const visualBox = wrapper.querySelector('.multi-select-box');
-
-                if (form) {
-                    form.addEventListener('submit', function(e) {
-                        const selectedCount = form.querySelectorAll('input[name="research_fields[]"]').length;
-
-                        if (selectedCount === 0) {
-                            e.preventDefault();
-
-                            errorMsg.classList.remove('d-none');
-                            visualBox.style.borderColor = '#dc3545';
-
-                            visualBox.classList.add('shake-animation');
-                            setTimeout(() => visualBox.classList.remove('shake-animation'), 500);
-                        } else {
-                            // Valid
-                            errorMsg.classList.add('d-none');
-                            visualBox.style.borderColor = '';
-                        }
-                    });
-
-                    wrapper.addEventListener('click', function() {
-                        errorMsg.classList.add('d-none');
-                        visualBox.style.borderColor = '';
-                    });
-                }
-            });
-        </script>
-
-        <style>
-            @keyframes shake {
-                0% {
-                    transform: translateX(0);
-                }
-
-                25% {
-                    transform: translateX(-5px);
-                }
-
-                50% {
-                    transform: translateX(5px);
-                }
-
-                75% {
-                    transform: translateX(-5px);
-                }
-
-                100% {
-                    transform: translateX(0);
-                }
-            }
-
-            .shake-animation {
-                animation: shake 0.3s ease-in-out;
-            }
-        </style>
-    <?php $__env->stopPush(); ?>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Tempat Coding\web programming\andrpaid\resources\views/pages/settings.blade.php ENDPATH**/ ?>

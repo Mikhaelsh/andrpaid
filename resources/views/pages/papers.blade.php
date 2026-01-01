@@ -36,15 +36,18 @@
                 </button>
             </div>
 
-            <a href="/papers/create" class="btn paper-showcase-create-action d-flex align-items-center gap-2">
-                <div class="icon-box"><i class="bi bi-plus-lg"></i></div>
-                <span>New Paper</span>
-            </a>
+            @lecturer
+                @if ($user->lecturer->id === Auth::user()->lecturer->id)
+                    <a href="/papers/create" class="btn paper-showcase-create-action d-flex align-items-center gap-2">
+                        <div class="icon-box"><i class="bi bi-plus-lg"></i></div>
+                        <span>New Paper</span>
+                    </a>
+                @endif
+            @endlecturer
         </div>
 
 
         <div class="offcanvas offcanvas-end paper-filter-offcanvas" tabindex="-1" id="filterOffcanvas">
-
             <div class="offcanvas-header border-bottom">
                 <h5 class="offcanvas-title fw-bold">Refine Results</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -156,16 +159,14 @@
         </div>
 
         <div class="d-flex flex-column gap-3">
-
             @forelse ($papers as $paper)
                 <div class="paper-showcase-card p-4">
                     <div class="d-flex justify-content-between align-items-start">
-
                         <div class="d-flex flex-column gap-2 col-md-10">
-
                             <div class="d-flex align-items-center gap-2 flex-wrap">
                                 <h5 class="mb-0 fw-bold paper-showcase-title me-2">
-                                    <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/overview" class="text-decoration-none stretched-link">{{ $paper->title }}</a>
+                                    <a href="/{{ $paper->lecturer->user->profileId }}/paper/{{ $paper->paperId }}/overview"
+                                        class="text-decoration-none stretched-link">{{ $paper->title }}</a>
                                 </h5>
 
                                 <span class="paper-status-badge {{ $paper->visibility }}">
@@ -177,8 +178,7 @@
                                 </span>
 
                                 @if ($paper->openCollaboration)
-                                    <span class="paper-status-badge collab-open"
-                                        title="This author is looking for collaborators">
+                                    <span class="paper-status-badge collab-open" title="Looking for collaborators">
                                         <i class="bi bi-people-fill me-1"></i> Open Collab
                                     </span>
                                 @endif
@@ -198,7 +198,6 @@
                             </div>
 
                             <div class="row align-items-center mt-1 border-top pt-3 gy-2">
-
                                 <div class="col-5 col-md-4 col-lg-3">
                                     <span
                                         class="paper-type-pill {{ Str::replace('_', '-', $paper->paperType->paperTypeId) }} d-block w-100">
@@ -206,15 +205,12 @@
                                     </span>
                                 </div>
 
-                                <div class="col-auto position-relative z-2">
-                                    <a href="/{{ $paper->lecturer->user->profileId }}/papers"
-                                        class="text-decoration-none author-hover-link"
-                                        title="View all papers by {{ $paper->lecturer->user->name }}">
-
-                                        <span class="paper-meta-text fw-medium">
-                                            <i class="bi bi-person-circle me-1"></i>
-                                            {{ $paper->lecturer->user->name }}
-                                        </span>
+                                <div class="col-auto position-relative z-2 d-flex align-items-center gap-2">
+                                    <img src="https://ui-avatars.com/api/?name={{ $paper->lecturer->user->name }}&background=random&size=20"
+                                        class="rounded-circle">
+                                    <a href="/{{ $paper->lecturer->user->profileId }}/overview"
+                                        class="text-decoration-none author-hover-link fw-bold text-dark small">
+                                        {{ $paper->lecturer->user->name }}
                                     </a>
                                 </div>
 
@@ -235,19 +231,22 @@
                             </div>
                         </div>
 
-                        <div class="position-relative z-2 ms-3">
-                            @php
-                                $isStarred = Auth::check() && $paper->paperStars->contains('user_id', Auth::user()->id);
-                            @endphp
+                        @lecturer
+                            <div class="position-relative z-2 ms-3">
+                                @php
+                                    $isStarred =
+                                        Auth::check() && $paper->paperStars->contains('user_id', Auth::user()->id);
+                                @endphp
 
-                            <button class="btn {{ $isStarred ? 'btn-warning' : 'paper-action-star-btn' }}"
-                                id="star-btn-{{ $paper->paperId }}" onclick="toggleStar(`{{ $paper->paperId }}`)"
-                                title="Star this paper">
+                                <button class="btn {{ $isStarred ? 'btn-warning' : 'paper-action-star-btn' }}"
+                                    id="star-btn-{{ $paper->paperId }}" onclick="toggleStar(`{{ $paper->paperId }}`)"
+                                    title="Star this paper">
 
-                                <i class="bi {{ $isStarred ? 'bi-star-fill' : 'bi-star' }}"
-                                    id="star-icon-{{ $paper->paperId }}"></i>
-                            </button>
-                        </div>
+                                    <i class="bi {{ $isStarred ? 'bi-star-fill' : 'bi-star' }}"
+                                        id="star-icon-{{ $paper->paperId }}"></i>
+                                </button>
+                            </div>
+                        @endlecturer
                     </div>
                 </div>
             @empty
@@ -257,13 +256,22 @@
                     </div>
                     <h4 class="fw-bold text-dark mb-2">No Research Papers Yet</h4>
                     <p class="text-muted mb-4 col-md-8 mx-auto" style="font-size: 0.95rem; line-height: 1.6;">
-                        It looks like you haven't created any paper repositories.
-                        Start documenting your research, manage drafts, and collaborate with another lecturer here.
+                        @if ($user->isLecturer())
+                            It looks like you haven't created any paper repositories.
+                            Start documenting your research, manage drafts, and collaborate with another lecturer here.
+                        @else
+                            No publications have been uploaded by affiliated researchers yet.
+                            @endlecturer
                     </p>
-                    <a href="/papers/create" class="btn paper-showcase-create-action d-flex align-items-center gap-2">
-                        <i class="bi bi-plus-lg"></i>
-                        Create New Paper Repository
-                    </a>
+
+                    @lecturer
+                        @if ($user->lecturer->id === Auth::user()->lecturer->id)
+                            <a href="/papers/create" class="btn paper-showcase-create-action d-flex align-items-center gap-2">
+                                <i class="bi bi-plus-lg"></i>
+                                Create New Paper Repository
+                            </a>
+                        @endif
+                    @endlecturer
                 </div>
             @endforelse
 
@@ -491,49 +499,58 @@
     @endpush
 
 
-    @push('scripts')
-        <script>
-            async function toggleStar(paperId) {
-                const btn = document.getElementById(`star-btn-${paperId}`);
-                const icon = document.getElementById(`star-icon-${paperId}`);
-                const countSpan = document.getElementById(`star-count-${paperId}`);
-                const navbarProfileStarsCount = document.getElementById(`navbarProfileStarsCount`)
+    @lecturer
+        @push('scripts')
+            <script>
+                async function toggleStar(paperId) {
+                    const btn = document.getElementById(`star-btn-${paperId}`);
+                    const icon = document.getElementById(`star-icon-${paperId}`);
+                    const countSpan = document.getElementById(`star-count-${paperId}`);
+                    const navbarProfileStarsCount = document.getElementById(`navbarProfileStarsCount`)
 
-                try {
-                    const response = await fetch(`/papers/${paperId}/star`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                    });
+                    const userId = "{{ $user->id }}"
+                    const currentUserId = "{{ Auth::user()->id }}"
 
-                    const data = await response.json();
+                    try {
+                        const response = await fetch(`/papers/${paperId}/star`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                        });
 
-                    // Update UI based on server response
-                    if (data.is_starred) {
-                        btn.classList.remove('paper-action-star-btn');
-                        btn.classList.add('btn-warning');
-                        icon.classList.remove('bi-star');
-                        icon.classList.add('bi-star-fill');
-                        navbarProfileStarsCount.innerText = parseInt(navbarProfileStarsCount.innerText) + 1;
-                    } else {
-                        btn.classList.remove('btn-warning');
-                        btn.classList.add('paper-action-star-btn');
-                        icon.classList.remove('bi-star-fill');
-                        icon.classList.add('bi-star');
-                        navbarProfileStarsCount.innerText = parseInt(navbarProfileStarsCount.innerText) - 1;
+                        const data = await response.json();
+
+                        // Update UI based on server response
+                        if (data.is_starred) {
+                            btn.classList.remove('paper-action-star-btn');
+                            btn.classList.add('btn-warning');
+                            icon.classList.remove('bi-star');
+                            icon.classList.add('bi-star-fill');
+                            if (userId === currentUserId) {
+                                navbarProfileStarsCount.innerText = parseInt(navbarProfileStarsCount.innerText) + 1;
+                            }
+                        } else {
+                            btn.classList.remove('btn-warning');
+                            btn.classList.add('paper-action-star-btn');
+                            icon.classList.remove('bi-star-fill');
+                            icon.classList.add('bi-star');
+                            if (userId === currentUserId) {
+                                navbarProfileStarsCount.innerText = parseInt(navbarProfileStarsCount.innerText) - 1;
+                            }
+                        }
+
+                        // Update the number
+                        countSpan.innerText = data.new_count;
+
+                    } catch (error) {
+                        console.error('Error toggling star:', error);
                     }
-
-                    // Update the number
-                    countSpan.innerText = data.new_count;
-
-                } catch (error) {
-                    console.error('Error toggling star:', error);
                 }
-            }
-        </script>
-    @endpush
+            </script>
+        @endpush
+    @endlecturer
 
 @endsection

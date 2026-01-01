@@ -200,15 +200,12 @@
                                     </span>
                                 </div>
 
-                                <div class="col-auto position-relative z-2">
-                                    <a href="/{{ $paper->lecturer->user->profileId }}/papers"
-                                        class="text-decoration-none author-hover-link"
-                                        title="View all papers by {{ $paper->lecturer->user->name }}">
-
-                                        <span class="paper-meta-text fw-medium">
-                                            <i class="bi bi-person-circle me-1"></i>
-                                            {{ $paper->lecturer->user->name }}
-                                        </span>
+                                <div class="col-auto position-relative z-2 d-flex align-items-center gap-2">
+                                    <img src="https://ui-avatars.com/api/?name={{ $paper->lecturer->user->name }}&background=random&size=20"
+                                        class="rounded-circle">
+                                    <a href="/{{ $paper->lecturer->user->profileId }}/overview"
+                                        class="text-decoration-none author-hover-link fw-bold text-dark small">
+                                        {{ $paper->lecturer->user->name }}
                                     </a>
                                 </div>
 

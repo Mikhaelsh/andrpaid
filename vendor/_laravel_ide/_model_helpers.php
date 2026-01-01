@@ -4145,12 +4145,14 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property mixed $province_id
      * @property mixed $user_id
+     * @property string|null $websiteUrl
      * @property int $id
      * @property-read \App\Models\Province $province
      * @property-read \App\Models\User $user
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Affiliation> $affiliations
      * @property-read int|null $affiliations_count
      * @method static \Illuminate\Database\Eloquent\Builder<University>|University whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<University>|University whereWebsiteurl($value)
      * @method static \Illuminate\Database\Eloquent\Builder<University>|University whereUserId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<University>|University whereProvinceId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<University>|University whereCreatedAt($value)

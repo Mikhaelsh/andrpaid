@@ -40,29 +40,77 @@
                     <a class="nav-link dropdown-toggle user-dropdown d-flex align-items-center gap-2" href="#"
                         role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <div class="avatar-container">
-                            <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name ?? 'User' }}&background=28a745&color=fff"
-                                alt="Profile" class="avatar-img">
+                            @university
+                                <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}&background=0d6efd&color=fff"
+                                    alt="Profile" class="avatar-img">
+                            @else
+                                <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}&background=28a745&color=fff"
+                                    alt="Profile" class="avatar-img">
+                            @enduniversity
                             <span class="status-indicator"></span>
                         </div>
-                        <span class="fw-medium">{{ Auth::user()->name ?? 'User' }}</span>
+                        <span class="fw-medium">{{ Auth::user()->name }}</span>
                     </a>
 
                     <ul class="dropdown-menu dropdown-menu-end custom-dropdown mt-3 animate slideIn">
                         <li>
-                            <h6 class="dropdown-header text-uppercase fw-bold">My Account</h6>
+                            <h6 class="dropdown-header text-uppercase fw-bold">
+                                @university
+                                    Organization Profile
+                                @else
+                                    Personal Profile
+                                @enduniversity
+                            </h6>
                         </li>
 
-                        <li><a class="dropdown-item py-2" href="/{{ Auth::user()->profileId }}/overview"><i class="bi bi-person me-3"></i> Profile</a>
-                        </li>
-                        <li><a class="dropdown-item py-2" href="/{{ Auth::user()->profileId }}/papers"><i class="bi bi-journal-code me-3"></i> Papers</a></li>
-                        <li><a class="dropdown-item py-2" href="/{{ Auth::user()->profileId }}/stars"><i class="bi bi-star me-3"></i> Stars</a></li>
+                        @university
+                            <li>
+                                <a class="dropdown-item py-2" href="/{{ Auth::user()->profileId }}/overview">
+                                    <i class="bi bi-building me-3"></i> Overview
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item py-2" href="/{{ Auth::user()->profileId }}/papers">
+                                    <i class="bi bi-journal-text me-3"></i> Publications
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item py-2" href="/{{ Auth::user()->profileId }}/researchers">
+                                    <i class="bi bi-people me-3"></i> Researchers
+                                </a>
+                            </li>
+                        @enduniversity
+
+                        @lecturer
+                            <li>
+                                <a class="dropdown-item py-2" href="/{{ Auth::user()->profileId }}/overview">
+                                    <i class="bi bi-person me-3"></i> Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item py-2" href="/{{ Auth::user()->profileId }}/papers">
+                                    <i class="bi bi-journal-code me-3"></i> Papers
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item py-2" href="/{{ Auth::user()->profileId }}/stars">
+                                    <i class="bi bi-star me-3"></i> Stars
+                                </a>
+                            </li>
+                        @endlecturer
 
                         <li>
                             <hr class="dropdown-divider my-2">
                         </li>
 
-                        <li><a class="dropdown-item py-2" href="/settings"><i class="bi bi-gear me-3"></i> Settings</a>
+                        <li>
+                            <a class="dropdown-item py-2" href="/settings">
+                                <i class="bi bi-gear me-3"></i> Settings
+                            </a>
                         </li>
+
                         <li>
                             <form action="/logout" method="POST">
                                 @csrf
@@ -74,7 +122,6 @@
                     </ul>
                 </li>
             </ul>
-
         </div>
     </div>
 </nav>

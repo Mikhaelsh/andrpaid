@@ -8,6 +8,7 @@
                 </a>
             </li>
 
+            <?php if($user->isLecturer()): ?>
             <li class="nav-item">
                 <a class="nav-link <?php echo e(request()->is('*/papers') ? 'active' : ''); ?>" href="/<?php echo e($navbarProfileData["profileId"]); ?>/papers">
                     <i class="bi bi-journal-code me-2"></i>Papers
@@ -21,6 +22,23 @@
                     <span class="badge-counter" id="navbarProfileStarsCount"><?php echo e($navbarProfileData["starsCount"]); ?></span>
                 </a>
             </li>
+            <?php endif; ?>
+
+            <?php if($user->isUniversity()): ?>
+                <li class="nav-item">
+                    <a class="nav-link <?php echo e(request()->is('*/papers') ? 'active' : ''); ?>" href="/<?php echo e($navbarProfileData["profileId"]); ?>/papers">
+                        <i class="bi bi-journal-text me-2"></i>Publications
+                        <span class="badge-counter"><?php echo e($navbarProfileData["papersCount"] ?? 0); ?></span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link <?php echo e(request()->is('*/researchers') ? 'active' : ''); ?>" href="/<?php echo e($navbarProfileData["profileId"]); ?>/researchers">
+                        <i class="bi bi-people-fill me-2"></i>Researchers
+                        <span class="badge-counter"><?php echo e($navbarProfileData["researchersCount"] ?? 0); ?></span>
+                    </a>
+                </li>
+            <?php endif; ?>
 
             <li class="nav-item">
                 <a class="nav-link <?php echo e(request()->is('*/followers') ? 'active' : ''); ?>" href="/<?php echo e($navbarProfileData["profileId"]); ?>/followers">
@@ -28,7 +46,6 @@
                     <span class="badge-counter">1.2k</span>
                 </a>
             </li>
-
         </ul>
     </div>
 </nav>

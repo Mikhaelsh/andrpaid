@@ -20,31 +20,40 @@ class SettingController extends Controller
 
         $allProvinces = Province::all();
 
-        $allUniversities = University::with('user')->get()->sortBy('user.name');
+        if($user->isLecturer()){
+            $allUniversities = University::with('user')->get()->sortBy('user.name');
 
-        $allResearchFields = ResearchField::all();
+            $allResearchFields = ResearchField::all();
 
-        return view("pages.settings", [
-            "user"=> $user,
-            "province" => $province,
-            "allProvinces" => $allProvinces,
-            "allUniversities" => $allUniversities,
-            "allResearchFields" => $allResearchFields,
-        ]);
+            return view("pages.settings", [
+                "user"=> $user,
+                "province" => $province,
+                "allProvinces" => $allProvinces,
+                "allUniversities" => $allUniversities,
+                "allResearchFields" => $allResearchFields,
+            ]);
+        } else{
+            return view("pages.settings", [
+                "user"=> $user,
+                "province" => $province,
+                "allProvinces" => $allProvinces,
+            ]);
+        }
+
     }
 
     public function updatePublicProfile(Request $request){
-        $validated = $request->validate([
-            'name'          => 'required|string|max:255',
-            'description'    => 'nullable|string',
-            'province_id'    => 'required|string',
-            'linkedin_url'    => 'nullable|string',
-            'portfolio_url'    => 'nullable|string',
-        ]);
-
         $user = Auth::user();
 
         if($user->isLecturer()){
+            $validated = $request->validate([
+                'name'          => 'required|string|max:255',
+                'description'    => 'nullable|string',
+                'province_id'    => 'required|string',
+                'linkedin_url'    => 'nullable|string',
+                'portfolio_url'    => 'nullable|string',
+            ]);
+
             $accRole = $user->lecturer;
 
             $accRole->update([
@@ -52,7 +61,19 @@ class SettingController extends Controller
                 "portfolioUrl" => $validated["portfolio_url"],
             ]);
         } else{
+            $validated = $request->validate([
+                'name'          => 'required|string|max:255',
+                'description'    => 'nullable|string',
+                'province_id'    => 'required|string',
+                'website_url'    => 'nullable|string',
+            ]);
+
+
             $accRole = $user->university;
+
+            $accRole->update([
+                "websiteUrl" => $validated["website_url"],
+            ]);
         }
 
         $province = Province::where("provinceId", $validated["province_id"])->first();

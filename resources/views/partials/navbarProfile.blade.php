@@ -8,6 +8,7 @@
                 </a>
             </li>
 
+            @if($user->isLecturer())
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('*/papers') ? 'active' : '' }}" href="/{{ $navbarProfileData["profileId"] }}/papers">
                     <i class="bi bi-journal-code me-2"></i>Papers
@@ -21,6 +22,23 @@
                     <span class="badge-counter" id="navbarProfileStarsCount">{{ $navbarProfileData["starsCount"] }}</span>
                 </a>
             </li>
+            @endif
+
+            @if($user->isUniversity())
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('*/papers') ? 'active' : '' }}" href="/{{ $navbarProfileData["profileId"] }}/papers">
+                        <i class="bi bi-journal-text me-2"></i>Publications
+                        <span class="badge-counter">{{ $navbarProfileData["papersCount"] ?? 0 }}</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('*/researchers') ? 'active' : '' }}" href="/{{ $navbarProfileData["profileId"] }}/researchers">
+                        <i class="bi bi-people-fill me-2"></i>Researchers
+                        <span class="badge-counter">{{ $navbarProfileData["researchersCount"] ?? 0 }}</span>
+                    </a>
+                </li>
+            @endif
 
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('*/followers') ? 'active' : '' }}" href="/{{ $navbarProfileData["profileId"] }}/followers">
@@ -28,7 +46,6 @@
                     <span class="badge-counter">1.2k</span>
                 </a>
             </li>
-
         </ul>
     </div>
 </nav>

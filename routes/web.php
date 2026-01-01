@@ -64,6 +64,8 @@ Route::middleware('auth')->group(function () {
 
         Route::get("/followers", [ProfileController::class,"indexFollowers"]);
 
+        Route::get("/researchers", [ProfileController::class,"indexResearchers"]);
+
         Route::prefix("/paper/{paperId}")->group(function(){
             Route::get("/overview", [PaperController::class,"paperOverview"]);
 

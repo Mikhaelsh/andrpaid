@@ -61,12 +61,14 @@ body {
     font-size: 0.9rem;
 }
 
-.form-control:focus, .form-select:focus {
+.form-control:focus,
+.form-select:focus {
     border-color: #a855f7;
     box-shadow: 0 0 0 0.25rem rgba(168, 85, 247, 0.15);
 }
 
-.form-control:disabled, .form-control[readonly] {
+.form-control:disabled,
+.form-control[readonly] {
     background-color: #f1f5f9;
     opacity: 1;
     border-color: #e2e8f0;
@@ -167,4 +169,30 @@ body {
     background-color: #e9ecef;
     color: #adb5bd;
     pointer-events: none;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.shake-animation {
+    animation: shake 0.3s ease-in-out;
 }

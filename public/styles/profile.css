@@ -460,7 +460,7 @@
 
 .featured-paper-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
 }
 
 .text-truncate-2 {
@@ -484,17 +484,31 @@
 .hover-primary {
     transition: color 0.2s;
 }
+
 .hover-primary:hover {
     color: #0d6efd !important;
 }
+
 .hover-primary:hover .bg-white {
     background-color: #0d6efd !important;
     color: white !important;
 }
+
 .hover-primary:hover .bg-white i {
     color: white !important;
 }
 
 .dynamic-stats-box .stat-item:not(:last-child) {
     border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.publication-card {
+    transition: all 0.25s ease-in-out;
+    border: 1px solid transparent;
+}
+
+.publication-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    border-color: rgba(13, 110, 253, 0.2) !important;
 }

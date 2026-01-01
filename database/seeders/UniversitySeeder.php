@@ -44,7 +44,7 @@ class UniversitySeeder extends Seeder
             if ($province) {
                 $user = User::factory()->create([
                     'name' => $data['name'],
-                    'email' => Str::slug($data['name']) . '@university.ac.id',
+                    'email' => Str::slug($data['name']) . '@uni.ac.id',
                 ]);
 
                 University::create([
@@ -53,5 +53,11 @@ class UniversitySeeder extends Seeder
                 ]);
             }
         }
+
+        $user = User::where("name", "BINUS University")->first();
+
+        $user->update([
+            'password' => bcrypt("aa")
+        ]);
     }
 }
