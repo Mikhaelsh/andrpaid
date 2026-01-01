@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Collaboration;
 use App\Models\Lecturer;
 use App\Models\Paper;
 use App\Models\PaperStar;
@@ -114,7 +115,7 @@ class PaperController extends Controller
         $fieldIds = ResearchField::whereIn('researchFieldId', $validated['category_ids'])->pluck('id');
         $paper->researchFields()->attach($fieldIds);
 
-        return redirect("/" . $user->profileId . "/papers")->with('successNewPaper', 'Your new paper has been created successfully!');
+        return redirect("/" . $user->profileId . "/papers")->with('success', 'Your new paper has been created successfully!');
     }
 
     public function toggleStar($paperId){
@@ -218,6 +219,27 @@ class PaperController extends Controller
             "papers" => $papers,
             "paperTypes" => $paperTypes,
             "researchFields" => $researchFields,
+        ]);
+    }
+
+    public function paperOverview($profileId, $paperId){
+        $user = User::where("profileId", $profileId)->first();
+
+        $paper = $user->lecturer->papers->where("paperId", $paperId)->first();
+
+        return view("pages.paper", [
+            "user" => $user,
+            "paper" => $paper,
+        ]);
+    }
+
+    public function paperWorkspace($profileId, $paperId){
+        $user = User::where("profileId", $profileId)->firstOrFail();
+        $paper = Paper::where('paperId', $paperId)->with('lecturer.user')->firstOrFail();
+
+        return view('pages.paper-workspace', [
+            'user' => $user,
+            'paper' => $paper
         ]);
     }
 }

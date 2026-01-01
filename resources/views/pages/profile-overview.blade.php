@@ -177,7 +177,7 @@
                                                 </span>
                                             </div>
                                             <h5 class="fw-bold mb-2">
-                                                <a href="#" class="text-decoration-none text-dark stretched-link">{{ $paper->title }}</a>
+                                                <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/overview" class="text-decoration-none text-dark stretched-link">{{ $paper->title }}</a>
                                             </h5>
                                             <p class="text-muted small mb-3 text-truncate-2">
                                                 {{ $paper->description }}
@@ -229,7 +229,7 @@
                                                 </span>
                                             </div>
                                             <h5 class="fw-bold mb-2">
-                                                <a href="#" class="text-decoration-none text-dark">{{ $paper->title }}</a>
+                                                <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/overview" class="text-decoration-none text-dark">{{ $paper->title }}</a>
                                             </h5>
                                             <p class="text-muted small mb-0 text-truncate-2">
                                                 {{ $paper->description }}

@@ -165,7 +165,7 @@
 
                             <div class="d-flex align-items-center gap-2 flex-wrap">
                                 <h5 class="mb-0 fw-bold paper-showcase-title me-2">
-                                    <a href="#" class="text-decoration-none stretched-link">{{ $paper->title }}</a>
+                                    <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/overview" class="text-decoration-none stretched-link">{{ $paper->title }}</a>
                                 </h5>
 
                                 <span class="paper-status-badge {{ $paper->visibility }}">
@@ -278,7 +278,7 @@
     </div>
 
 
-    @if (session('successNewPaper'))
+    @if (session('success'))
         <div class="modal fade custom-modal-backdrop" id="statusModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
 
@@ -291,7 +291,7 @@
                         </div>
 
                         <h4 class="fw-bold mb-3 heading-text">Success!</h4>
-                        <p class="text-muted mb-4 fs-5">{{ session('successNewPaper') }}</p>
+                        <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
 
                         <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm"
                             data-bs-dismiss="modal">

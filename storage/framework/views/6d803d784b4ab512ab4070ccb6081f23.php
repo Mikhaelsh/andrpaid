@@ -1,7 +1,7 @@
 <?php $__env->startSection('title', 'Create New Paper'); ?>
 
 <?php $__env->startSection('additionalCSS'); ?>
-    <link rel="stylesheet" href="<?php echo e(asset('styles/paper.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('styles/papers.css')); ?>">
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>

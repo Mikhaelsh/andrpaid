@@ -3,7 +3,7 @@
 @section('title', 'Create New Paper')
 
 @section('additionalCSS')
-    <link rel="stylesheet" href="{{ asset('styles/paper.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/papers.css') }}">
 @endsection
 
 @section('content')

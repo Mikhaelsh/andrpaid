@@ -16,6 +16,7 @@ class LecturerSeeder extends Seeder
      */
     public function run(): void
     {
+        // First User
         $user = User::create([
             'name'=> "Niko Sutiono",
             'email'=> "nikosutiono11@gmail.com",
@@ -32,6 +33,21 @@ class LecturerSeeder extends Seeder
 
         Paper::factory()->count(20)->create([
             'lecturer_id' => $lecturer->id,
+        ]);
+
+        // Second User
+        $user = User::create([
+            'name'=> "LC140",
+            'email'=> "lc140-lcas@binus.edu",
+            'password' => bcrypt("aa"),
+            'description'=> "I am LC140 URAAAAA"
+        ]);
+
+        $province = Province::where('provinceId', "banten" )->first();
+
+        $lecturer = Lecturer::create([
+            "user_id"=> $user->id,
+            "province_id" => $province->id
         ]);
 
         // 3 lecturers with 2 papers each

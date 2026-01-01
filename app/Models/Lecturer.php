@@ -30,4 +30,15 @@ class Lecturer extends Model
     public function researchFields(){
         return $this->belongsToMany(ResearchField::class);
     }
+
+    public function collaborations(){
+        return $this->hasMany(Collaboration::class);
+    }
+
+    public function sentRequests(){
+        return $this->hasMany(CollaborationRequest::class, 'from_lecturer_id');
+    }
+    public function receivedRequests(){
+        return $this->hasMany(CollaborationRequest::class, 'to_lecturer_id');
+    }
 }

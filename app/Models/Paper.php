@@ -34,4 +34,12 @@ class Paper extends Model
     public function paperStars(){
         return $this->hasMany(PaperStar::class);
     }
+
+    public function collaborations(){
+        return $this->hasMany(Collaboration::class);
+    }
+
+    public function collaborationRequests(){
+        return $this->hasMany(CollaborationRequest::class);
+    }
 }

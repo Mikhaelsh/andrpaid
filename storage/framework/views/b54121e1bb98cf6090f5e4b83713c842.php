@@ -180,7 +180,7 @@
                                                 </span>
                                             </div>
                                             <h5 class="fw-bold mb-2">
-                                                <a href="#" class="text-decoration-none text-dark stretched-link"><?php echo e($paper->title); ?></a>
+                                                <a href="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/overview" class="text-decoration-none text-dark stretched-link"><?php echo e($paper->title); ?></a>
                                             </h5>
                                             <p class="text-muted small mb-3 text-truncate-2">
                                                 <?php echo e($paper->description); ?>
@@ -234,7 +234,7 @@
                                                 </span>
                                             </div>
                                             <h5 class="fw-bold mb-2">
-                                                <a href="#" class="text-decoration-none text-dark"><?php echo e($paper->title); ?></a>
+                                                <a href="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/overview" class="text-decoration-none text-dark"><?php echo e($paper->title); ?></a>
                                             </h5>
                                             <p class="text-muted small mb-0 text-truncate-2">
                                                 <?php echo e($paper->description); ?>

@@ -1,11 +1,15 @@
 <?php
 
+use App\Http\Controllers\CollaborationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FindController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PaperController;
+use App\Http\Controllers\PaperSettingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function () {
@@ -31,6 +35,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post("/logout", [LoginController::class,"logoutUser"]);
 
+    Route::get("/find", [FindController::class,"index"]);
+
+    Route::get('/search-user-lecturer', [UserController::class, 'searchUserLecturer'])->name('api.users.search.lecturer');
+
     Route::prefix("/settings")->group(function(){
         Route::get("/", [SettingController::class,"index"]);
 
@@ -55,6 +63,58 @@ Route::middleware('auth')->group(function () {
         Route::get("/overview", [ProfileController::class,"indexOverview"]);
 
         Route::get("/followers", [ProfileController::class,"indexFollowers"]);
+
+        Route::prefix("/paper/{paperId}")->group(function(){
+            Route::get("/overview", [PaperController::class,"paperOverview"]);
+
+            Route::get("/workspace", [PaperController::class,"paperWorkspace"]);
+
+            Route::post("/toggle-collaboration", [PaperController::class,"toggleCollaboration"]);
+
+            Route::post("/create-new-project-role", [PaperController::class,"createNewProjectRole"]);
+
+            Route::prefix("/settings")->group(function(){
+                Route::get("/", [PaperSettingController::class,"index"]);
+
+                Route::post("/update-paper", [PaperSettingController::class,"updatePaper"]);
+
+                Route::post("/delete-paper", [PaperSettingController::class,"deletePaper"]);
+            });
+
+            Route::prefix("/collaborations")->group(function(){
+                Route::get("/", [CollaborationController::class,"index"]);
+
+                Route::post("/toggle-collaboration", [CollaborationController::class,"toggleCollaboration"]);
+
+                Route::post("/create-new-role", [CollaborationController::class,"createNewRole"]);
+
+                Route::post("/remove-role", [CollaborationController::class,"removeRole"]);
+
+                Route::post('/invite', [CollaborationController::class, 'inviteUser']);
+
+                Route::post('/cancel-invitation', [CollaborationController::class, 'cancelInvitation']);
+
+                Route::post('/clear-invitation-history', [CollaborationController::class, 'clearInvitationHistory']);
+
+                Route::post('/accept-invitation', [CollaborationController::class, 'acceptInvitation']);
+
+                Route::post('/reject-invitation', [CollaborationController::class, 'rejectInvitation']);
+
+                Route::post('/accept-request', [CollaborationController::class, 'acceptRequest']);
+
+                Route::post('/reject-request', [CollaborationController::class, 'rejectRequest']);
+
+                Route::post('/remove-request', [CollaborationController::class, 'removeRequest']);
+
+                Route::post('/clear-request-history', [CollaborationController::class, 'clearRequestHistory']);
+
+                Route::post('/edit-role', [CollaborationController::class, 'editRole']);
+
+                Route::post('/remove-member', [CollaborationController::class, 'removeMember']);
+
+                Route::post('/apply-for-role', [CollaborationController::class, 'applyForRole']);
+            });
+        });
     });
 
     Route::prefix("/papers")->group(function () {
