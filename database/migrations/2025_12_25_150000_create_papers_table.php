@@ -30,8 +30,10 @@ return new class extends Migration
             $table->foreignId('paper_type_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->json('references_data')->nullable(); 
             $table->longText('synthesis_text')->nullable();
-            $table->json('themes')->nullable(); // Stores ["Theme A", "Theme B"]
+            $table->json('themes')->nullable(); 
             $table->boolean('lit_review_finalized')->default(false);
+            $table->longText('methodology_xml')->nullable();
+            $table->boolean('methodology_finalized')->default(false);
             $table->timestamps();
         });
     }
@@ -47,6 +49,8 @@ return new class extends Migration
             $table->dropColumn('synthesis_text');
             $table->dropColumn('themes');
             $table->dropColumn('lit_review_finalized');
+            $table->dropColumn('methodology_xml');
+            $table->dropColumn('methodology_finalized');
         });
     }
 };

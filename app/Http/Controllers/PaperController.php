@@ -452,4 +452,52 @@ class PaperController extends Controller
         $status = $paper->lit_review_finalized ? 'finalized' : 're-opened';
         return back()->with('success', "Literature review has been $status.");
     }
+
+    public function paperMethodology($profileId, $paperId)
+    {
+        $user = User::where("profileId", $profileId)->firstOrFail();
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+
+        // Calculate Permissions (Same logic as Lit Review)
+        $currentUser = Auth::user();
+        $canEdit = false;
+        if ($currentUser && $currentUser->lecturer) {
+            $isOwner = $paper->lecturer_id === $currentUser->lecturer->id;
+            $isCollaborator = Collaboration::where('paper_id', $paper->id)
+                ->where('lecturer_id', $currentUser->lecturer->id)->exists();
+            if ($isOwner || $isCollaborator) $canEdit = true;
+        }
+
+        return view('pages.methodology', [
+            'user' => $user,
+            'paper' => $paper,
+            'canEdit' => $canEdit
+        ]);
+    }
+
+    public function saveMethodology(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        
+        // Security Check
+        $this->authorizeEditor($paper);
+
+        $paper->methodology_xml = $request->input('xml');
+        $paper->save();
+
+        return response()->json(['status' => 'success', 'message' => 'Diagram saved successfully']);
+    }
+
+    public function finalizeMethodology($profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        
+        $this->authorizeEditor($paper);
+
+        $paper->methodology_finalized = !$paper->methodology_finalized;
+        $paper->save();
+
+        $status = $paper->methodology_finalized ? 'finalized' : 're-opened';
+        return back()->with('success', "Methodology has been $status.");
+    }
 }

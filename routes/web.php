@@ -89,6 +89,12 @@ Route::middleware('auth')->group(function () {
             
             Route::post("/finalize-lit-review", [PaperController::class, "finalizeLitReview"]);
 
+            Route::get("/methodology", [PaperController::class, "paperMethodology"]);
+
+            Route::post("/save-methodology", [PaperController::class, "saveMethodology"]);
+
+            Route::post("/finalize-methodology", [PaperController::class, "finalizeMethodology"]);
+
             Route::post("/create-new-project-role", [PaperController::class,"createNewProjectRole"]);
 
             Route::prefix("/settings")->group(function(){

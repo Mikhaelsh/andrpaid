@@ -1611,12 +1611,13 @@ namespace App\Models {
     /**
      * App\Models\Paper
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string|null $methodology_xml
      * @property boolean $lit_review_finalized
      * @property array|null $themes
      * @property string|null $synthesis_text
      * @property array|null $references_data
-     * @property \Illuminate\Support\Carbon|null $updated_at
-     * @property \Illuminate\Support\Carbon|null $created_at
      * @property mixed $paper_type_id
      * @property mixed $lecturer_id
      * @property boolean $openCollaboration
@@ -1653,12 +1654,13 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereOpencollaboration($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereLecturerId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper wherePaperTypeId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereCreatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereReferencesData($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereSynthesisText($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereThemes($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereLitReviewFinalized($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereMethodologyXml($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper query()

@@ -77,19 +77,35 @@
 
             {{-- 2. METHODOLOGY --}}
             <div class="col-md-6">
-                <a href="#" class="text-decoration-none">
+                <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/methodology" class="text-decoration-none">
                     <div class="workspace-card h-100 p-4">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div class="module-icon bg-info bg-opacity-10 text-info">
                                 <i class="bi bi-diagram-3"></i>
                             </div>
-                            <span class="badge bg-light text-secondary border">Empty</span>
+                            
+                            {{-- DYNAMIC STATUS BADGE --}}
+                            @if($paper->methodology_finalized)
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                    <i class="bi bi-check-lg me-1"></i> Finalized
+                                </span>
+                            @elseif(!empty($paper->methodology_xml))
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">In Progress</span>
+                            @else
+                                <span class="badge bg-light text-secondary border">Empty</span>
+                            @endif
                         </div>
                         <h5 class="fw-bold text-dark mb-2">Methodology</h5>
                         <p class="text-muted small mb-4">Design your research flow, diagram your process, and define variables.</p>
 
                         <div class="d-flex justify-content-between align-items-center border-top pt-3">
-                            <span class="small text-muted">No diagrams yet</span>
+                            <span class="small text-muted">
+                                @if(!empty($paper->methodology_xml))
+                                    Diagram available
+                                @else
+                                    No diagrams yet
+                                @endif
+                            </span>
                             <span class="small fw-bold text-primary">Open <i class="bi bi-arrow-right ms-1"></i></span>
                         </div>
                     </div>

@@ -75,19 +75,35 @@
 
             
             <div class="col-md-6">
-                <a href="#" class="text-decoration-none">
+                <a href="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/methodology" class="text-decoration-none">
                     <div class="workspace-card h-100 p-4">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div class="module-icon bg-info bg-opacity-10 text-info">
                                 <i class="bi bi-diagram-3"></i>
                             </div>
-                            <span class="badge bg-light text-secondary border">Empty</span>
+                            
+                            
+                            <?php if($paper->methodology_finalized): ?>
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                    <i class="bi bi-check-lg me-1"></i> Finalized
+                                </span>
+                            <?php elseif(!empty($paper->methodology_xml)): ?>
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">In Progress</span>
+                            <?php else: ?>
+                                <span class="badge bg-light text-secondary border">Empty</span>
+                            <?php endif; ?>
                         </div>
                         <h5 class="fw-bold text-dark mb-2">Methodology</h5>
                         <p class="text-muted small mb-4">Design your research flow, diagram your process, and define variables.</p>
 
                         <div class="d-flex justify-content-between align-items-center border-top pt-3">
-                            <span class="small text-muted">No diagrams yet</span>
+                            <span class="small text-muted">
+                                <?php if(!empty($paper->methodology_xml)): ?>
+                                    Diagram available
+                                <?php else: ?>
+                                    No diagrams yet
+                                <?php endif; ?>
+                            </span>
                             <span class="small fw-bold text-primary">Open <i class="bi bi-arrow-right ms-1"></i></span>
                         </div>
                     </div>
