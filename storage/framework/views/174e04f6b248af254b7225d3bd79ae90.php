@@ -235,43 +235,33 @@
         };
 
         function init() {
-            // 1. Bind click events for future clicks
             themeListItems.forEach(el => el.addEventListener("click", handleThemeChange));
 
-            // 2. Set the default theme immediately WITHOUT animation
             if(defaultThemeItem) {
                 const defaultTheme = defaultThemeItem.dataset.theme;
                 
-                // Apply background color
                 setTheme(defaultTheme);
                 
-                // Apply 'pressed' state to the button
                 setSelectedThemeItem(defaultThemeItem);
             }
         }
 
         function handleThemeChange(event) {
             let selectedItem = event.target;
-            // Handle if user clicks the ::before pseudo element
             if(!selectedItem.dataset.theme) return; 
             
             let selectedTheme = selectedItem.dataset.theme;
 
-            // Only animate if the item isn't already active
             if (!selectedItem.classList.contains("pressed") && !form.classList.contains("rotate")) {
                 
-                // Trigger Animation
                 form.classList.add("rotate");
                 
-                // Update Button State
                 setSelectedThemeItem(selectedItem);
                 
-                // Wait for card to be sideways (600ms) then swap background color
                 setTimeout(() => { 
                     setTheme(selectedTheme); 
                 }, 600);
 
-                // Remove animation class so it can happen again later
                 setTimeout(() => { 
                     form.classList.remove("rotate"); 
                 }, 1200);
@@ -294,10 +284,8 @@
             selectedItem.classList.add("pressed");
         }
 
-        // Run Initialization
         init();
 
-        // Bootstrap Modal Logic (if exists)
         if (window.bootstrap && document.getElementById('statusModal')) {
             setTimeout(() => {
                 var myModal = new bootstrap.Modal(document.getElementById('statusModal'));

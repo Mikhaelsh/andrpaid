@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Collaboration;
 use App\Models\Paper;
+use App\Models\PaperReference;
 use App\Models\PaperStar;
 use App\Models\PaperType;
 use App\Models\ResearchField;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PaperController extends Controller
 {
@@ -247,5 +250,191 @@ class PaperController extends Controller
             'user' => $user,
             'paper' => $paper
         ]);
+    }
+
+    public function LitReview($profileId, $paperId)
+    {
+        $user = User::where("profileId", $profileId)->firstOrFail();
+
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+
+        return view('pages.literature-review', [
+            'user' => $user,
+            'paper' => $paper
+        ]);
+    }
+
+    private function authorizeEditor($paper)
+    {
+        $user = Auth::user();
+
+        // 1. Ensure user has a lecturer profile (since papers are owned/edited by lecturers)
+        if (!$user->lecturer) {
+            abort(403, 'Only lecturers can edit papers.');
+        }
+
+        // 2. Check if User is the Owner
+        $isOwner = $paper->lecturer_id === $user->lecturer->id;
+
+        // 3. Check if User is an Assigned Collaborator
+        $isCollaborator = Collaboration::where('paper_id', $paper->id)
+            ->where('lecturer_id', $user->lecturer->id)
+            ->exists();
+
+        // 4. Deny if neither
+        if (!$isOwner && !$isCollaborator) {
+            abort(403, 'You do not have permission to edit this workspace.');
+        }
+    }
+
+    public function paperLitReview($profileId, $paperId)
+    {
+        $user = User::where("profileId", $profileId)->firstOrFail();
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+
+        // 1. Calculate Permissions
+        $currentUser = Auth::user();
+        $canEdit = false;
+
+        if ($currentUser && $currentUser->lecturer) {
+            $isOwner = $paper->lecturer_id === $currentUser->lecturer->id;
+            
+            // Check if they are a collaborator
+            $isCollaborator = Collaboration::where('paper_id', $paper->id)
+                ->where('lecturer_id', $currentUser->lecturer->id)
+                ->exists();
+
+            if ($isOwner || $isCollaborator) {
+                $canEdit = true;
+            }
+        }
+
+        // 2. Pass $canEdit to the view
+        return view('pages.literature-review', [
+            'user' => $user,
+            'paper' => $paper,
+            'canEdit' => $canEdit // <--- THIS LINE WAS MISSING
+        ]);
+    }
+
+    public function addReference(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+
+        // SECURITY CHECK
+        $this->authorizeEditor($paper);
+
+        $validated = $request->validate([
+            'title' => 'required|string',
+            'author' => 'required|string',
+            'year' => 'required|integer',
+            'journal' => 'nullable|string',
+            'url' => 'nullable|url',
+            'key_points' => 'nullable|json',
+            'is_analyzed' => 'nullable'
+        ]);
+
+        $newRef = [
+            'id' => uniqid(),
+            'title' => $validated['title'],
+            'author' => $validated['author'],
+            'year' => $validated['year'],
+            'publication' => $validated['journal'] ?? '',
+            'url' => $validated['url'] ?? '',
+            'key_points' => json_decode($validated['key_points'] ?? '[]'),
+            'is_analyzed' => $request->has('is_analyzed'),
+            'added_by' => Auth::user()->name, 
+            'created_at' => now()->toDateTimeString()
+        ];
+
+        $currentRefs = $paper->references_data ?? [];
+        $currentRefs[] = $newRef;
+        
+        $paper->references_data = $currentRefs;
+        $paper->save();
+
+        return back()->with('success', 'Reference added successfully.');
+    }
+
+    public function saveSynthesis(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+
+        // SECURITY CHECK
+        $this->authorizeEditor($paper);
+        
+        $paper->synthesis_text = $request->input('synthesis_text');
+        $paper->save();
+
+        return back()->with('success', 'Synthesis draft saved successfully.');
+    }
+
+    public function exportBibtex($profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $references = $paper->references_data ?? [];
+
+        if (empty($references)) {
+            return back()->with('error', 'No references to export.');
+        }
+
+        $bibtex = "";
+
+        foreach ($references as $ref) {
+            // Create a unique citation key (e.g., AuthorYear)
+            $lastname = explode(' ', trim($ref['author']))[0];
+            $citKey = Str::slug($lastname) . $ref['year'];
+
+            $bibtex .= "@article{{$citKey},\n";
+            $bibtex .= "  title = {{$ref['title']}},\n";
+            $bibtex .= "  author = {{$ref['author']}},\n";
+            $bibtex .= "  journal = {{$ref['publication']}},\n";
+            $bibtex .= "  year = {{$ref['year']}},\n";
+            if (!empty($ref['url'])) {
+                $bibtex .= "  url = {{$ref['url']}},\n";
+            }
+            $bibtex .= "}\n\n";
+        }
+
+        $filename = Str::slug($paper->title) . '-references.bib';
+
+        return response($bibtex)
+            ->header('Content-Type', 'application/x-bibtex')
+            ->header('Content-Disposition', "attachment; filename=\"$filename\"");
+    }
+
+    public function addTheme(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $request->validate(['theme_name' => 'required|string|max:50']);
+
+        $currentThemes = $paper->themes ?? []; // Get existing array
+        
+        // Avoid duplicates
+        if (!in_array($request->theme_name, $currentThemes)) {
+            $currentThemes[] = $request->theme_name;
+            $paper->themes = $currentThemes;
+            $paper->save();
+        }
+
+        return back();
+    }
+
+    public function removeTheme(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $themeToRemove = $request->input('theme_name');
+
+        $currentThemes = $paper->themes ?? [];
+        
+        // Filter out the theme to remove
+        $updatedThemes = array_values(array_filter($currentThemes, function($theme) use ($themeToRemove) {
+            return $theme !== $themeToRemove;
+        }));
+
+        $paper->themes = $updatedThemes;
+        $paper->save();
+
+        return back();
     }
 }

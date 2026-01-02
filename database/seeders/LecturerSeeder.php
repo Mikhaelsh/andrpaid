@@ -50,6 +50,22 @@ class LecturerSeeder extends Seeder
             "province_id" => $province->id
         ]);
 
+        // Best User (Top Funder)
+
+        $user = User::create([
+            'name'=> "Bahlil Lahadalia",
+            'email'=> "contactcenter136@esdm.go.id",
+            'password' => bcrypt("bahlilsunshine"),
+            'description'=> "Saya penyuka sawit 😍"
+        ]);
+
+        $province = Province::where('provinceId', "banten" )->first();
+
+        $lecturer = Lecturer::create([
+            "user_id"=> $user->id,
+            "province_id" => $province->id
+        ]);
+
         // 3 lecturers with 2 papers each
         Lecturer::factory()->count(3)->has(
             Paper::factory()->count(2),

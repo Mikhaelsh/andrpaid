@@ -31,7 +31,7 @@
 
             
             <div class="col-md-6">
-                <a href="#" class="text-decoration-none">
+                <a href="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/lit-review" class="text-decoration-none">
                     <div class="workspace-card h-100 p-4">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div class="module-icon bg-primary bg-opacity-10 text-primary">
@@ -44,7 +44,14 @@
 
                         
                         <div class="d-flex justify-content-between align-items-center border-top pt-3">
-                            <span class="small text-muted">12 References</span>
+                            <?php
+                                // Safety check: Decode if it's a string, default to empty array if null
+                                $refs = $paper->references_data;
+                                if(is_string($refs)) $refs = json_decode($refs, true);
+                                $refCount = is_array($refs) ? count($refs) : 0;
+                            ?>
+
+                            <span class="small text-muted"><?php echo e($refCount); ?> References</span>
                             <span class="small fw-bold text-primary">Open <i class="bi bi-arrow-right ms-1"></i></span>
                         </div>
                     </div>

@@ -9,6 +9,16 @@
     --info-blue: #17a2b8;
 }
 
+html, body {
+    height: 100%;
+}
+
+.page-wrapper-foot-nav{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 body {
     font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     color: var(--text-color);
@@ -291,6 +301,7 @@ body {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     position: relative;
     z-index: 10;
+    bottom: 0;
 }
 
 .btn-glass-feedback {
@@ -555,4 +566,275 @@ select.horizon-input {
 .profile-tabs .nav-link.active .badge-counter {
     background-color: #28a745;
     color: white;
+}
+
+.modal-detective {
+    max-width: 1100px; 
+}
+
+.modal-detective .modal-content {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+/* The Container Wrapper */
+.dossier-container {
+    display: flex;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    min-height: 600px;
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.dossier-paper {
+    flex: 1; /* 60% width */
+    background: #fdfbf7; /* Off-white paper color */
+    padding: 40px;
+    position: relative;
+    color: #1a1a1a;
+    border-right: 1px solid #d1d1d1;
+}
+
+/* Paper Texture Effect */
+.dossier-paper::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 5px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), transparent);
+}
+
+.dossier-title {
+    font-family: 'Courier New', Courier, monospace; /* Typewriter feel */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 2px solid #1a1a1a;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Custom Inputs for the Paper Side */
+.dossier-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.dossier-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    padding: 8px 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    color: #000;
+    transition: border-color 0.3s;
+    border-radius: 0;
+}
+
+.dossier-input:focus {
+    outline: none;
+    border-bottom-color: #8e2de2; /* Theme Purple */
+    background: rgba(142, 45, 226, 0.05);
+}
+
+.dossier-board {
+    flex: 1; /* 40% width */
+    background: #2c2c2c; /* Dark board background */
+    background-image: radial-gradient(#3a3a3a 15%, transparent 16%); /* Dot grid pattern */
+    background-size: 20px 20px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(255,255,255,0.1);
+}
+
+.board-header {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Sticky Note Styling */
+.sticky-note-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sticky-note {
+    background: #ffeb3b; /* Classic Post-it Yellow */
+    color: #1a1a1a;
+    padding: 15px;
+    font-family: 'Indie Flower', cursive, sans-serif; /* Handwriting font if available, else sans */
+    font-size: 0.95rem;
+    box-shadow: 2px 4px 6px rgba(0,0,0,0.3);
+    transform: rotate(-1deg);
+    transition: transform 0.2s;
+    position: relative;
+    border-radius: 2px;
+}
+
+.sticky-note:nth-child(even) { transform: rotate(1deg); background: #81d4fa; /* Blue note */ }
+.sticky-note:nth-child(3n) { transform: rotate(-2deg); background: #ffcc80; /* Orange note */ }
+
+.sticky-note:hover {
+    transform: scale(1.02) rotate(0deg);
+    z-index: 10;
+}
+
+/* Delete 'X' on sticky note */
+.sticky-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    opacity: 0.5;
+    font-size: 14px;
+}
+.sticky-close:hover { opacity: 1; color: red; }
+
+/* Add Note Input Area */
+.add-note-wrapper {
+    margin-top: 20px;
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+}
+
+.note-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    resize: none;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+.note-input:focus { outline: none; }
+.note-input::placeholder { color: rgba(255,255,255,0.5); }
+
+.btn-pin {
+    width: 100%;
+    background: #8e2de2;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+.btn-pin:hover { background: #7524b8; }
+
+
+.key-point-badge {
+    font-size: 0.75rem;
+    background: #fff8e1; 
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+/* SYNTHESIS STUDIO STYLES */
+.synthesis-container {
+    display: flex;
+    height: 75vh;
+    border-radius: 15px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+}
+
+/* Left: Source Material */
+.synthesis-sources {
+    flex: 0.8;
+    background: #2c3e50;
+    color: #ecf0f1;
+    padding: 25px;
+    overflow-y: auto;
+    border-right: 1px solid #34495e;
+}
+
+.source-item {
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+.source-citation {
+    font-size: 0.75rem;
+    color: #bdc3c7;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+.source-points li { margin-bottom: 5px; }
+
+/* Right: The Editor */
+.synthesis-editor {
+    flex: 1.2;
+    padding: 40px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-textarea {
+    flex-grow: 1;
+    border: none;
+    font-family: 'Georgia', serif;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #2c3e50;
+    resize: none;
+    outline: none;
+    background: transparent;
+}
+.editor-textarea::placeholder { color: #ccc; font-style: italic; }
+
+.synthesis-header {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    display: flex; justify-content: space-between;
+}
+
+@media (min-width: 576px) {
+    .modal-detective {
+        max-width: 1100px !important;
+        margin-right: auto;
+        margin-left: auto;
+    }
 }

@@ -70,8 +70,22 @@ Route::middleware('auth')->group(function () {
             Route::get("/overview", [PaperController::class,"paperOverview"]);
 
             Route::get("/workspace", [PaperController::class,"paperWorkspace"]);
+            
+            Route::get("/lit-review", [PaperController::class, "LitReview"]);
+
+            Route::post("/add-reference", [PaperController::class,"addReference"]);
+
+            Route::post("/save-synthesis", [PaperController::class, "saveSynthesis"]);
+
+            Route::get("/export-bibtex", [PaperController::class, "exportBibtex"]);
+
+            Route::post("/add-theme", [PaperController::class, "addTheme"]);
+
+            Route::post("/remove-theme", [PaperController::class, "removeTheme"]);
 
             Route::post("/toggle-collaboration", [PaperController::class,"toggleCollaboration"]);
+            
+            Route::get("/lit-review", [PaperController::class, "paperLitReview"]);
 
             Route::post("/create-new-project-role", [PaperController::class,"createNewProjectRole"]);
 
@@ -85,6 +99,7 @@ Route::middleware('auth')->group(function () {
 
             Route::prefix("/collaborations")->group(function(){
                 Route::get("/", [CollaborationController::class,"index"]);
+                
 
                 Route::post("/toggle-collaboration", [CollaborationController::class,"toggleCollaboration"]);
 
