@@ -437,4 +437,19 @@ class PaperController extends Controller
 
         return back();
     }
+
+    public function finalizeLitReview($profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        
+        // Security check
+        $this->authorizeEditor($paper);
+
+        // Toggle the status (Finalized <-> Draft)
+        $paper->lit_review_finalized = !$paper->lit_review_finalized;
+        $paper->save();
+
+        $status = $paper->lit_review_finalized ? 'finalized' : 're-opened';
+        return back()->with('success', "Literature review has been $status.");
+    }
 }

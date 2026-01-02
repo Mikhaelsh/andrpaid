@@ -39,7 +39,22 @@
                             <div class="module-icon bg-primary bg-opacity-10 text-primary">
                                 <i class="bi bi-book"></i>
                             </div>
-                            <span class="badge bg-light text-secondary border">Draft</span>
+                            {{-- DYNAMIC STATUS BADGE --}}
+                            @php
+                                $refs = $paper->references_data;
+                                if(is_string($refs)) $refs = json_decode($refs, true);
+                                $refCount = is_array($refs) ? count($refs) : 0;
+                            @endphp
+
+                            @if($paper->lit_review_finalized)
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                    <i class="bi bi-check-lg me-1"></i> Finalized
+                                </span>
+                            @elseif($refCount > 0)
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">In Progress</span>
+                            @else
+                                <span class="badge bg-light text-secondary border">Draft</span>
+                            @endif
                         </div>
                         <h5 class="fw-bold text-dark mb-2">Literature Review</h5>
                         <p class="text-muted small mb-4">Manage references, key points, and synthesize your theoretical framework.</p>

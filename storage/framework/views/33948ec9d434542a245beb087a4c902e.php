@@ -174,6 +174,34 @@
 
                     </div>
                 </div>
+                
+                
+                <?php if($canEdit): ?>
+                    <div class="workspace-card p-4 mt-4">
+                        <h6 class="fw-bold text-dark mb-2">Review Status</h6>
+                        <p class="text-muted small mb-3">
+                            <?php if($paper->lit_review_finalized): ?>
+                                This section is marked as complete. You can reopen it if you need to add more sources.
+                            <?php else: ?>
+                                Once you have synthesized your sources, mark this section as finalized.
+                            <?php endif; ?>
+                        </p>
+                        
+                        <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/finalize-lit-review" method="POST">
+                            <?php echo csrf_field(); ?>
+                            <?php if($paper->lit_review_finalized): ?>
+                                <button type="submit" class="btn btn-outline-success w-100">
+                                    <i class="bi bi-check-circle-fill me-2"></i> Finalized
+                                </button>
+                            <?php else: ?>
+                                <button type="submit" class="btn btn-dark w-100">
+                                    <i class="bi bi-check2-circle me-2"></i> Finalize Review
+                                </button>
+                            <?php endif; ?>
+                        </form>
+                    </div>
+                <?php endif; ?>
+
             </div>
 
             
@@ -243,7 +271,6 @@
                                                 </button>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

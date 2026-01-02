@@ -86,6 +86,8 @@ Route::middleware('auth')->group(function () {
             Route::post("/toggle-collaboration", [PaperController::class,"toggleCollaboration"]);
             
             Route::get("/lit-review", [PaperController::class, "paperLitReview"]);
+            
+            Route::post("/finalize-lit-review", [PaperController::class, "finalizeLitReview"]);
 
             Route::post("/create-new-project-role", [PaperController::class,"createNewProjectRole"]);
 

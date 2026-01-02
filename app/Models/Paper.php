@@ -15,6 +15,7 @@ class Paper extends Model
         'references_data' => 'array', 
         'openCollaboration' => 'boolean',
         'themes' => 'array',
+        'lit_review_finalized' => 'boolean',
     ];
 
     protected $with = ["paperStars"];

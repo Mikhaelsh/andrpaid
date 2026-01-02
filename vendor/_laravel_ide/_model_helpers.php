@@ -1611,6 +1611,7 @@ namespace App\Models {
     /**
      * App\Models\Paper
      *
+     * @property boolean $lit_review_finalized
      * @property array|null $themes
      * @property string|null $synthesis_text
      * @property array|null $references_data
@@ -1657,6 +1658,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereReferencesData($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereSynthesisText($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereThemes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereLitReviewFinalized($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper query()

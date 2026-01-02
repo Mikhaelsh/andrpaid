@@ -28,6 +28,10 @@ return new class extends Migration
 
             $table->foreignId('lecturer_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('paper_type_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->json('references_data')->nullable(); 
+            $table->longText('synthesis_text')->nullable();
+            $table->json('themes')->nullable(); // Stores ["Theme A", "Theme B"]
+            $table->boolean('lit_review_finalized')->default(false);
             $table->timestamps();
         });
     }
@@ -38,5 +42,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('papers');
+        Schema::table('papers', function (Blueprint $table) {
+            $table->dropColumn('references_data');
+            $table->dropColumn('synthesis_text');
+            $table->dropColumn('themes');
+            $table->dropColumn('lit_review_finalized');
+        });
     }
 };

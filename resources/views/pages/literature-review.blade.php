@@ -173,6 +173,34 @@
 
                     </div>
                 </div>
+                
+                {{-- ACTIONS CARD (Finalize) --}}
+                @if($canEdit)
+                    <div class="workspace-card p-4 mt-4">
+                        <h6 class="fw-bold text-dark mb-2">Review Status</h6>
+                        <p class="text-muted small mb-3">
+                            @if($paper->lit_review_finalized)
+                                This section is marked as complete. You can reopen it if you need to add more sources.
+                            @else
+                                Once you have synthesized your sources, mark this section as finalized.
+                            @endif
+                        </p>
+                        
+                        <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/finalize-lit-review" method="POST">
+                            @csrf
+                            @if($paper->lit_review_finalized)
+                                <button type="submit" class="btn btn-outline-success w-100">
+                                    <i class="bi bi-check-circle-fill me-2"></i> Finalized
+                                </button>
+                            @else
+                                <button type="submit" class="btn btn-dark w-100">
+                                    <i class="bi bi-check2-circle me-2"></i> Finalize Review
+                                </button>
+                            @endif
+                        </form>
+                    </div>
+                @endif
+
             </div>
 
             {{-- RIGHT COLUMN: Reference List --}}
@@ -242,7 +270,6 @@
                                                 </button>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
