@@ -500,4 +500,154 @@ class PaperController extends Controller
         $status = $paper->methodology_finalized ? 'finalized' : 're-opened';
         return back()->with('success', "Methodology has been $status.");
     }
+
+    // --- RESULTS & ANALYSIS ---
+
+    public function paperResults($profileId, $paperId)
+    {
+        $user = User::where("profileId", $profileId)->firstOrFail();
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+
+        // Calculate Permissions
+        $currentUser = Auth::user();
+        $canEdit = false;
+        if ($currentUser && $currentUser->lecturer) {
+            $isOwner = $paper->lecturer_id === $currentUser->lecturer->id;
+            $isCollaborator = Collaboration::where('paper_id', $paper->id)
+                ->where('lecturer_id', $currentUser->lecturer->id)->exists();
+            if ($isOwner || $isCollaborator) $canEdit = true;
+        }
+
+        return view('pages.results', [
+            'user' => $user,
+            'paper' => $paper,
+            'canEdit' => $canEdit
+        ]);
+    }
+
+    public function addResultChart(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $request->validate([
+            'chart_image' => 'required|image|max:5048', // 5MB Max
+            'title' => 'required|string'
+        ]);
+
+        // Upload Logic
+        $path = $request->file('chart_image')->store('charts', 'public');
+
+        $newItem = [
+            'id' => uniqid(),
+            'type' => 'chart',
+            'title' => $request->title,
+            'content' => $path, // Store path
+            'analysis' => [] // Array for bullet points
+        ];
+
+        $data = $paper->results_data ?? [];
+        $data[] = $newItem;
+        $paper->results_data = $data;
+        $paper->save();
+
+        return back()->with('success', 'Chart added successfully.');
+    }
+
+    public function addResultTable(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $newItem = [
+            'id' => uniqid(),
+            'type' => 'table',
+            'title' => $request->title ?? 'Untitled Table',
+            'content' => [ // Default 3x3 Table
+                ['Header 1', 'Header 2', 'Header 3'],
+                ['Data 1', 'Data 2', 'Data 3'],
+                ['Data 4', 'Data 5', 'Data 6']
+            ],
+            'analysis' => []
+        ];
+
+        $data = $paper->results_data ?? [];
+        $data[] = $newItem;
+        $paper->results_data = $data;
+        $paper->save();
+
+        return back()->with('success', 'Table created successfully.');
+    }
+
+    public function updateResultItem(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $data = $paper->results_data ?? [];
+        $itemId = $request->input('item_id');
+        
+        foreach ($data as &$item) {
+            if ($item['id'] === $itemId) {
+                
+                // 1. Handle Title Rename (NEW)
+                if ($request->has('title')) {
+                    $item['title'] = $request->input('title');
+                }
+
+                // 2. Handle Adding Analysis Point
+                if ($request->has('new_point')) {
+                    $item['analysis'][] = $request->input('new_point');
+                }
+                
+                // 3. Handle Removing Analysis Point
+                if ($request->has('remove_point_index')) {
+                    array_splice($item['analysis'], $request->input('remove_point_index'), 1);
+                }
+
+                // 4. Handle Table Data Update
+                if ($request->has('table_content')) {
+                    $item['content'] = json_decode($request->input('table_content'));
+                }
+                
+                break;
+            }
+        }
+
+        $paper->results_data = $data;
+        $paper->save();
+
+        return back()->with('success', 'Updated successfully.');
+    }
+
+    public function deleteResultItem(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $itemId = $request->input('item_id');
+        $data = $paper->results_data ?? [];
+
+        // Filter out the item
+        $data = array_values(array_filter($data, function($item) use ($itemId) {
+            return $item['id'] !== $itemId;
+        }));
+
+        $paper->results_data = $data;
+        $paper->save();
+
+        return back()->with('success', 'Item removed.');
+    }
+
+    public function finalizeResults($profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $paper->results_finalized = !$paper->results_finalized;
+        $paper->save();
+
+        $status = $paper->results_finalized ? 'finalized' : 're-opened';
+        return back()->with('success', "Results section has been $status.");
+    }
 }

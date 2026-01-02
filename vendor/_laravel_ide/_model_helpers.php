@@ -1613,6 +1613,8 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
+     * @property array|null $results_data
+     * @property boolean $methodology_finalized
      * @property string|null $methodology_xml
      * @property boolean $lit_review_finalized
      * @property array|null $themes
@@ -1659,6 +1661,8 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereThemes($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereLitReviewFinalized($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereMethodologyXml($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereMethodologyFinalized($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereResultsData($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper newModelQuery()

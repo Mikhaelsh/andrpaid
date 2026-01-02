@@ -95,6 +95,18 @@ Route::middleware('auth')->group(function () {
 
             Route::post("/finalize-methodology", [PaperController::class, "finalizeMethodology"]);
 
+            Route::get("/results", [PaperController::class, "paperResults"]);
+
+            Route::post("/results/add-chart", [PaperController::class, "addResultChart"]);
+
+            Route::post("/results/add-table", [PaperController::class, "addResultTable"]);
+
+            Route::post("/results/update", [PaperController::class, "updateResultItem"]);
+
+            Route::post("/results/delete", [PaperController::class, "deleteResultItem"]);
+
+            Route::post("/finalize-results", [PaperController::class, "finalizeResults"]);
+
             Route::post("/create-new-project-role", [PaperController::class,"createNewProjectRole"]);
 
             Route::prefix("/settings")->group(function(){

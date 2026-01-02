@@ -34,6 +34,8 @@ return new class extends Migration
             $table->boolean('lit_review_finalized')->default(false);
             $table->longText('methodology_xml')->nullable();
             $table->boolean('methodology_finalized')->default(false);
+            $table->json('results_data')->nullable();
+            $table->boolean('results_finalized')->default(false);
             $table->timestamps();
         });
     }
@@ -51,6 +53,8 @@ return new class extends Migration
             $table->dropColumn('lit_review_finalized');
             $table->dropColumn('methodology_xml');
             $table->dropColumn('methodology_finalized');
+            $table->dropColumn('results_data');
+            $table->dropColumn('results_finalized');
         });
     }
 };

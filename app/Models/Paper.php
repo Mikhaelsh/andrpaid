@@ -17,6 +17,8 @@ class Paper extends Model
         'themes' => 'array',
         'lit_review_finalized' => 'boolean',
         'methodology_finalized' => 'boolean',
+        'results_data' => 'array',
+        'results_finalized' => 'boolean',
     ];
 
     protected $with = ["paperStars"];
