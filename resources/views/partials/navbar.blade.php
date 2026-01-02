@@ -28,11 +28,21 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link px-3 {{ request()->is('messages') ? 'active' : '' }}" href="/messages">
-                        <i class="bi bi-chat-dots-fill me-1"></i> Messages
-                    </a>
-                </li>
+                @notadmin
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {{ request()->is('messages') ? 'active' : '' }}" href="/messages">
+                            <i class="bi bi-chat-dots-fill me-1"></i> Messages
+                        </a>
+                    </li>
+                @endnotadmin
+
+                @admin
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {{ request()->is('admin-panel*') ? 'active' : '' }}" href="/admin-panel">
+                            <i class="bi bi-shield-lock-fill me-1"></i> Admin Panel
+                        </a>
+                    </li>
+                @endadmin
             </ul>
 
             <ul class="navbar-nav ms-auto align-items-center">

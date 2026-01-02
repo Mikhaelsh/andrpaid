@@ -60,6 +60,10 @@ class User extends Authenticatable
         return $this->university !== null;
     }
 
+    public function isAdmin(){
+        return $this->id === 1;
+    }
+
     public function lecturer(){
         return $this->hasOne(Lecturer::class);
     }

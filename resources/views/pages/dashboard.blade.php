@@ -3,11 +3,8 @@
 @section('title', 'Dashboard')
 
 @section('additionalCSS')
-    <link rel="stylesheet" href="styles/auth.css">
 @endsection
 
 @section('content')
-@admin
-Im admin boys
-@endadmin
+
 @endsection

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CollaborationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FindController;
@@ -125,5 +126,33 @@ Route::middleware('auth')->group(function () {
         Route::post("/create-new-paper", [PaperController::class,"createNewPaper"]);
 
         Route::post('/{paperId}/star', [PaperController::class, 'toggleStar']);
+    });
+
+    Route::prefix("/admin-panel")->group(function () {
+        Route::get("/", [AdminController::class,"index"]);
+
+        Route::prefix("/master-data")->group(function () {
+            Route::prefix("/research-fields")->group(function () {
+                Route::get("/", [AdminController::class,"indexResearchFields"]);
+
+                Route::post("/create", [AdminController::class,"createResearchFields"]);
+
+                Route::post("/update", [AdminController::class,"updateResearchFields"]);
+
+                Route::post("/delete", [AdminController::class,"deleteResearchFields"]);
+            });
+
+            Route::prefix("/paper-types")->group(function () {
+                Route::get("/", [AdminController::class,"indexPaperTypes"]);
+
+                Route::post("/create", [AdminController::class,"createPaperTypes"]);
+
+                Route::post("/update", [AdminController::class,"updatePaperTypes"]);
+
+                Route::post("/delete", [AdminController::class,"deletePaperTypes"]);
+            });
+
+            Route::get("/paper-types", [AdminController::class,"indexPaperTypes"]);
+        });
     });
 });

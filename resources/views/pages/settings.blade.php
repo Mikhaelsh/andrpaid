@@ -77,16 +77,20 @@
                                         <textarea class="form-control" name="description" rows="4" placeholder="Tell us a little bit about yourself...">{{ $user->description }}</textarea>
                                     </div>
 
-                                    <div class="col-md-12">
-                                        <label class="form-label fw-semibold">Province / Location</label>
-                                        <select class="form-select" name="province_id">
-                                            @foreach ($allProvinces as $eachProvince)
-                                                <option {{ $eachProvince->name === $province->name ? 'selected' : '' }}
-                                                    value="{{ $eachProvince->provinceId }}">{{ $eachProvince->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                    @notadmin
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-semibold">Province / Location</label>
+                                            <select class="form-select" name="province_id">
+                                                @foreach ($allProvinces as $eachProvince)
+                                                    <option
+                                                        {{ isset($province) && $eachProvince->name === $province->name ? 'selected' : '' }}
+                                                        value="{{ $eachProvince->provinceId }}">
+                                                        {{ $eachProvince->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @endnotadmin
 
                                     @lecturer
                                         <div class="col-md-6">
@@ -438,52 +442,54 @@
 
                             <hr class="my-4">
 
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="fw-bold mb-1 text-danger">Delete Account</h6>
-                                    <p class="text-muted mb-0 small">Permanently remove your account and all data.</p>
+                            @notadmin
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="fw-bold mb-1 text-danger">Delete Account</h6>
+                                        <p class="text-muted mb-0 small">Permanently remove your account and all data.</p>
+                                    </div>
+                                    <button class="btn btn-outline-danger btn-sm" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseDelete" aria-expanded="false"
+                                        aria-controls="collapseDelete">
+                                        Delete
+                                    </button>
                                 </div>
-                                <button class="btn btn-outline-danger btn-sm" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseDelete" aria-expanded="false"
-                                    aria-controls="collapseDelete">
-                                    Delete
-                                </button>
-                            </div>
 
-                            <div class="collapse mt-3" id="collapseDelete">
-                                <div class="card card-body border-danger bg-danger bg-opacity-10">
-                                    <h6 class="fw-bold text-danger mb-2">Are you absolutely sure?</h6>
-                                    <p class="small text-danger mb-3">
-                                        This action cannot be undone. This will permanently delete your profile, papers, and
-                                        remove your data from our servers.
-                                    </p>
+                                <div class="collapse mt-3" id="collapseDelete">
+                                    <div class="card card-body border-danger bg-danger bg-opacity-10">
+                                        <h6 class="fw-bold text-danger mb-2">Are you absolutely sure?</h6>
+                                        <p class="small text-danger mb-3">
+                                            This action cannot be undone. This will permanently delete your profile, papers, and
+                                            remove your data from our servers.
+                                        </p>
 
-                                    <form action="/settings/delete-account" method="POST">
-                                        @csrf
+                                        <form action="/settings/delete-account" method="POST">
+                                            @csrf
 
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold small text-danger">
-                                                Type "<span class="user-select-all">DELETE ACCOUNT</span>" to confirm
-                                            </label>
-                                            <input type="text" class="form-control border-danger"
-                                                id="deleteConfirmationInput" placeholder="DELETE ACCOUNT"
-                                                autocomplete="off">
-                                        </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold small text-danger">
+                                                    Type "<span class="user-select-all">DELETE ACCOUNT</span>" to confirm
+                                                </label>
+                                                <input type="text" class="form-control border-danger"
+                                                    id="deleteConfirmationInput" placeholder="DELETE ACCOUNT"
+                                                    autocomplete="off">
+                                            </div>
 
-                                        <div class="d-flex justify-content-end gap-2">
-                                            <button type="button" class="btn btn-sm btn-light text-danger border"
-                                                data-bs-toggle="collapse" data-bs-target="#collapseDelete">
-                                                Cancel
-                                            </button>
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <button type="button" class="btn btn-sm btn-light text-danger border"
+                                                    data-bs-toggle="collapse" data-bs-target="#collapseDelete">
+                                                    Cancel
+                                                </button>
 
-                                            <button type="submit" class="btn btn-sm btn-danger" id="finalDeleteBtn"
-                                                disabled>
-                                                Delete Account
-                                            </button>
-                                        </div>
-                                    </form>
+                                                <button type="submit" class="btn btn-sm btn-danger" id="finalDeleteBtn"
+                                                    disabled>
+                                                    Delete Account
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
+                            @endnotadmin
 
                         </div>
                     </div>
