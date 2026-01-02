@@ -19,11 +19,12 @@ class AffiliationSeeder extends Seeder
 
         $univ = $user->university;
 
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 40; $i++) {
             $user = User::factory()->create();
 
             $lecturer = Lecturer::factory()->create([
                 'user_id' => $user->id,
+                'province_id' => ($i % 34) + 1,
             ]);
 
             Affiliation::create([

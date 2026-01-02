@@ -7,5 +7,7 @@
 @endsection
 
 @section('content')
-
+@admin
+Im admin boys
+@endadmin
 @endsection
