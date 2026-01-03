@@ -14,6 +14,29 @@ class LoginController extends Controller
         return view("pages.login");
     }
 
+    public function indexForgotPassword(){
+        return view("pages.login-forgotPassword");
+    }
+
+    public function resetPassword(Request $request){
+        $validated = $request->validate([
+            'email'            => 'required|email|exists:users,email',
+            'password'         => 'required|min:8|same:password_confirmation',
+            'password_confirmation'  => 'required',
+        ]);
+
+        $user = User::where("email", $validated["email"])->first();
+
+        if(!$user->isAdmin()){
+            $user->update([
+                "password" => bcrypt($validated["password"]),
+                "latest_password_updated_at" => now()
+            ]);
+        }
+
+        return redirect("/login")->with('success', 'Your password has been changed successfully!');
+    }
+
     public function loginUser(Request $request){
         $validated = $request->validate([
             'email'     => 'required',

@@ -18,9 +18,15 @@ Route::get("/", function () {
 });
 
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'index'])->name("login");
+    Route::prefix("/login")->group(function(){
+        Route::get('/', [LoginController::class, 'index'])->name("login");
 
-    Route::post('/login', [LoginController::class, 'loginUser']);
+        Route::get('/forgot-password', [LoginController::class, 'indexForgotPassword']);
+
+        Route::post('/', [LoginController::class, 'loginUser']);
+
+        Route::post('/reset-password', [LoginController::class, 'resetPassword']);
+    });
 
     Route::prefix('/register')->group(function () {
         Route::get('/', [RegisterController::class,'index']);

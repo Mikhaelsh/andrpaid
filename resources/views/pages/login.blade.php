@@ -40,7 +40,7 @@
                                 <div class="mb-2">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <label for="password" class="form-label">Password</label>
-                                        <a href="/forgot-password" class="auth-link small">Forgot password?</a>
+                                        <a href="/login/forgot-password" class="auth-link small">Forgot password?</a>
                                     </div>
                                     <div class="input-group">
                                         <span class="input-group-text">
