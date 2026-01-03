@@ -170,36 +170,30 @@ class PaperController extends Controller
             });
         }
 
-        // Status
         if ($request->filled('status')) {
             $query->whereIn('status', (array) $request->status);
         }
 
-        // Visibility
         if ($request->filled('visibility')) {
             $query->whereIn('visibility', (array) $request->visibility);
         }
 
-        // Open Collaboration
         if ($request->filled('collab')) {
             $query->whereIn('openCollaboration', (array) $request->collab);
         }
 
-        // Paper Type
         if ($request->filled('paper_type_id')) {
             $query->whereHas('paperType', function ($q) use ($request) {
                 $q->whereIn('paperTypeId', (array) $request->paper_type_id);
             });
         }
 
-        // Research Field
         if ($request->filled('research_field_id')) {
             $query->whereHas('researchFields', function ($q) use ($request) {
                 $q->whereIn('researchFieldId', (array) $request->research_field_id);
             });
         }
 
-        // Sorting
         $sort = $request->input('sort', 'newest');
         switch ($sort) {
             case 'oldest':
