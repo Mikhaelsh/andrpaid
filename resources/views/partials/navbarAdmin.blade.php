@@ -85,7 +85,7 @@
                 <li class="admin-nav-item">
                     <a href="/admin-panel/system/maintenance"
                         class="admin-nav-link text-danger {{ request()->is('admin-panel/system*') ? 'active' : '' }}">
-                        <i class="bi bi-power text-danger"></i>
+                        <i class="bi bi-gear text-danger"></i>
                         <span>System Control</span>
                     </a>
                 </li>

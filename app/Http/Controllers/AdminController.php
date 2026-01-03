@@ -11,11 +11,56 @@ use App\Models\University;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
     public function index(){
-        return view("pages.admin");
+        $totalUsers = User::count();
+        $totalUniversities = University::count();
+        $totalLecturers = Lecturer::count();
+        $totalPapers = Paper::count();
+
+        $recentUsers = User::latest()->take(5)->get();
+        $recentActivities = ActivityLog::with('user')->latest()->take(5)->get();
+
+        $endDate = Carbon::now();
+        $startDate = Carbon::now()->subDays(6);
+
+        $logs = ActivityLog::select(DB::raw('DATE(created_at) as date'), 'type', DB::raw('count(*) as count'))
+            ->whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()])
+            ->whereIn('type', ['login', 'logout'])
+            ->groupBy('date', 'type')
+            ->get();
+
+        $chartLabels = [];
+        $loginData = [];
+        $logoutData = [];
+
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i)->format('Y-m-d');
+            $shortDate = Carbon::now()->subDays($i)->format('d M');
+
+            $chartLabels[] = $shortDate;
+
+            $loginCount = $logs->where('date', $date)->where('type', 'login')->first()->count ?? 0;
+            $logoutCount = $logs->where('date', $date)->where('type', 'logout')->first()->count ?? 0;
+
+            $loginData[] = $loginCount;
+            $logoutData[] = $logoutCount;
+        }
+
+        return view('pages.admin', compact(
+            'totalUsers',
+            'totalUniversities',
+            'totalLecturers',
+            'totalPapers',
+            'recentUsers',
+            'recentActivities',
+            'chartLabels',
+            'loginData',
+            'logoutData'
+        ));
     }
 
     public function indexResearchFields(){
@@ -161,15 +206,12 @@ class AdminController extends Controller
     }
 
     public function indexGlobalStatistics(Request $request){
-        // --- 1. OVERALL STATS ---
         $stats = [
             'universities' => University::count(),
             'lecturers'    => Lecturer::count(),
             'papers'       => Paper::count(),
         ];
 
-        // --- 2. MAP DATA (Snapshot for Leaflet) ---
-        // Only fetches necessary fields. No date filtering here (Map shows current state).
         $mapData = User::with(['university.province', 'lecturer.province'])
             ->get()
             ->map(function ($user) {
@@ -188,7 +230,7 @@ class AdminController extends Controller
 
                 return [
                     'name' => $user->name,
-                    'role' => $role, // 'university' or 'lecturer'
+                    'role' => $role,
                     'province' => $province,
                     'profile_id' => $user->profileId
                 ];
@@ -196,12 +238,9 @@ class AdminController extends Controller
             ->filter()
             ->values();
 
-        // --- 3. CHART DATA (Historical Growth) ---
-        // Applies Date Filter if present, otherwise defaults to last 30 days
         $startDate = $request->date_from ? Carbon::parse($request->date_from) : Carbon::now()->subDays(30);
         $endDate   = $request->date_to ? Carbon::parse($request->date_to) : Carbon::now();
 
-        // Helper to get daily counts
         $getGrowth = function($model) use ($startDate, $endDate) {
             return $model::selectRaw('DATE(created_at) as date, count(*) as count')
                 ->whereBetween('created_at', [$startDate, $endDate])
