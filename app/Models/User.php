@@ -75,4 +75,8 @@ class User extends Authenticatable
     public function paperStars(){
         return $this->hasMany(PaperStar::class);
     }
+
+    public function activityLogs(){
+        return $this->hasMany(ActivityLog::class);
+    }
 }

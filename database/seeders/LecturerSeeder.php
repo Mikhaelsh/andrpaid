@@ -51,8 +51,8 @@ class LecturerSeeder extends Seeder
         ]);
 
         // 3 lecturers with 2 papers each
-        Lecturer::factory()->count(3)->has(
-            Paper::factory()->count(2),
+        Lecturer::factory()->count(5)->has(
+            Paper::factory()->count(5),
             'papers'
         )->create();
     }

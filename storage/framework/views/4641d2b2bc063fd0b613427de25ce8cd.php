@@ -1,4 +1,4 @@
-<?php $__env->startSection('title', 'Master Data - Research Fields'); ?>
+<?php $__env->startSection('title', 'Master Data'); ?>
 
 <?php $__env->startSection('additionalCSS'); ?>
     <link rel="stylesheet" href="<?php echo e(asset('styles/admin.css')); ?>">

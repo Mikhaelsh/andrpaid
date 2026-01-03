@@ -151,8 +151,12 @@ Route::middleware('auth')->group(function () {
 
                 Route::post("/delete", [AdminController::class,"deletePaperTypes"]);
             });
+        });
 
-            Route::get("/paper-types", [AdminController::class,"indexPaperTypes"]);
+        Route::prefix("/monitoring")->group(function () {
+            Route::get("/activity-logs", [AdminController::class,"indexActivityLogs"]);
+
+            Route::get("/global-statistics", [AdminController::class,"indexGlobalStatistics"]);
         });
     });
 });

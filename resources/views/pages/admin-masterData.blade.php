@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Master Data - Research Fields')
+@section('title', 'Master Data')
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">

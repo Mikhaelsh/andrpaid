@@ -10,7 +10,7 @@
 .admin-subnav-wrapper {
     position: sticky;
     top: var(--main-nav-height);
-    z-index: 1020;
+    z-index: 1000 !important;
     background-color: var(--admin-bg);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--admin-border);

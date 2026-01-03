@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +27,13 @@ class LoginController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
+            if(!$user->isAdmin()){
+                ActivityLog::create([
+                    "user_id" => $user->id,
+                    "type" => "login"
+                ]);
+            }
+
             return redirect('/dashboard');
         }
 
@@ -33,10 +41,18 @@ class LoginController extends Controller
     }
 
     public function logoutUser(Request $request) {
+        if(!Auth::user()->isAdmin()){
+            ActivityLog::create([
+                "user_id" => Auth::user()->id,
+                "type" => "logout"
+            ]);
+        }
+
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
 
         return redirect('/');
     }

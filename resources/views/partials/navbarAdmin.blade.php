@@ -68,7 +68,7 @@
                     </a>
                     <ul class="dropdown-menu admin-dropdown-menu" aria-labelledby="monitoringDropdown">
                         <li>
-                            <a class="dropdown-item admin-dropdown-item" href="/admin-panel/monitoring/statistics">
+                            <a class="dropdown-item admin-dropdown-item" href="/admin-panel/monitoring/global-statistics">
                                 <i class="bi bi-bar-chart-line"></i> Global Statistics
                             </a>
                         </li>
