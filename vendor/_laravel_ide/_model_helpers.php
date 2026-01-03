@@ -3522,8 +3522,18 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
+     * @property mixed $user_id
+     * @property mixed $report_type_id
+     * @property string $status
+     * @property string $description
      * @property int $id
+     * @property-read \App\Models\User $user
+     * @property-read \App\Models\ReportType $reportType
      * @method static \Illuminate\Database\Eloquent\Builder<Report>|Report whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Report>|Report whereDescription($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Report>|Report whereStatus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Report>|Report whereReportTypeId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Report>|Report whereUserId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Report>|Report whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Report>|Report whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Report>|Report newModelQuery()
@@ -3831,8 +3841,14 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string $reportTypeId
+     * @property string $name
      * @property int $id
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Report> $reports
+     * @property-read int|null $reports_count
      * @method static \Illuminate\Database\Eloquent\Builder<ReportType>|ReportType whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<ReportType>|ReportType whereName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<ReportType>|ReportType whereReporttypeid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<ReportType>|ReportType whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<ReportType>|ReportType whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<ReportType>|ReportType newModelQuery()
@@ -4789,6 +4805,8 @@ namespace App\Models {
      * @property-read int|null $paperStars_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ActivityLog> $activityLogs
      * @property-read int|null $activityLogs_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Report> $reports
+     * @property-read int|null $reports_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
      * @property-read int|null $notifications_count
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereId($value)

@@ -22,13 +22,14 @@
 </footer>
 
 @notadmin
+    @php
+        $reportTypes = \App\Models\ReportType::all();
+    @endphp
+
     <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
-
             <div class="modal-content">
-
                 <div class="horizon-card">
-
                     <div class="horizon-sidebar">
                         <div class="horizon-sidebar-icon">
                             <i class="bi bi-chat-heart-fill"></i>
@@ -47,17 +48,16 @@
 
                         <h3 class="fw-bold text-dark mb-4">Share Thoughts</h3>
 
-                        <form action="/feedback/submit" method="POST">
+                        <form action="/report/submit" method="POST">
                             @csrf
 
                             <div class="mb-3">
                                 <label class="horizon-label">Topic</label>
                                 <select class="horizon-input" name="type" required>
                                     <option value="" selected disabled>Select...</option>
-                                    <option value="bug">Report a Bug</option>
-                                    <option value="feature">Request Feature</option>
-                                    <option value="ui">UI Polish</option>
-                                    <option value="other">Other</option>
+                                    @foreach ($reportTypes as $reportType)
+                                        <option value="{{ $reportType->reportTypeId }}">{{ $reportType->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -76,4 +76,40 @@
             </div>
         </div>
     </div>
+
+    @if (session('successReport'))
+        <div class="modal fade custom-modal-backdrop" id="statusModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content custom-modal-content type-success text-center p-4">
+
+                    <div class="modal-body px-4 py-4">
+
+                        <div class="modal-icon-wrapper mb-4 mx-auto">
+                            <i class="bi bi-check-lg custom-icon"></i>
+                        </div>
+
+                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <p class="text-muted mb-4 fs-5">{{ session('successReport') }}</p>
+
+                        <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm" data-bs-dismiss="modal">
+                            CONTINUE
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @push('scripts')
+            <script type="module">
+                if (window.bootstrap) {
+                    setTimeout(() => {
+                        var myModal = new bootstrap.Modal(document.getElementById('statusModal'));
+                        myModal.show();
+                    }, 300);
+                }
+            </script>
+        @endpush
+    @endif
 @endnotadmin

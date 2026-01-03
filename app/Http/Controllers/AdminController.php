@@ -6,6 +6,8 @@ use App\Models\ActivityLog;
 use App\Models\Lecturer;
 use App\Models\Paper;
 use App\Models\PaperType;
+use App\Models\Report;
+use App\Models\ReportType;
 use App\Models\ResearchField;
 use App\Models\University;
 use App\Models\User;
@@ -261,5 +263,57 @@ class AdminController extends Controller
             "mapData" => $mapData,
             "chartData" => $chartData
         ]);
+    }
+
+    public function indexUserReport(Request $request){
+        $query = Report::with(['user', 'reportType']);
+
+        if ($request->has('status') && $request->status != 'all') {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('type') && $request->type != 'all') {
+            $query->where('report_type_id', $request->type);
+        }
+
+        $reports = $query->latest()->paginate(10);
+        $reportTypes = ReportType::all();
+
+        $stats = [
+            'total'     => Report::count(),
+            'pending'   => Report::where('status', 'pending')->count(),
+            'resolved'  => Report::where('status', 'resolved')->count(),
+        ];
+
+        $dates = collect();
+        $incomingData = collect();
+        $resolvedData = collect();
+
+        for ($i = 6; $i >= 0; $i--) {
+            $date = now()->subDays($i);
+            $dates->push($date->format('M d'));
+
+            $incomingData->push(Report::whereDate('created_at', $date)->count());
+            $resolvedData->push(Report::whereDate('updated_at', $date)->where('status', 'resolved')->count());
+        }
+
+        return view('pages.admin-request', [
+            'reports' => $reports,
+            'reportTypes' => $reportTypes,
+            'stats' => $stats,
+            'dates' => $dates,
+            'incomingData' => $incomingData,
+            'resolvedData' => $resolvedData,
+        ]);
+    }
+
+    public function manageUserReport($reportId, Request $request){
+        $report = Report::where("id", $reportId)->first();
+        
+        $report->update([
+            "status" => $request["status"]
+        ]);
+
+        return redirect()->back()->with("success", "Report Status has been changed successfully");
     }
 }

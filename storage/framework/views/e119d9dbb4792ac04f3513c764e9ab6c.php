@@ -127,9 +127,9 @@
                     <div class="p-3">
                         <div class="row g-2">
                             <div class="col-6">
-                                <a href="#" class="btn btn-outline-primary w-100 py-3 d-flex flex-column align-items-center">
+                                <a href="/admin-panel/request/user-report" class="btn btn-outline-primary w-100 py-3 d-flex flex-column align-items-center">
                                     <i class="bi bi-chat-left-text fs-4 mb-2"></i>
-                                    <span class="small fw-bold">User Feedback</span>
+                                    <span class="small fw-bold">User Report</span>
                                 </a>
                             </div>
                             <div class="col-6">

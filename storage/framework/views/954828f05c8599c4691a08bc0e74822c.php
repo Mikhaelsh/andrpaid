@@ -36,24 +36,25 @@
                     </ul>
                 </li>
 
+                <?php
+                    $existNewReport = \App\Models\Report::where("status", "pending")->exists();
+                ?>
+
                 <li class="admin-nav-item dropdown">
                     <a href="#"
-                        class="admin-nav-link dropdown-toggle <?php echo e(request()->is('admin-panel/requests*') ? 'active' : ''); ?>"
+                        class="admin-nav-link dropdown-toggle <?php echo e(request()->is('admin-panel/request*') ? 'active' : ''); ?>"
                         id="requestsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-inbox-fill"></i>
-                        <span>Requests</span>
+                        <span>Request</span>
                     </a>
                     <ul class="dropdown-menu admin-dropdown-menu" aria-labelledby="requestsDropdown">
                         <li>
                             <a class="dropdown-item admin-dropdown-item d-flex justify-content-between"
-                                href="/admin-panel/requests/feedback">
-                                <span><i class="bi bi-chat-square-quote"></i> User Feedback</span>
-                                <span class="badge bg-danger rounded-pill">New</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item admin-dropdown-item" href="/admin-panel/requests/reposts">
-                                <i class="bi bi-share"></i> Repost Requests
+                                href="/admin-panel/request/user-report">
+                                <span><i class="bi bi-chat-square-quote"></i> User Report</span>
+                                <?php if($existNewReport): ?>
+                                    <span class="badge bg-danger rounded-pill">New</span>
+                                <?php endif; ?>
                             </a>
                         </li>
                     </ul>

@@ -22,13 +22,14 @@
 </footer>
 
 <?php if (\Illuminate\Support\Facades\Blade::check('notadmin')): ?>
+    <?php
+        $reportTypes = \App\Models\ReportType::all();
+    ?>
+
     <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
-
             <div class="modal-content">
-
                 <div class="horizon-card">
-
                     <div class="horizon-sidebar">
                         <div class="horizon-sidebar-icon">
                             <i class="bi bi-chat-heart-fill"></i>
@@ -47,17 +48,16 @@
 
                         <h3 class="fw-bold text-dark mb-4">Share Thoughts</h3>
 
-                        <form action="/feedback/submit" method="POST">
+                        <form action="/report/submit" method="POST">
                             <?php echo csrf_field(); ?>
 
                             <div class="mb-3">
                                 <label class="horizon-label">Topic</label>
                                 <select class="horizon-input" name="type" required>
                                     <option value="" selected disabled>Select...</option>
-                                    <option value="bug">Report a Bug</option>
-                                    <option value="feature">Request Feature</option>
-                                    <option value="ui">UI Polish</option>
-                                    <option value="other">Other</option>
+                                    <?php $__currentLoopData = $reportTypes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $reportType): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($reportType->reportTypeId); ?>"><?php echo e($reportType->name); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
 
@@ -76,5 +76,41 @@
             </div>
         </div>
     </div>
+
+    <?php if(session('successReport')): ?>
+        <div class="modal fade custom-modal-backdrop" id="statusModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content custom-modal-content type-success text-center p-4">
+
+                    <div class="modal-body px-4 py-4">
+
+                        <div class="modal-icon-wrapper mb-4 mx-auto">
+                            <i class="bi bi-check-lg custom-icon"></i>
+                        </div>
+
+                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <p class="text-muted mb-4 fs-5"><?php echo e(session('successReport')); ?></p>
+
+                        <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm" data-bs-dismiss="modal">
+                            CONTINUE
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <?php $__env->startPush('scripts'); ?>
+            <script type="module">
+                if (window.bootstrap) {
+                    setTimeout(() => {
+                        var myModal = new bootstrap.Modal(document.getElementById('statusModal'));
+                        myModal.show();
+                    }, 300);
+                }
+            </script>
+        <?php $__env->stopPush(); ?>
+    <?php endif; ?>
 <?php endif; ?>
 <?php /**PATH C:\Tempat Coding\web programming\andrpaid\resources\views/partials/footer.blade.php ENDPATH**/ ?>

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->uuid('profileId')->unique();
             $table->string('password');
-            $table->timestamp("")->useCurrent();
+            $table->timestamp("latest_password_updated_at")->useCurrent();
             $table->timestamps();
         });
 

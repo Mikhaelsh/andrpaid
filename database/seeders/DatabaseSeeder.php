@@ -40,6 +40,8 @@ class DatabaseSeeder extends Seeder
             UniversitySeeder::class,
             AffiliationSeeder::class,
             ActivityLogSeeder::class,
+            ReportTypeSeeder::class,
+            ReportSeeder::class,
         ]);
     }
 }

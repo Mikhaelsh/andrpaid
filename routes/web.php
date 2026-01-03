@@ -9,6 +9,7 @@ use App\Http\Controllers\PaperController;
 use App\Http\Controllers\PaperSettingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::get("/find", [FindController::class,"index"]);
 
     Route::get('/search-user-lecturer', [UserController::class, 'searchUserLecturer'])->name('api.users.search.lecturer');
+
+    Route::post('/report/submit', [ReportController::class, 'submitReport']);
 
     Route::prefix("/settings")->group(function(){
         Route::get("/", [SettingController::class,"index"]);
@@ -163,6 +166,14 @@ Route::middleware('auth')->group(function () {
             Route::get("/activity-logs", [AdminController::class,"indexActivityLogs"]);
 
             Route::get("/global-statistics", [AdminController::class,"indexGlobalStatistics"]);
+        });
+
+        Route::prefix("/request")->group(function () {
+            Route::prefix("/user-report")->group(function () {
+                Route::get("/", [AdminController::class,"indexUserReport"]);
+
+                Route::post("/{reportId}", [AdminController::class,"manageUserReport"]);
+            });
         });
     });
 });
