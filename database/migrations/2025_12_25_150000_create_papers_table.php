@@ -33,9 +33,16 @@ return new class extends Migration
             $table->json('themes')->nullable(); 
             $table->boolean('lit_review_finalized')->default(false);
             $table->longText('methodology_xml')->nullable();
+            $table->json('datasets')->nullable(); 
+            $table->json('formulas')->nullable();
+            $table->json('code_blocks')->nullable();
             $table->boolean('methodology_finalized')->default(false);
             $table->json('results_data')->nullable();
             $table->boolean('results_finalized')->default(false);
+            $table->longText('conclusion_summary')->nullable();
+            $table->longText('conclusion_limitations')->nullable();
+            $table->longText('conclusion_future_works')->nullable();
+            $table->boolean('conclusion_finalized')->default(false);
             $table->timestamps();
         });
     }
@@ -52,9 +59,13 @@ return new class extends Migration
             $table->dropColumn('themes');
             $table->dropColumn('lit_review_finalized');
             $table->dropColumn('methodology_xml');
+            $table->dropColumn('datasets');
+            $table->dropColumn('formulas');
+            $table->dropColumn('code_blocks');
             $table->dropColumn('methodology_finalized');
             $table->dropColumn('results_data');
             $table->dropColumn('results_finalized');
+            $table->dropColumn(['conclusion_summary', 'conclusion_limitations', 'conclusion_future_works', 'conclusion_finalized']);
         });
     }
 };

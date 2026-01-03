@@ -93,6 +93,20 @@ Route::middleware('auth')->group(function () {
 
             Route::post("/save-methodology", [PaperController::class, "saveMethodology"]);
 
+            Route::post("/methodology/add-dataset", [PaperController::class, "addDataset"]);
+
+            Route::post("/methodology/update-dataset", [PaperController::class, "updateDataset"]);
+
+            Route::post("/methodology/remove-dataset", [PaperController::class, "removeDataset"]);
+
+            Route::post("/methodology/add-formula", [PaperController::class, "addFormula"]);
+
+            Route::post("/methodology/remove-formula", [PaperController::class, "removeFormula"]);
+
+            Route::post("/methodology/add-code", [PaperController::class, "addCodeBlock"]);
+
+            Route::post("/methodology/remove-code", [PaperController::class, "removeCodeBlock"]);
+
             Route::post("/finalize-methodology", [PaperController::class, "finalizeMethodology"]);
 
             Route::get("/results", [PaperController::class, "paperResults"]);
@@ -106,6 +120,12 @@ Route::middleware('auth')->group(function () {
             Route::post("/results/delete", [PaperController::class, "deleteResultItem"]);
 
             Route::post("/finalize-results", [PaperController::class, "finalizeResults"]);
+
+            Route::get("/conclusion", [PaperController::class, "paperConclusion"]);
+
+            Route::post("/save-conclusion", [PaperController::class, "saveConclusion"]);
+
+            Route::post("/finalize-conclusion", [PaperController::class, "finalizeConclusion"]);
 
             Route::post("/create-new-project-role", [PaperController::class,"createNewProjectRole"]);
 

@@ -16,9 +16,13 @@ class Paper extends Model
         'openCollaboration' => 'boolean',
         'themes' => 'array',
         'lit_review_finalized' => 'boolean',
+        'datasets' => 'array',
+        'formulas' => 'array',
         'methodology_finalized' => 'boolean',
         'results_data' => 'array',
         'results_finalized' => 'boolean',
+        'code_blocks' => 'array',
+        'conclusion_finalized' => 'boolean',
     ];
 
     protected $with = ["paperStars"];

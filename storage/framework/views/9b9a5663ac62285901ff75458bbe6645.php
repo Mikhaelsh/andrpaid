@@ -159,19 +159,36 @@
 
             
             <div class="col-md-6">
-                <a href="#" class="text-decoration-none">
+                <a href="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/conclusion" class="text-decoration-none">
                     <div class="workspace-card h-100 p-4">
                         <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="module-icon bg-warning bg-opacity-10 text-warning">
-                                <i class="bi bi-chat-square-quote"></i>
+                            <div class="module-icon bg-success bg-opacity-10 text-success">
+                                <i class="bi bi-check-all"></i>
                             </div>
-                            <span class="badge bg-light text-secondary border">Locked</span>
+                            
+                            
+                            <?php
+                                $hasContent = !empty($paper->conclusion_summary);
+                            ?>
+
+                            <?php if($paper->conclusion_finalized): ?>
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                    <i class="bi bi-check-lg me-1"></i> Finalized
+                                </span>
+                            <?php elseif($hasContent): ?>
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">In Progress</span>
+                            <?php else: ?>
+                                <span class="badge bg-light text-secondary border">Draft</span>
+                            <?php endif; ?>
                         </div>
                         <h5 class="fw-bold text-dark mb-2">Conclusion</h5>
-                        <p class="text-muted small mb-4">Summarize your findings and suggest future research directions.</p>
+                        <p class="text-muted small mb-4">Summarize findings, limitations, and propose future research directions.</p>
 
                         <div class="d-flex justify-content-between align-items-center border-top pt-3">
-                            <span class="small text-muted">Waiting for Results</span>
+                            <span class="small text-muted">
+                                <?php echo e($hasContent ? 'Draft started' : 'Not started'); ?>
+
+                            </span>
                             <span class="small fw-bold text-primary">Open <i class="bi bi-arrow-right ms-1"></i></span>
                         </div>
                     </div>

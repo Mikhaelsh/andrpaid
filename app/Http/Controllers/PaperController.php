@@ -488,6 +488,157 @@ class PaperController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Diagram saved successfully']);
     }
 
+    // --- DATASETS ---
+    public function addDataset(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $request->validate([
+            'name' => 'required',
+            'sample_image' => 'nullable|image|max:2048' // Max 2MB
+        ]);
+
+        $imagePath = null;
+        if ($request->hasFile('sample_image')) {
+            $imagePath = $request->file('sample_image')->store('dataset_samples', 'public');
+        }
+
+        $newItem = [
+            'id' => uniqid(),
+            'name' => $request->name,
+            'link' => $request->link,
+            'description' => $request->description,
+            'image_path' => $imagePath // New Field
+        ];
+
+        $items = $paper->datasets ?? [];
+        $items[] = $newItem;
+        $paper->datasets = $items;
+        $paper->save();
+
+        return back()->with('success', 'Dataset added successfully.');
+    }
+
+    public function removeDataset(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $items = $paper->datasets ?? [];
+        $items = array_values(array_filter($items, fn($i) => $i['id'] !== $request->item_id));
+        
+        $paper->datasets = $items;
+        $paper->save();
+
+        return back()->with('success', 'Dataset removed.');
+    }
+
+    public function addCodeBlock(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $newItem = [
+            'id' => uniqid(),
+            'title' => $request->title,
+            'platform' => $request->platform, // 'colab', 'github', 'generic'
+            'embed_code' => $request->embed_code,
+            'description' => $request->description
+        ];
+
+        $items = $paper->code_blocks ?? [];
+        $items[] = $newItem;
+        $paper->code_blocks = $items;
+        $paper->save();
+
+        return back()->with('success', 'Code block embedded.');
+    }
+
+    public function removeCodeBlock(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $items = $paper->code_blocks ?? [];
+        $items = array_values(array_filter($items, fn($i) => $i['id'] !== $request->item_id));
+        
+        $paper->code_blocks = $items;
+        $paper->save();
+
+        return back()->with('success', 'Code block removed.');
+    }
+
+    public function updateDataset(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $request->validate([
+            'item_id' => 'required',
+            'name' => 'required',
+            'sample_image' => 'nullable|image|max:2048'
+        ]);
+
+        $datasets = $paper->datasets ?? [];
+        
+        foreach ($datasets as &$ds) {
+            if ($ds['id'] === $request->item_id) {
+                // Update text fields
+                $ds['name'] = $request->name;
+                $ds['link'] = $request->link;
+                $ds['description'] = $request->description;
+
+                // Handle Image Upload
+                if ($request->hasFile('sample_image')) {
+                    // (Optional: Delete old image from storage here if you want strict cleanup)
+                    $ds['image_path'] = $request->file('sample_image')->store('dataset_samples', 'public');
+                }
+                break;
+            }
+        }
+
+        $paper->datasets = $datasets;
+        $paper->save();
+
+        return back()->with('success', 'Dataset updated successfully.');
+    }
+
+    // --- FORMULAS ---
+    public function addFormula(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $newItem = [
+            'id' => uniqid(),
+            'latex' => $request->latex,
+            'description' => $request->description,
+            'reference_id' => $request->reference_id 
+        ];
+
+        $items = $paper->formulas ?? [];
+        $items[] = $newItem;
+        $paper->formulas = $items;
+        $paper->save();
+
+        return back()->with('success', 'Formula added.');
+    }
+
+    public function removeFormula(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $items = $paper->formulas ?? [];
+        $items = array_values(array_filter($items, fn($i) => $i['id'] !== $request->item_id));
+        
+        $paper->formulas = $items;
+        $paper->save();
+
+        return back()->with('success', 'Formula removed.');
+    }
+
     public function finalizeMethodology($profileId, $paperId)
     {
         $paper = Paper::where('paperId', $paperId)->firstOrFail();
@@ -649,5 +800,56 @@ class PaperController extends Controller
 
         $status = $paper->results_finalized ? 'finalized' : 're-opened';
         return back()->with('success', "Results section has been $status.");
+    }
+
+    // --- CONCLUSION ---
+
+    public function paperConclusion($profileId, $paperId)
+    {
+        $user = User::where("profileId", $profileId)->firstOrFail();
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+
+        // Calculate Permissions
+        $currentUser = Auth::user();
+        $canEdit = false;
+        if ($currentUser && $currentUser->lecturer) {
+            $isOwner = $paper->lecturer_id === $currentUser->lecturer->id;
+            $isCollaborator = Collaboration::where('paper_id', $paper->id)
+                ->where('lecturer_id', $currentUser->lecturer->id)->exists();
+            if ($isOwner || $isCollaborator) $canEdit = true;
+        }
+
+        return view('pages.conclusion', [
+            'user' => $user,
+            'paper' => $paper,
+            'canEdit' => $canEdit
+        ]);
+    }
+
+    public function saveConclusion(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        // Update all three fields at once
+        $paper->conclusion_summary = $request->input('summary');
+        $paper->conclusion_limitations = $request->input('limitations');
+        $paper->conclusion_future_works = $request->input('future_works');
+        
+        $paper->save();
+
+        return back()->with('success', 'Conclusion saved successfully.');
+    }
+
+    public function finalizeConclusion($profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $paper->conclusion_finalized = !$paper->conclusion_finalized;
+        $paper->save();
+
+        $status = $paper->conclusion_finalized ? 'finalized' : 're-opened';
+        return back()->with('success', "Conclusion section has been $status.");
     }
 }
