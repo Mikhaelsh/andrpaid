@@ -35,15 +35,12 @@
                         </span>
                     </div>
 
-                    
                     <div class="reseacher-list-container flex-grow-1" style="min-height: 0; display: flex; flex-direction: column;">
                         
-                        
                         <div class="d-flex flex-column gap-3 mb-3" id="researcherGrid">
-                            
+                          
                         </div>
 
-                        
                         <div id="emptyState" class="text-center py-5 d-none mt-2">
                             <div class="text-muted opacity-50 mb-3">
                                 <i class="bi bi-geo-alt" style="font-size: 3rem;"></i>
@@ -53,7 +50,6 @@
                             <button class="btn btn-link btn-sm" onclick="resetMap()">Show All</button>
                         </div>
 
-                        
                         <div id="paginationControls" class="mt-auto pt-3 border-top d-none">
                             <div class="d-flex justify-content-between align-items-center">
                                 <button class="btn btn-outline-secondary btn-sm" id="btnPrev" onclick="changePage(-1)">
@@ -77,25 +73,21 @@
 <script src="<?php echo e(asset('libs/leaflet/leaflet.js')); ?>"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // --- Configuration ---
         const ITEMS_PER_PAGE = 5; 
         let currentPage = 1;
-        let currentFilteredData = []; // Holds the currently active dataset (filtered or all)
+        let currentFilteredData = []; 
         
-        // --- Data & Elements ---
         const allResearchers = <?php echo json_encode($researchers, 15, 512) ?>;
         const gridContainer = document.getElementById('researcherGrid');
         const countBadge = document.getElementById('researcherCountBadge');
         const emptyState = document.getElementById('emptyState');
         const regionLabel = document.getElementById('selectedRegionName');
         
-        // Pagination Elements
         const paginationControls = document.getElementById('paginationControls');
         const btnPrev = document.getElementById('btnPrev');
         const btnNext = document.getElementById('btnNext');
         const pageIndicator = document.getElementById('pageIndicator');
 
-        // --- Helper: Normalize Names ---
         function normalize(str) {
             if (!str) return '';
             let name = str.toLowerCase().trim();
@@ -111,7 +103,6 @@
             return name.trim();
         }
 
-        // --- Pre-calculate Counts for Map ---
         const provinceCounts = {};
         allResearchers.forEach(r => {
             if (r.province?.name) {
@@ -120,7 +111,6 @@
             }
         });
 
-        // --- Map Initialization ---
         const map = L.map('indonesiaMap').setView([-2.5489, 118.0149], 5);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OpenStreetMap &copy; CARTO',
@@ -131,12 +121,9 @@
         let geojsonLayer;
         const geoJsonUrl = "<?php echo e(asset('data/indonesia-prov.geojson')); ?>";
 
-        // --- Core Rendering Functions ---
-
-        // 1. Initialize List (Called when filter changes)
         function initList(data) {
             currentFilteredData = data;
-            currentPage = 1; // Reset to page 1
+            currentPage = 1; 
             countBadge.innerText = data.length + ' Found';
             
             if (data.length === 0) {
@@ -145,20 +132,17 @@
                 paginationControls.classList.add('d-none');
             } else {
                 emptyState.classList.add('d-none');
-                renderPage(); // Render first page
+                renderPage(); 
             }
         }
 
-        // 2. Render Specific Page
         function renderPage() {
             gridContainer.innerHTML = '';
             
-            // Calculate slice
             const start = (currentPage - 1) * ITEMS_PER_PAGE;
             const end = start + ITEMS_PER_PAGE;
             const pageData = currentFilteredData.slice(start, end);
             
-            // Render Cards
             pageData.forEach(researcher => {
                 const userName = researcher.user?.name || 'Unknown';
                 const avatar = `https://ui-avatars.com/api/?name=${userName}&background=random&size=64`;
@@ -195,11 +179,9 @@
 
             updatePaginationUI();
             
-            // Scroll to top of list when paging
             document.querySelector('.reseacher-list-container').scrollTop = 0;
         }
 
-        // 3. Update Buttons and Text
         function updatePaginationUI() {
             const totalPages = Math.ceil(currentFilteredData.length / ITEMS_PER_PAGE);
             
@@ -214,7 +196,6 @@
             }
         }
 
-        // 4. Handle Page Change
         window.changePage = function(direction) {
             const totalPages = Math.ceil(currentFilteredData.length / ITEMS_PER_PAGE);
             const newPage = currentPage + direction;
@@ -225,7 +206,6 @@
             }
         };
 
-        // --- Filtering Logic ---
 
         window.filterResearchers = function(provinceName) {
             if(!provinceName) return;
@@ -254,7 +234,6 @@
             initList(allResearchers);
         }
 
-        // --- Map Helper Functions ---
         function getProvinceName(feature) {
             if (feature && feature.properties) {
                 const p = feature.properties;
@@ -291,7 +270,6 @@
             }
         }
 
-        // --- Fetch GeoJSON ---
         fetch(geoJsonUrl)
             .then(res => res.json())
             .then(data => {
@@ -313,7 +291,6 @@
                 }).addTo(map);
             });
 
-        // --- Initial Render ---
         initList(allResearchers);
     });
 </script>

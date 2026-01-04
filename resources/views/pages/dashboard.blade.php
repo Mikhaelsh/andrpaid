@@ -238,25 +238,36 @@
                     
                     <div class="d-flex flex-column gap-3">
                         @foreach($recommendations as $rec)
+                            @php
+                                if ($rec instanceof \App\Models\User) {
+                                    $recUser = $rec;
+                                    $displayName = $rec->name;
+                                    $subText = "University • " . ($rec->university->location ?? 'Indonesia');
+                                    $title = ""; 
+                                } else {
+                                    $recUser = $rec->user;
+                                    $displayName = $recUser->name;
+                                    
+                                    $uniName = $rec->affiliation->university->user->name ?? 'Independent';
+                                    $subText = "Computer Science • " . Str::limit($uniName, 20);
+                                    $title = $rec->title ?? "";
+                                }
+                            @endphp
+
                             <div class="d-flex align-items-center gap-3">
-                                <img src="https://ui-avatars.com/api/?name={{ $rec->user->name }}&background=random" class="rounded-circle" width="40" height="40">
+                                <img src="https://ui-avatars.com/api/?name={{ $displayName }}&background=random" class="rounded-circle" width="40" height="40">
                                 <div class="flex-grow-1 overflow-hidden">
                                     <h6 class="fw-bold mb-0 text-truncate small">
-                                        <a href="/{{ $rec->user->profileId }}/overview" class="text-dark text-decoration-none">
-                                            {{ $rec->title }} {{ $rec->user->name }}
+                                        <a href="/{{ $recUser->profileId }}/overview" class="text-dark text-decoration-none">
+                                            {{ $title }} {{ $displayName }}
                                         </a>
                                     </h6>
-                                    
-                                    {{-- Institution Name --}}
+
+                                    {{-- Description / Affiliation --}}
                                     <p class="text-muted small mb-0 text-truncate">
-                                        {{-- 
-                                            Accessing: Lecturer -> Affiliation -> University -> User -> Name 
-                                        --}}
-                                        @php
-                                            $uniName = $rec->affiliation->university->user->name ?? 'Unknown University';
-                                        @endphp
-                                        Computer Science • {{ Str::limit($uniName, 20) }}
+                                        {{ $subText }}
                                     </p>
+                                    
                                 </div>
                                 <button class="btn btn-sm btn-outline-primary rounded-circle" style="width: 32px; height: 32px; padding: 0;">
                                     <i class="bi bi-plus"></i>

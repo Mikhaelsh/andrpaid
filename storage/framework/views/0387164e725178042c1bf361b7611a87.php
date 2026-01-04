@@ -240,25 +240,38 @@
                     
                     <div class="d-flex flex-column gap-3">
                         <?php $__currentLoopData = $recommendations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rec): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php
+                                if ($rec instanceof \App\Models\User) {
+                                    $recUser = $rec;
+                                    $displayName = $rec->name;
+                                    $subText = "University • " . ($rec->university->location ?? 'Indonesia');
+                                    $title = ""; 
+                                } else {
+                                    $recUser = $rec->user;
+                                    $displayName = $recUser->name;
+                                    
+                                    $uniName = $rec->affiliation->university->user->name ?? 'Independent';
+                                    $subText = "Computer Science • " . Str::limit($uniName, 20);
+                                    $title = $rec->title ?? "";
+                                }
+                            ?>
+
                             <div class="d-flex align-items-center gap-3">
-                                <img src="https://ui-avatars.com/api/?name=<?php echo e($rec->user->name); ?>&background=random" class="rounded-circle" width="40" height="40">
+                                <img src="https://ui-avatars.com/api/?name=<?php echo e($displayName); ?>&background=random" class="rounded-circle" width="40" height="40">
                                 <div class="flex-grow-1 overflow-hidden">
                                     <h6 class="fw-bold mb-0 text-truncate small">
-                                        <a href="/<?php echo e($rec->user->profileId); ?>/overview" class="text-dark text-decoration-none">
-                                            <?php echo e($rec->title); ?> <?php echo e($rec->user->name); ?>
+                                        <a href="/<?php echo e($recUser->profileId); ?>/overview" class="text-dark text-decoration-none">
+                                            <?php echo e($title); ?> <?php echo e($displayName); ?>
 
                                         </a>
                                     </h6>
-                                    
+
                                     
                                     <p class="text-muted small mb-0 text-truncate">
-                                        
-                                        <?php
-                                            $uniName = $rec->affiliation->university->user->name ?? 'Unknown University';
-                                        ?>
-                                        Computer Science • <?php echo e(Str::limit($uniName, 20)); ?>
+                                        <?php echo e($subText); ?>
 
                                     </p>
+                                    
                                 </div>
                                 <button class="btn btn-sm btn-outline-primary rounded-circle" style="width: 32px; height: 32px; padding: 0;">
                                     <i class="bi bi-plus"></i>
