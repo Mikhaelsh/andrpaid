@@ -1,9 +1,7 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Conclusion - ' . $paper->title); ?>
 
-@section('title', 'Conclusion - ' . $paper->title)
-
-@section('additionalCSS')
-    <link rel="stylesheet" href="{{ asset('styles/paper.css') }}">
+<?php $__env->startSection('additionalCSS'); ?>
+    <link rel="stylesheet" href="<?php echo e(asset('styles/paper.css')); ?>">
     <style>
         .section-card {
             border: 1px solid #eee;
@@ -53,19 +51,19 @@
             white-space: pre-line;
         }
     </style>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
-    @include('partials.navbarPaper', ['paper' => $paper])
+<?php $__env->startSection('content'); ?>
+    <?php echo $__env->make('partials.navbarPaper', ['paper' => $paper], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <div class="container py-5">
-        @php
+        <?php
             $isLocked = $paper->conclusion_finalized;
             $canInteract = $canEdit && !$isLocked;
-        @endphp
+        ?>
 
         <div class="mb-4">
-            <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/workspace"
+            <a href="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/workspace"
                 class="text-decoration-none text-muted small fw-bold">
                 <i class="bi bi-arrow-left me-1"></i> Back to Workspace
             </a>
@@ -85,37 +83,37 @@
                     <p class="text-muted mb-0 ms-1">Summarize your findings, acknowledge limitations, and suggest next
                         steps.</p>
 
-                    @if ($isLocked)
+                    <?php if($isLocked): ?>
                         <span
                             class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 ms-2">
                             <i class="bi bi-lock-fill me-1"></i> Finalized
                         </span>
-                    @else
+                    <?php else: ?>
                         <span class="badge bg-light text-secondary border ms-2">Draft Mode</span>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
 
             <div class="d-flex gap-2">
-                @if ($canEdit)
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/finalize-conclusion" method="POST">
-                        @csrf
-                        @if ($isLocked)
+                <?php if($canEdit): ?>
+                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/finalize-conclusion" method="POST">
+                        <?php echo csrf_field(); ?>
+                        <?php if($isLocked): ?>
                             <button type="submit" class="btn btn-outline-success btn-sm me-2" title="Click to Reopen">
                                 <i class="bi bi-check-circle-fill me-1"></i> Finalized
                             </button>
-                        @else
+                        <?php else: ?>
                             <button type="submit" class="btn btn-dark btn-sm me-2">
                                 <i class="bi bi-check2-circle me-1"></i> Finalize Conclusion
                             </button>
-                        @endif
+                        <?php endif; ?>
                     </form>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
 
-        <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/save-conclusion" method="POST">
-            @csrf
+        <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/save-conclusion" method="POST">
+            <?php echo csrf_field(); ?>
 
             <div class="row g-4">
                 <div class="col-12">
@@ -127,16 +125,17 @@
                             <h5 class="fw-bold mb-0">Summary of Findings</h5>
                         </div>
 
-                        @if ($isLocked)
+                        <?php if($isLocked): ?>
                             <div class="finalized-text">
-                                {{ $paper->conclusion_summary ?? 'No summary provided.' }}
+                                <?php echo e($paper->conclusion_summary ?? 'No summary provided.'); ?>
+
                             </div>
-                        @else
+                        <?php else: ?>
                             <textarea name="summary" class="form-control" rows="6"
-                                placeholder="Synthesize the key results of your research here..." {{ $canEdit ? '' : 'disabled' }}>{{ $paper->conclusion_summary }}</textarea>
+                                placeholder="Synthesize the key results of your research here..." <?php echo e($canEdit ? '' : 'disabled'); ?>><?php echo e($paper->conclusion_summary); ?></textarea>
                             <div class="form-text mt-2"><i class="bi bi-info-circle me-1"></i> Briefly restate the problem
                                 and how your results addressed it.</div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -149,15 +148,16 @@
                             <h5 class="fw-bold mb-0">Limitations</h5>
                         </div>
 
-                        @if ($isLocked)
+                        <?php if($isLocked): ?>
                             <div class="finalized-text">
-                                {{ $paper->conclusion_limitations ?? 'No limitations noted.' }}
+                                <?php echo e($paper->conclusion_limitations ?? 'No limitations noted.'); ?>
+
                             </div>
-                        @else
+                        <?php else: ?>
                             <textarea name="limitations" class="form-control" rows="8"
                                 placeholder="What were the constraints? (e.g. Sample size, time, data availability)"
-                                {{ $canEdit ? '' : 'disabled' }}>{{ $paper->conclusion_limitations }}</textarea>
-                        @endif
+                                <?php echo e($canEdit ? '' : 'disabled'); ?>><?php echo e($paper->conclusion_limitations); ?></textarea>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -170,24 +170,26 @@
                             <h5 class="fw-bold mb-0">Future Works</h5>
                         </div>
 
-                        @if ($isLocked)
+                        <?php if($isLocked): ?>
                             <div class="finalized-text">
-                                {{ $paper->conclusion_future_works ?? 'No future works suggested.' }}
+                                <?php echo e($paper->conclusion_future_works ?? 'No future works suggested.'); ?>
+
                             </div>
-                        @else
+                        <?php else: ?>
                             <textarea name="future_works" class="form-control" rows="8" placeholder="Suggest avenues for further research..."
-                                {{ $canEdit ? '' : 'disabled' }}>{{ $paper->conclusion_future_works }}</textarea>
-                        @endif
+                                <?php echo e($canEdit ? '' : 'disabled'); ?>><?php echo e($paper->conclusion_future_works); ?></textarea>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
 
-            @if ($canInteract)
+            <?php if($canInteract): ?>
                 <div class="fixed-bottom bg-white border-top py-3 shadow-lg" style="z-index: 100;">
                     <div class="container d-flex justify-content-between align-items-center">
                         <span class="text-muted small">
                             <i class="bi bi-clock-history me-1"></i>
-                            Last saved: {{ $paper->updated_at->diffForHumans() }}
+                            Last saved: <?php echo e($paper->updated_at->diffForHumans()); ?>
+
                         </span>
                         <button type="submit" class="btn btn-primary px-5">
                             <i class="bi bi-save me-2"></i> Save Changes
@@ -196,8 +198,10 @@
                 </div>
 
                 <div style="height: 80px;"></div>
-            @endif
+            <?php endif; ?>
 
         </form>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Tempat Coding\web programming\andrpaid\resources\views/pages/conclusion.blade.php ENDPATH**/ ?>

@@ -1,17 +1,15 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Literature Review - ' . $paper->title); ?>
 
-@section('title', 'Literature Review - ' . $paper->title)
+<?php $__env->startSection('additionalCSS'); ?>
+    <link rel="stylesheet" href="<?php echo e(asset('styles/paper.css')); ?>">
+<?php $__env->stopSection(); ?>
 
-@section('additionalCSS')
-    <link rel="stylesheet" href="{{ asset('styles/paper.css') }}">
-@endsection
-
-@section('content')
-    @include('partials.navbarPaper', ['paper' => $paper])
+<?php $__env->startSection('content'); ?>
+    <?php echo $__env->make('partials.navbarPaper', ['paper' => $paper], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <div class="container py-5">
         <div class="mb-4">
-            <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/workspace"
+            <a href="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/workspace"
                 class="text-decoration-none text-muted small fw-bold">
                 <i class="bi bi-arrow-left me-1"></i> Back to Workspace
             </a>
@@ -38,16 +36,16 @@
                     <option value="chicago">Chicago Style</option>
                 </select>
 
-                <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/export-bibtex"
+                <a href="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/export-bibtex"
                     class="btn btn-outline-secondary btn-sm">
                     <i class="bi bi-download me-1"></i> Export BibTeX
                 </a>
 
-                @if ($canEdit)
+                <?php if($canEdit): ?>
                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addSourceModal">
                         <i class="bi bi-plus-lg me-1"></i> Add Source
                     </button>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
 
@@ -56,7 +54,7 @@
                 <div class="workspace-card p-4 mb-4">
                     <h6 class="fw-bold text-dark mb-3">Synthesis Progress</h6>
                     <div class="mb-4">
-                        @php
+                        <?php
                             $totalRefs = !empty($paper->references_data) ? count($paper->references_data) : 0;
                             $analyzedRefs = 0;
                             if ($totalRefs > 0) {
@@ -67,68 +65,69 @@
                                 }
                             }
                             $progress = $totalRefs > 0 ? ($analyzedRefs / $totalRefs) * 100 : 0;
-                        @endphp
+                        ?>
 
                         <div class="d-flex justify-content-between small mb-1">
                             <span class="text-muted">Sources Analyzed</span>
-                            <span class="fw-bold text-primary">{{ $analyzedRefs }}/{{ $totalRefs }}</span>
+                            <span class="fw-bold text-primary"><?php echo e($analyzedRefs); ?>/<?php echo e($totalRefs); ?></span>
                         </div>
                         <div class="progress" style="height: 6px;">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $progress }}%">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: <?php echo e($progress); ?>%">
                             </div>
                         </div>
                     </div>
 
-                    @if ($canEdit)
+                    <?php if($canEdit): ?>
                         <div class="d-grid">
                             <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#synthesisModal">
                                 <i class="bi bi-pencil-square me-2"></i>Write Synthesis
                             </button>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
 
                 <div class="workspace-card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h6 class="fw-bold text-dark mb-0">Key Themes</h6>
-                        @if ($canEdit)
+                        <?php if($canEdit): ?>
                             <button class="btn btn-link p-0 text-decoration-none small" onclick="toggleThemeForm()">
                                 <i class="bi bi-plus-lg"></i>
                             </button>
-                        @endif
+                        <?php endif; ?>
                     </div>
 
                     <div class="d-flex flex-wrap gap-2">
-                        @if (!empty($paper->themes))
-                            @foreach ($paper->themes as $theme)
-                                <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/remove-theme"
+                        <?php if(!empty($paper->themes)): ?>
+                            <?php $__currentLoopData = $paper->themes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $theme): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/remove-theme"
                                     method="POST" class="d-inline">
-                                    @csrf
-                                    <input type="hidden" name="theme_name" value="{{ $theme }}">
+                                    <?php echo csrf_field(); ?>
+                                    <input type="hidden" name="theme_name" value="<?php echo e($theme); ?>">
                                     <button type="submit"
                                         class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 rounded-pill px-3 py-2 text-decoration-none d-flex align-items-center gap-2"
                                         style="cursor: pointer; border: none; background: none;">
-                                        {{ $theme }}
+                                        <?php echo e($theme); ?>
+
                                         <i class="bi bi-x-circle-fill opacity-50 hover-opacity-100"
                                             style="font-size: 0.7rem;"></i>
                                     </button>
                                 </form>
-                            @endforeach
-                        @else
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php else: ?>
                             <span class="text-muted small fst-italic">No themes defined yet.</span>
-                        @endif
+                        <?php endif; ?>
 
-                        @if ($canEdit)
+                        <?php if($canEdit): ?>
                             <span class="badge bg-light text-secondary border rounded-pill px-3 py-2 border-dashed"
                                 id="addThemeBtn" style="cursor: pointer;" onclick="toggleThemeForm()">
                                 + Add Tag
                             </span>
-                        @endif
+                        <?php endif; ?>
 
-                        <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/add-theme" method="POST"
+                        <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/add-theme" method="POST"
                             id="addThemeForm" style="display: none;" class="w-100 mt-2">
-                            @csrf
+                            <?php echo csrf_field(); ?>
                             <div class="input-group input-group-sm">
                                 <input type="text" name="theme_name" class="form-control" placeholder="Theme name..."
                                     required autofocus>
@@ -145,60 +144,60 @@
                 <div class="workspace-card p-4 mt-4">
                     <h6 class="fw-bold text-dark mb-2">Review Status</h6>
                     <p class="text-muted small mb-3">
-                        @if ($paper->lit_review_finalized)
+                        <?php if($paper->lit_review_finalized): ?>
                             This section is marked as complete. You can reopen it if you need to add more sources.
-                        @else
+                        <?php else: ?>
                             Once you have synthesized your sources, mark this section as finalized.
-                        @endif
+                        <?php endif; ?>
                     </p>
 
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/finalize-lit-review" method="POST">
-                        @csrf
-                        @if ($paper->lit_review_finalized)
+                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/finalize-lit-review" method="POST">
+                        <?php echo csrf_field(); ?>
+                        <?php if($paper->lit_review_finalized): ?>
                             <button type="submit" class="btn btn-outline-success w-100">
                                 <i class="bi bi-check-circle-fill me-2"></i> Finalized
                             </button>
-                        @else
+                        <?php else: ?>
                             <button type="submit" class="btn btn-dark w-100">
                                 <i class="bi bi-check2-circle me-2"></i> Finalize Review
                             </button>
-                        @endif
+                        <?php endif; ?>
                     </form>
                 </div>
 
             </div>
 
             <div class="col-lg-8 order-lg-1">
-                @if (empty($paper->references_data))
+                <?php if(empty($paper->references_data)): ?>
                     <div class="text-center py-5 border rounded-3 bg-light">
                         <i class="bi bi-journal-bookmark-fill empty-state-icon"></i>
                         <h5 class="fw-bold text-muted">No References Yet</h5>
                         <p class="text-muted small mb-4">Start your research by adding your first source to the board.</p>
 
-                        @if ($canEdit)
+                        <?php if($canEdit): ?>
                             <button class="btn btn-outline-primary" data-bs-toggle="modal"
                                 data-bs-target="#addSourceModal">
                                 Add Reference
                             </button>
-                        @endif
+                        <?php endif; ?>
                     </div>
-                @else
+                <?php else: ?>
                     <div class="d-flex flex-column gap-3">
-                        @foreach (array_reverse($paper->references_data) as $ref)
-                            <div class="workspace-card reference-card p-4" data-title="{{ $ref['title'] }}"
-                                data-author="{{ $ref['author'] }}" data-year="{{ $ref['year'] }}"
-                                data-journal="{{ $ref['publication'] ?? '' }}" data-url="{{ $ref['url'] ?? '' }}">
+                        <?php $__currentLoopData = array_reverse($paper->references_data); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ref): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="workspace-card reference-card p-4" data-title="<?php echo e($ref['title']); ?>"
+                                data-author="<?php echo e($ref['author']); ?>" data-year="<?php echo e($ref['year']); ?>"
+                                data-journal="<?php echo e($ref['publication'] ?? ''); ?>" data-url="<?php echo e($ref['url'] ?? ''); ?>">
 
                                 <div class="d-flex gap-3">
-                                    <div class="module-icon {{ $ref['is_analyzed'] ? 'bg-success text-success' : 'bg-secondary text-secondary' }} bg-opacity-10 flex-shrink-0"
+                                    <div class="module-icon <?php echo e($ref['is_analyzed'] ? 'bg-success text-success' : 'bg-secondary text-secondary'); ?> bg-opacity-10 flex-shrink-0"
                                         style="width: 50px; height: 50px;">
                                         <i
-                                            class="bi {{ $ref['is_analyzed'] ? 'bi-check-circle-fill' : 'bi-hourglass-split' }} fs-5"></i>
+                                            class="bi <?php echo e($ref['is_analyzed'] ? 'bi-check-circle-fill' : 'bi-hourglass-split'); ?> fs-5"></i>
                                     </div>
 
                                     <div class="flex-grow-1">
                                         <div class="d-flex justify-content-between align-items-start">
-                                            <h6 class="fw-bold text-dark mb-1">{{ $ref['title'] }}</h6>
+                                            <h6 class="fw-bold text-dark mb-1"><?php echo e($ref['title']); ?></h6>
                                             <div class="dropdown">
                                                 <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown">
                                                     <i class="bi bi-three-dots-vertical"></i>
@@ -211,21 +210,21 @@
                                         </div>
 
                                         <p class="text-muted small mb-2">
-                                            {{ $ref['author'] }} ({{ $ref['year'] }})
-                                            @if (!empty($ref['publication']))
-                                                • <i>{{ $ref['publication'] }}</i>
-                                            @endif
+                                            <?php echo e($ref['author']); ?> (<?php echo e($ref['year']); ?>)
+                                            <?php if(!empty($ref['publication'])): ?>
+                                                • <i><?php echo e($ref['publication']); ?></i>
+                                            <?php endif; ?>
                                         </p>
 
-                                        @if (!empty($ref['key_points']))
+                                        <?php if(!empty($ref['key_points'])): ?>
                                             <div class="mt-2 pt-2 border-top">
                                                 <span class="small fw-bold text-muted me-2"><i
                                                         class="bi bi-pin-angle-fill me-1"></i>Key Points:</span>
-                                                @foreach ($ref['key_points'] as $point)
-                                                    <span class="key-point-badge">{{ $point }}</span>
-                                                @endforeach
+                                                <?php $__currentLoopData = $ref['key_points']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $point): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <span class="key-point-badge"><?php echo e($point); ?></span>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </div>
-                                        @endif
+                                        <?php endif; ?>
 
                                         <div class="citation-box">
                                             <span
@@ -242,19 +241,19 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
     </div>
 
-    @if ($canEdit)
+    <?php if($canEdit): ?>
         <div class="modal fade" id="addSourceModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-detective">
                 <div class="modal-content">
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/add-reference" method="POST">
-                        @csrf
+                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/add-reference" method="POST">
+                        <?php echo csrf_field(); ?>
                         <input type="hidden" name="key_points" id="keyPointsJson">
 
                         <div class="dossier-container">
@@ -321,29 +320,29 @@
         <div class="modal fade" id="synthesisModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content bg-transparent border-0">
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/save-synthesis" method="POST">
-                        @csrf
+                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/save-synthesis" method="POST">
+                        <?php echo csrf_field(); ?>
                         <div class="synthesis-container">
                             <div class="synthesis-sources">
                                 <h5 class="mb-4"><i class="bi bi-layers-fill me-2"></i>Source Material</h5>
-                                @if (empty($paper->references_data))
+                                <?php if(empty($paper->references_data)): ?>
                                     <p class="text-white-50 small">No references added yet.</p>
-                                @else
-                                    @foreach ($paper->references_data as $ref)
-                                        @if (!empty($ref['key_points']))
+                                <?php else: ?>
+                                    <?php $__currentLoopData = $paper->references_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ref): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php if(!empty($ref['key_points'])): ?>
                                             <div class="source-item">
                                                 <div class="source-citation">
-                                                    {{ $ref['author'] }} ({{ $ref['year'] }})
+                                                    <?php echo e($ref['author']); ?> (<?php echo e($ref['year']); ?>)
                                                 </div>
                                                 <ul class="ps-3 mb-0 source-points">
-                                                    @foreach ($ref['key_points'] as $point)
-                                                        <li>{{ $point }}</li>
-                                                    @endforeach
+                                                    <?php $__currentLoopData = $ref['key_points']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $point): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <li><?php echo e($point); ?></li>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </ul>
                                             </div>
-                                        @endif
-                                    @endforeach
-                                @endif
+                                        <?php endif; ?>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                <?php endif; ?>
                             </div>
                             <div class="synthesis-editor">
                                 <div class="synthesis-header">
@@ -353,7 +352,7 @@
                                             aria-label="Close"></button>
                                     </div>
                                 </div>
-                                <textarea name="synthesis_text" class="editor-textarea" placeholder="Start synthesizing your findings here...">{{ $paper->synthesis_text }}</textarea>
+                                <textarea name="synthesis_text" class="editor-textarea" placeholder="Start synthesizing your findings here..."><?php echo e($paper->synthesis_text); ?></textarea>
                                 <div class="mt-3 text-end">
                                     <button type="submit" class="btn btn-dark px-4">
                                         <i class="bi bi-save me-1"></i> Save Draft
@@ -365,10 +364,10 @@
                 </div>
             </div>
         </div>
-    @endif
-@endsection
+    <?php endif; ?>
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             updateCitations();
@@ -501,4 +500,6 @@
             }
         }
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Tempat Coding\web programming\andrpaid\resources\views/pages/literature-review.blade.php ENDPATH**/ ?>

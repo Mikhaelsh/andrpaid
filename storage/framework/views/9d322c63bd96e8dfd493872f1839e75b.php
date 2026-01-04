@@ -14,20 +14,24 @@
 </head>
 
 <body>
+    <div class="page-wrapper-foot-nav">
 
-    <?php if (! (View::hasSection('hideNavbar'))): ?>
-        <?php echo $__env->make('partials.navbar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-    <?php endif; ?>
+        <?php if (! (View::hasSection('hideNavbar'))): ?>
+            <?php echo $__env->make('partials.navbar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        <?php endif; ?>
 
-    <?php echo $__env->yieldContent('content'); ?>
+        <main class="flex-grow-1">
+            <?php echo $__env->yieldContent('content'); ?>
+        </main>
 
-    <?php if (! (View::hasSection('hideFooter'))): ?>
-        <?php echo $__env->make('partials.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-    <?php endif; ?>
+        <?php if (! (View::hasSection('hideFooter'))): ?>
+            <?php echo $__env->make('partials.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        <?php endif; ?>
+
+    </div>
 
     <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
-
 </html>
 
 

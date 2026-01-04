@@ -1,20 +1,18 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Methodology - ' . $paper->title); ?>
 
-@section('title', 'Methodology - ' . $paper->title)
+<?php $__env->startSection('additionalCSS'); ?>
+    <link rel="stylesheet" href="<?php echo e(asset('styles/paper.css')); ?>">
+<?php $__env->stopSection(); ?>
 
-@section('additionalCSS')
-    <link rel="stylesheet" href="{{ asset('styles/paper.css') }}">
-@endsection
-
-@section('content')
-    @include('partials.navbarPaper', ['paper' => $paper])
+<?php $__env->startSection('content'); ?>
+    <?php echo $__env->make('partials.navbarPaper', ['paper' => $paper], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <div class="container-fluid px-4 py-4">
 
-        {{-- HEADER AREA --}}
+        
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
-                <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/workspace" class="text-decoration-none text-muted small fw-bold">
+                <a href="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/workspace" class="text-decoration-none text-muted small fw-bold">
                     <i class="bi bi-arrow-left me-1"></i> Back to Workspace
                 </a>
                 <div class="d-flex align-items-center gap-3" style="margin-top: 20px;">
@@ -23,13 +21,13 @@
                     </div>
                     <h3 class="fw-bold text-dark mt-2 mb-0">Research Methodology</h3>
 
-                    @if($paper->methodology_finalized)
+                    <?php if($paper->methodology_finalized): ?>
                         <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 mt-2">
                             <i class="bi bi-lock-fill me-1"></i> Finalized
                         </span>
-                    @else
+                    <?php else: ?>
                         <span class="badge bg-light text-secondary border mt-2">Draft Mode</span>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -38,27 +36,27 @@
                     <i class="bi bi-check-circle-fill me-1"></i> Saved
                 </div>
 
-                @if($canEdit)
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/finalize-methodology" method="POST">
-                        @csrf
-                        @if($paper->methodology_finalized)
+                <?php if($canEdit): ?>
+                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/finalize-methodology" method="POST">
+                        <?php echo csrf_field(); ?>
+                        <?php if($paper->methodology_finalized): ?>
                             <button type="submit" class="btn btn-outline-success btn-sm" title="Click to Reopen">
                                 <i class="bi bi-check-circle-fill me-1"></i> Finalized
                             </button>
-                        @else
+                        <?php else: ?>
                             <button type="submit" class="btn btn-dark btn-sm">
                                 <i class="bi bi-check2-circle me-1"></i> Finalize Diagram
                             </button>
-                        @endif
+                        <?php endif; ?>
                     </form>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
 
         <div class="editor-container">
-            @if(!$canEdit || $paper->methodology_finalized)
+            <?php if(!$canEdit || $paper->methodology_finalized): ?>
                 <div class="read-only-overlay" title="Read Only Mode (Finalized)"></div>
-            @endif
+            <?php endif; ?>
 
             <iframe id="drawioFrame" src="https://embed.diagrams.net/?embed=1&ui=atlas&spin=1&proto=json&configure=1&saveAndExit=0&noSaveBtn=0"></iframe>
         </div>
@@ -70,67 +68,67 @@
             <div class="methodology-card shadow-sm">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold text-dark mb-0"><i class="bi bi-database-fill me-2 text-primary"></i>Data Sources</h5>
-                    @if($canEdit && !$paper->methodology_finalized)
+                    <?php if($canEdit && !$paper->methodology_finalized): ?>
                         <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addDatasetModal">
                             <i class="bi bi-plus-lg"></i> Add Dataset
                         </button>
-                    @endif
+                    <?php endif; ?>
                 </div>
 
-                @if(empty($paper->datasets))
+                <?php if(empty($paper->datasets)): ?>
                     <div class="text-center py-4 text-muted small bg-light rounded">
                         No datasets defined.
                     </div>
-                @else
+                <?php else: ?>
                     <div class="d-flex flex-column gap-3">
-                        @foreach($paper->datasets as $ds)
+                        <?php $__currentLoopData = $paper->datasets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ds): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="border rounded p-3 position-relative bg-white">
                                 <div class="row">
-                                    @if(!empty($ds['image_path']))
+                                    <?php if(!empty($ds['image_path'])): ?>
                                         <div class="col-4">
-                                            <a href="{{ asset('storage/' . $ds['image_path']) }}" target="_blank">
-                                                <img src="{{ asset('storage/' . $ds['image_path']) }}" class="dataset-preview-img" alt="Sample">
+                                            <a href="<?php echo e(asset('storage/' . $ds['image_path'])); ?>" target="_blank">
+                                                <img src="<?php echo e(asset('storage/' . $ds['image_path'])); ?>" class="dataset-preview-img" alt="Sample">
                                             </a>
                                         </div>
                                         <div class="col-8">
-                                    @else
+                                    <?php else: ?>
                                         <div class="col-12">
-                                    @endif
+                                    <?php endif; ?>
 
-                                        <h6 class="fw-bold mb-1">{{ $ds['name'] }}</h6>
+                                        <h6 class="fw-bold mb-1"><?php echo e($ds['name']); ?></h6>
 
-                                        @if(!empty($ds['link']))
-                                            <a href="{{ $ds['link'] }}" target="_blank" class="small text-primary text-decoration-none mb-2 d-inline-block">
+                                        <?php if(!empty($ds['link'])): ?>
+                                            <a href="<?php echo e($ds['link']); ?>" target="_blank" class="small text-primary text-decoration-none mb-2 d-inline-block">
                                                 <i class="bi bi-link-45deg"></i> Link to source
                                             </a>
-                                        @else
+                                        <?php else: ?>
                                             <span class="badge bg-light text-secondary border small mb-2">Manual Collection</span>
-                                        @endif
+                                        <?php endif; ?>
 
-                                        <p class="small text-muted mb-0">{{ $ds['description'] }}</p>
+                                        <p class="small text-muted mb-0"><?php echo e($ds['description']); ?></p>
                                     </div>
                                 </div>
 
-                                @if($canEdit && !$paper->methodology_finalized)
+                                <?php if($canEdit && !$paper->methodology_finalized): ?>
                                     <div class="position-absolute top-0 end-0 m-2 d-flex gap-1">
                                         <button class="btn btn-link text-secondary p-0 small"
-                                                onclick='openEditDatasetModal(@json($ds))'>
+                                                onclick='openEditDatasetModal(<?php echo json_encode($ds, 15, 512) ?>)'>
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
 
-                                        <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/methodology/remove-dataset" method="POST" class="d-inline">
-                                            @csrf
-                                            <input type="hidden" name="item_id" value="{{ $ds['id'] }}">
+                                        <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/methodology/remove-dataset" method="POST" class="d-inline">
+                                            <?php echo csrf_field(); ?>
+                                            <input type="hidden" name="item_id" value="<?php echo e($ds['id']); ?>">
                                             <button type="submit" class="btn btn-link text-danger p-0 small" onclick="return confirm('Remove this dataset?')">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
                                     </div>
-                                @endif
+                                <?php endif; ?>
                             </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
 
@@ -138,28 +136,28 @@
             <div class="methodology-card shadow-sm">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold text-dark mb-0"><i class="bi bi-calculator-fill me-2 text-info"></i>Formulas & Models</h5>
-                    @if($canEdit && !$paper->methodology_finalized)
+                    <?php if($canEdit && !$paper->methodology_finalized): ?>
                         <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#addFormulaModal">
                             <i class="bi bi-plus-lg"></i> Add Formula
                         </button>
-                    @endif
+                    <?php endif; ?>
                 </div>
-                 @if(empty($paper->formulas))
+                 <?php if(empty($paper->formulas)): ?>
                     <div class="text-center py-4 text-muted small bg-light rounded">
                         No formulas added.
                     </div>
-                @else
+                <?php else: ?>
                     <div class="d-flex flex-column gap-3">
-                        @foreach($paper->formulas as $form)
+                        <?php $__currentLoopData = $paper->formulas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $form): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="border rounded p-3 position-relative bg-white">
-                                <div id="formula-display-{{ $form['id'] }}"
+                                <div id="formula-display-<?php echo e($form['id']); ?>"
                                     class="mb-2 text-center py-3 bg-light rounded"
                                     style="min-height: 50px; font-size: 1.2rem; overflow-x: auto;">
                                 </div>
 
-                                <p class="small text-muted mb-1">{{ $form['description'] }}</p>
+                                <p class="small text-muted mb-1"><?php echo e($form['description']); ?></p>
 
-                                @php
+                                <?php
                                     $refTitle = "Unknown Reference";
                                     if(!empty($paper->references_data)) {
                                         foreach($paper->references_data as $ref) {
@@ -169,26 +167,27 @@
                                             }
                                         }
                                     }
-                                @endphp
-                                @if(!empty($form['reference_id']))
+                                ?>
+                                <?php if(!empty($form['reference_id'])): ?>
                                     <div class="small fw-bold text-secondary">
-                                        <i class="bi bi-journal-bookmark me-1"></i> Source: {{ $refTitle }}
-                                    </div>
-                                @endif
+                                        <i class="bi bi-journal-bookmark me-1"></i> Source: <?php echo e($refTitle); ?>
 
-                                @if($canEdit && !$paper->methodology_finalized)
-                                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/methodology/remove-formula" method="POST" class="position-absolute top-0 end-0 m-2">
-                                        @csrf
-                                        <input type="hidden" name="item_id" value="{{ $form['id'] }}">
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if($canEdit && !$paper->methodology_finalized): ?>
+                                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/methodology/remove-formula" method="POST" class="position-absolute top-0 end-0 m-2">
+                                        <?php echo csrf_field(); ?>
+                                        <input type="hidden" name="item_id" value="<?php echo e($form['id']); ?>">
                                         <button type="submit" class="btn btn-link text-danger p-0 small" onclick="return confirm('Remove this formula?')">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
-                                @endif
+                                <?php endif; ?>
                             </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
 
@@ -199,70 +198,72 @@
                         <h5 class="fw-bold text-dark mb-0"><i class="bi bi-code-slash me-2" style="color: #F7931E;"></i>Implementation Code</h5>
                         <p class="text-muted small mb-0">Embed notebooks from Google Colab, GitHub Gists, or other repositories.</p>
                     </div>
-                    @if($canEdit && !$paper->methodology_finalized)
+                    <?php if($canEdit && !$paper->methodology_finalized): ?>
                         <button class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#addCodeModal">
                             <i class="bi bi-plus-lg"></i> Embed Code
                         </button>
-                    @endif
+                    <?php endif; ?>
                 </div>
 
-                @if(empty($paper->code_blocks))
+                <?php if(empty($paper->code_blocks)): ?>
                     <div class="text-center py-5 bg-light rounded">
                         <i class="bi bi-file-earmark-code" style="font-size: 2rem; color: #ccc;"></i>
                         <p class="text-muted small mt-2">No code snippets or notebooks embedded.</p>
                     </div>
-                @else
+                <?php else: ?>
                     <div class="row g-4">
-                        @foreach($paper->code_blocks as $code)
+                        <?php $__currentLoopData = $paper->code_blocks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $code): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="col-lg-6">
                                 <div class="code-card">
                                     <div class="code-header">
                                         <div class="d-flex align-items-center gap-2">
-                                            @if($code['platform'] == 'colab')
+                                            <?php if($code['platform'] == 'colab'): ?>
                                                 <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Colaboratory_SVG_Logo.svg" width="20">
-                                            @elseif($code['platform'] == 'github')
+                                            <?php elseif($code['platform'] == 'github'): ?>
                                                 <i class="bi bi-github"></i>
-                                            @else
+                                            <?php else: ?>
                                                 <i class="bi bi-code-square"></i>
-                                            @endif
-                                            <span class="fw-bold small">{{ $code['title'] }}</span>
+                                            <?php endif; ?>
+                                            <span class="fw-bold small"><?php echo e($code['title']); ?></span>
                                         </div>
-                                        @if($canEdit && !$paper->methodology_finalized)
-                                            <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/methodology/remove-code" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="item_id" value="{{ $code['id'] }}">
+                                        <?php if($canEdit && !$paper->methodology_finalized): ?>
+                                            <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/methodology/remove-code" method="POST">
+                                                <?php echo csrf_field(); ?>
+                                                <input type="hidden" name="item_id" value="<?php echo e($code['id']); ?>">
                                                 <button type="submit" class="btn btn-link text-secondary p-0 small hover-white">
                                                     <i class="bi bi-x-lg"></i>
                                                 </button>
                                             </form>
-                                        @endif
+                                        <?php endif; ?>
                                     </div>
                                     <div class="code-content">
 
                                         <div class="ratio ratio-16x9">
-                                            {!! $code['embed_code'] !!}
+                                            <?php echo $code['embed_code']; ?>
+
                                         </div>
                                         <div class="mt-2 text-muted small border-top pt-2">
-                                            {{ $code['description'] }}
+                                            <?php echo e($code['description']); ?>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
 
     </div>
 
-    @if($canEdit)
-        {{-- Add Dataset Modal --}}
+    <?php if($canEdit): ?>
+        
         <div class="modal fade" id="addDatasetModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/methodology/add-dataset" method="POST" enctype="multipart/form-data">
-                        @csrf
+                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/methodology/add-dataset" method="POST" enctype="multipart/form-data">
+                        <?php echo csrf_field(); ?>
                         <div class="modal-header">
                             <h5 class="modal-title">Add Data Source</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -294,12 +295,12 @@
             </div>
         </div>
 
-        {{-- EDIT DATASET MODAL --}}
+        
         <div class="modal fade" id="editDatasetModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/methodology/update-dataset" method="POST" enctype="multipart/form-data">
-                        @csrf
+                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/methodology/update-dataset" method="POST" enctype="multipart/form-data">
+                        <?php echo csrf_field(); ?>
                         <input type="hidden" name="item_id" id="edit_ds_id">
 
                         <div class="modal-header">
@@ -339,12 +340,12 @@
             </div>
         </div>
 
-        {{-- Add Formula Modal --}}
+        
         <div class="modal fade" id="addFormulaModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/methodology/add-formula" method="POST">
-                        @csrf
+                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/methodology/add-formula" method="POST">
+                        <?php echo csrf_field(); ?>
                         <div class="modal-header">
                             <h5 class="modal-title">Add Formula</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -359,13 +360,14 @@
                                 <label class="form-label">Reference (From Literature Review)</label>
                                 <select name="reference_id" class="form-select">
                                     <option value="">-- No specific reference --</option>
-                                    @if(!empty($paper->references_data))
-                                        @foreach($paper->references_data as $ref)
-                                            <option value="{{ $ref['id'] ?? '' }}">
-                                                {{ $ref['author'] }} ({{ $ref['year'] }}) - {{ Str::limit($ref['title'], 30) }}
+                                    <?php if(!empty($paper->references_data)): ?>
+                                        <?php $__currentLoopData = $paper->references_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ref): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($ref['id'] ?? ''); ?>">
+                                                <?php echo e($ref['author']); ?> (<?php echo e($ref['year']); ?>) - <?php echo e(Str::limit($ref['title'], 30)); ?>
+
                                             </option>
-                                        @endforeach
-                                    @endif
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    <?php endif; ?>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -381,12 +383,12 @@
             </div>
         </div>
 
-        {{-- Add Code Modal --}}
+        
         <div class="modal fade" id="addCodeModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/methodology/add-code" method="POST">
-                        @csrf
+                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/methodology/add-code" method="POST">
+                        <?php echo csrf_field(); ?>
                         <div class="modal-header">
                             <h5 class="modal-title">Embed Code</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -421,19 +423,19 @@
                 </div>
             </div>
         </div>
-    @endif
-@endsection
+    <?php endif; ?>
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 <script>
     const iframe = document.getElementById('drawioFrame');
-    const existingXml = @json($paper->methodology_xml);
+    const existingXml = <?php echo json_encode($paper->methodology_xml, 15, 512) ?>;
 
     // JS Logic: User can edit ONLY if authorized AND not finalized
-    const isFinalized = @json($paper->methodology_finalized);
-    const userCanEdit = @json($canEdit);
+    const isFinalized = <?php echo json_encode($paper->methodology_finalized, 15, 512) ?>;
+    const userCanEdit = <?php echo json_encode($canEdit, 15, 512) ?>;
     const canInteract = userCanEdit && !isFinalized;
 
     const configuration = { compressXml: false, ui: 'atlas' };
@@ -460,11 +462,11 @@
     });
 
     function saveToBackend(xmlData) {
-        fetch('/{{ $user->profileId }}/paper/{{ $paper->paperId }}/save-methodology', {
+        fetch('/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/save-methodology', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
             },
             body: JSON.stringify({ xml: xmlData })
         })
@@ -480,7 +482,7 @@
     document.addEventListener("DOMContentLoaded", function() {
 
         // 1. Get Formula Data from PHP
-        const formulas = @json($paper->formulas ?? []);
+        const formulas = <?php echo json_encode($paper->formulas ?? [], 15, 512) ?>;
 
         // 2. Render each formula explicitly
         formulas.forEach(form => {
@@ -544,4 +546,6 @@
         new bootstrap.Modal(document.getElementById('editDatasetModal')).show();
     }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Tempat Coding\web programming\andrpaid\resources\views/pages/methodology.blade.php ENDPATH**/ ?>

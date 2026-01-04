@@ -10,162 +10,169 @@
 @endsection
 
 @section('content')
-<div class="login-page-wrapper">
+    <div class="login-page-wrapper">
 
-    <ul class="theme-picker">
-        <li data-theme="barney" class="barney"></li>
-        <li data-theme="firewatch" class="firewatch"></li>
-        <li data-theme="citrus" class="citrus"></li>
-        <li data-theme="marsh" class="marsh"></li>
-        <li data-theme="frost" class="frost"></li>
-        <li data-theme="slate" class="slate"></li>
-        <li data-theme="candy" class="candy"></li>
-    </ul>
+        <ul class="theme-picker">
+            <li data-theme="barney" class="barney"></li>
+            <li data-theme="firewatch" class="firewatch"></li>
+            <li data-theme="citrus" class="citrus"></li>
+            <li data-theme="marsh" class="marsh"></li>
+            <li data-theme="frost" class="frost"></li>
+            <li data-theme="slate" class="slate"></li>
+            <li data-theme="candy" class="candy"></li>
+        </ul>
 
-    <form action="/login" method="POST" class="form auth-3d-form">
-        @csrf
+        <form action="/login" method="POST" class="form auth-3d-form">
+            @csrf
 
-        <div class="header-section">
-            <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="auth-logo">
-            <h1>AndRPaid</h1>
-            <p>Welcome Back!!!</p>
-        </div>
-
-        @if (session('errorLogin') || $errors->any())
-            <div class="theme-alert">
-                <i class='bx bx-error-circle'></i>
-                <span>{{ session('errorLogin') ?? 'Invalid credentials' }}</span>
+            <div class="header-section">
+                <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="auth-logo">
+                <h1>AndRPaid</h1>
+                <p>Welcome Back!!!</p>
             </div>
-        @endif
 
-        <div class="input-wrapper">
-            <input type="email" name="email" placeholder="Enter your email" required autocomplete="email" value="{{ old('email') }}" />
-            <i class="bx bxs-user-circle"></i>
-        </div>
+            @if (session('errorLogin') || $errors->any())
+                <div class="theme-alert">
+                    <i class='bx bx-error-circle'></i>
+                    <span>{{ session('errorLogin') ?? 'Invalid credentials' }}</span>
+                </div>
+            @endif
 
-        <div class="input-wrapper">
-            <input type="password" name="password" placeholder="Enter your password" required autocomplete="current-password" />
-            <i class="bx bx-key"></i>
-        </div>
+            <div class="input-wrapper">
+                <input type="email" name="email" placeholder="Enter your email" required autocomplete="email"
+                    value="{{ old('email') }}" />
+                <i class="bx bxs-user-circle"></i>
+            </div>
 
-        <div class="form-links">
-            <a href="/forgot-password">Forgot password?</a>
-        </div>
+            <div class="input-wrapper">
+                <input type="password" name="password" placeholder="Enter your password" required
+                    autocomplete="current-password" />
+                <i class="bx bx-key"></i>
+            </div>
 
-        <div class="button-wrapper">
-            <button type="submit">
-                Sign In
-                <i class="bx bx-right-arrow-alt"></i>
-            </button>
-        </div>
+            <div class="form-links">
+                <a href="/forgot-password">Forgot password?</a>
+            </div>
 
-        <div class="form-footer">
-            <p>New here? <a href="/register">Create an account</a></p>
-        </div>
-    </form>
+            <div class="button-wrapper">
+                <button type="submit">
+                    Sign In
+                    <i class="bx bx-right-arrow-alt"></i>
+                </button>
+            </div>
 
-    @if (session('success'))
-        <div class="modal fade custom-modal-backdrop" id="statusModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content custom-modal-content type-success text-center p-4">
-                    <div class="modal-body px-4 py-4">
-                        <div class="modal-icon-wrapper mb-4 mx-auto">
-                            <i class="bi bi-check-lg custom-icon"></i>
+            <div class="form-footer">
+                <p>New here? <a href="/register">Create an account</a></p>
+            </div>
+        </form>
+
+        @if (session('success'))
+            <div class="modal fade custom-modal-backdrop" id="statusModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content custom-modal-content type-success text-center p-4">
+                        <div class="modal-body px-4 py-4">
+                            <div class="modal-icon-wrapper mb-4 mx-auto">
+                                <i class="bi bi-check-lg custom-icon"></i>
+                            </div>
+                            <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                            <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
+                            <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm"
+                                data-bs-dismiss="modal">
+                                CONTINUE
+                            </button>
                         </div>
-                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
-                        <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
-                        <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm" data-bs-dismiss="modal">
-                            CONTINUE
-                        </button>
                     </div>
                 </div>
             </div>
-        </div>
-    @endif
+        @endif
 
-</div>
+    </div>
 
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const themeList = document.querySelector(".theme-picker");
-        const defaultThemeItem = themeList.firstElementChild; 
-        const themeListItems = themeList.childNodes;
-        
-        const backgroundWrapper = document.querySelector('.login-page-wrapper');
-        const form = document.querySelector(".form");
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const themeList = document.querySelector(".theme-picker");
+                const defaultThemeItem = themeList.firstElementChild;
+                const themeListItems = themeList.childNodes;
 
-        const themeState = {
-            selected: null,
-            set: (t) => { themeState.selected = t; },
-            get: () => themeState.selected
-        };
+                const backgroundWrapper = document.querySelector('.login-page-wrapper');
+                const form = document.querySelector(".form");
 
-        const itemState = {
-            selected: null,
-            set: (i) => { itemState.selected = i; },
-            get: () => itemState.selected
-        };
+                const themeState = {
+                    selected: null,
+                    set: (t) => {
+                        themeState.selected = t;
+                    },
+                    get: () => themeState.selected
+                };
 
-        function init() {
-            themeListItems.forEach(el => el.addEventListener("click", handleThemeChange));
+                const itemState = {
+                    selected: null,
+                    set: (i) => {
+                        itemState.selected = i;
+                    },
+                    get: () => itemState.selected
+                };
 
-            if(defaultThemeItem) {
-                const defaultTheme = defaultThemeItem.dataset.theme;
-                
-                setTheme(defaultTheme);
-                
-                setSelectedThemeItem(defaultThemeItem);
-            }
-        }
+                function init() {
+                    themeListItems.forEach(el => el.addEventListener("click", handleThemeChange));
 
-        function handleThemeChange(event) {
-            let selectedItem = event.target;
-            if(!selectedItem.dataset.theme) return; 
-            
-            let selectedTheme = selectedItem.dataset.theme;
+                    if (defaultThemeItem) {
+                        const defaultTheme = defaultThemeItem.dataset.theme;
 
-            if (!selectedItem.classList.contains("pressed") && !form.classList.contains("rotate")) {
-              
-                form.classList.add("rotate");
-                
-                setSelectedThemeItem(selectedItem);
-                
-                setTimeout(() => { 
-                    setTheme(selectedTheme); 
-                }, 600);
+                        setTheme(defaultTheme);
 
-                setTimeout(() => { 
-                    form.classList.remove("rotate"); 
-                }, 1200);
-            }
-        }
+                        setSelectedThemeItem(defaultThemeItem);
+                    }
+                }
 
-        function setTheme(selectedTheme) {
-            if(themeState.get()) {
-                backgroundWrapper.classList.remove(themeState.get());
-            }
-            themeState.set(selectedTheme);
-            backgroundWrapper.classList.add(themeState.get());
-        }
+                function handleThemeChange(event) {
+                    let selectedItem = event.target;
+                    if (!selectedItem.dataset.theme) return;
 
-        function setSelectedThemeItem(selectedItem) {
-            const current = itemState.get();
-            if (current) current.classList.remove("pressed");
-            
-            itemState.set(selectedItem);
-            selectedItem.classList.add("pressed");
-        }
+                    let selectedTheme = selectedItem.dataset.theme;
 
-        init();
+                    if (!selectedItem.classList.contains("pressed") && !form.classList.contains("rotate")) {
 
-        if (window.bootstrap && document.getElementById('statusModal')) {
-            setTimeout(() => {
-                var myModal = new bootstrap.Modal(document.getElementById('statusModal'));
-                myModal.show();
-            }, 300);
-        }
-    });
-</script>
-@endpush
+                        form.classList.add("rotate");
+
+                        setSelectedThemeItem(selectedItem);
+
+                        setTimeout(() => {
+                            setTheme(selectedTheme);
+                        }, 600);
+
+                        setTimeout(() => {
+                            form.classList.remove("rotate");
+                        }, 1200);
+                    }
+                }
+
+                function setTheme(selectedTheme) {
+                    if (themeState.get()) {
+                        backgroundWrapper.classList.remove(themeState.get());
+                    }
+                    themeState.set(selectedTheme);
+                    backgroundWrapper.classList.add(themeState.get());
+                }
+
+                function setSelectedThemeItem(selectedItem) {
+                    const current = itemState.get();
+                    if (current) current.classList.remove("pressed");
+
+                    itemState.set(selectedItem);
+                    selectedItem.classList.add("pressed");
+                }
+
+                init();
+
+                if (window.bootstrap && document.getElementById('statusModal')) {
+                    setTimeout(() => {
+                        var myModal = new bootstrap.Modal(document.getElementById('statusModal'));
+                        myModal.show();
+                    }, 300);
+                }
+            });
+        </script>
+    @endpush
 @endsection

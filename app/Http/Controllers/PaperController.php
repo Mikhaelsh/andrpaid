@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Collaboration;
 use App\Models\Paper;
-use App\Models\PaperReference;
 use App\Models\PaperStar;
 use App\Models\PaperType;
 use App\Models\ResearchField;
@@ -262,20 +261,16 @@ class PaperController extends Controller
     {
         $user = Auth::user();
 
-        // 1. Ensure user has a lecturer profile (since papers are owned/edited by lecturers)
         if (!$user->lecturer) {
             abort(403, 'Only lecturers can edit papers.');
         }
 
-        // 2. Check if User is the Owner
         $isOwner = $paper->lecturer_id === $user->lecturer->id;
 
-        // 3. Check if User is an Assigned Collaborator
         $isCollaborator = Collaboration::where('paper_id', $paper->id)
             ->where('lecturer_id', $user->lecturer->id)
             ->exists();
 
-        // 4. Deny if neither
         if (!$isOwner && !$isCollaborator) {
             abort(403, 'You do not have permission to edit this workspace.');
         }
@@ -286,13 +281,12 @@ class PaperController extends Controller
         $user = User::where("profileId", $profileId)->firstOrFail();
         $paper = Paper::where('paperId', $paperId)->firstOrFail();
 
-        // 1. Calculate Permissions
         $currentUser = Auth::user();
         $canEdit = false;
 
         if ($currentUser && $currentUser->lecturer) {
             $isOwner = $paper->lecturer_id === $currentUser->lecturer->id;
-            
+
             // Check if they are a collaborator
             $isCollaborator = Collaboration::where('paper_id', $paper->id)
                 ->where('lecturer_id', $currentUser->lecturer->id)
@@ -301,13 +295,16 @@ class PaperController extends Controller
             if ($isOwner || $isCollaborator) {
                 $canEdit = true;
             }
+
+            if ($paper->lit_review_finalized === true){
+                $canEdit = false;
+            }
         }
 
-        // 2. Pass $canEdit to the view
         return view('pages.literature-review', [
             'user' => $user,
             'paper' => $paper,
-            'canEdit' => $canEdit // <--- THIS LINE WAS MISSING
+            'canEdit' => $canEdit
         ]);
     }
 
@@ -315,7 +312,6 @@ class PaperController extends Controller
     {
         $paper = Paper::where('paperId', $paperId)->firstOrFail();
 
-        // SECURITY CHECK
         $this->authorizeEditor($paper);
 
         $validated = $request->validate([
@@ -337,13 +333,13 @@ class PaperController extends Controller
             'url' => $validated['url'] ?? '',
             'key_points' => json_decode($validated['key_points'] ?? '[]'),
             'is_analyzed' => $request->has('is_analyzed'),
-            'added_by' => Auth::user()->name, 
+            'added_by' => Auth::user()->name,
             'created_at' => now()->toDateTimeString()
         ];
 
         $currentRefs = $paper->references_data ?? [];
         $currentRefs[] = $newRef;
-        
+
         $paper->references_data = $currentRefs;
         $paper->save();
 
@@ -354,9 +350,8 @@ class PaperController extends Controller
     {
         $paper = Paper::where('paperId', $paperId)->firstOrFail();
 
-        // SECURITY CHECK
         $this->authorizeEditor($paper);
-        
+
         $paper->synthesis_text = $request->input('synthesis_text');
         $paper->save();
 
@@ -375,7 +370,6 @@ class PaperController extends Controller
         $bibtex = "";
 
         foreach ($references as $ref) {
-            // Create a unique citation key (e.g., AuthorYear)
             $lastname = explode(' ', trim($ref['author']))[0];
             $citKey = Str::slug($lastname) . $ref['year'];
 
@@ -402,9 +396,8 @@ class PaperController extends Controller
         $paper = Paper::where('paperId', $paperId)->firstOrFail();
         $request->validate(['theme_name' => 'required|string|max:50']);
 
-        $currentThemes = $paper->themes ?? []; // Get existing array
-        
-        // Avoid duplicates
+        $currentThemes = $paper->themes ?? [];
+
         if (!in_array($request->theme_name, $currentThemes)) {
             $currentThemes[] = $request->theme_name;
             $paper->themes = $currentThemes;
@@ -420,7 +413,7 @@ class PaperController extends Controller
         $themeToRemove = $request->input('theme_name');
 
         $currentThemes = $paper->themes ?? [];
-        
+
         // Filter out the theme to remove
         $updatedThemes = array_values(array_filter($currentThemes, function($theme) use ($themeToRemove) {
             return $theme !== $themeToRemove;
@@ -435,11 +428,9 @@ class PaperController extends Controller
     public function finalizeLitReview($profileId, $paperId)
     {
         $paper = Paper::where('paperId', $paperId)->firstOrFail();
-        
-        // Security check
+
         $this->authorizeEditor($paper);
 
-        // Toggle the status (Finalized <-> Draft)
         $paper->lit_review_finalized = !$paper->lit_review_finalized;
         $paper->save();
 
@@ -452,7 +443,6 @@ class PaperController extends Controller
         $user = User::where("profileId", $profileId)->firstOrFail();
         $paper = Paper::where('paperId', $paperId)->firstOrFail();
 
-        // Calculate Permissions (Same logic as Lit Review)
         $currentUser = Auth::user();
         $canEdit = false;
         if ($currentUser && $currentUser->lecturer) {
@@ -472,8 +462,7 @@ class PaperController extends Controller
     public function saveMethodology(Request $request, $profileId, $paperId)
     {
         $paper = Paper::where('paperId', $paperId)->firstOrFail();
-        
-        // Security Check
+
         $this->authorizeEditor($paper);
 
         $paper->methodology_xml = $request->input('xml');
@@ -482,7 +471,6 @@ class PaperController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Diagram saved successfully']);
     }
 
-    // --- DATASETS ---
     public function addDataset(Request $request, $profileId, $paperId)
     {
         $paper = Paper::where('paperId', $paperId)->firstOrFail();
@@ -490,7 +478,7 @@ class PaperController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'sample_image' => 'nullable|image|max:2048' // Max 2MB
+            'sample_image' => 'nullable|image|max:2048'
         ]);
 
         $imagePath = null;
@@ -503,7 +491,7 @@ class PaperController extends Controller
             'name' => $request->name,
             'link' => $request->link,
             'description' => $request->description,
-            'image_path' => $imagePath // New Field
+            'image_path' => $imagePath
         ];
 
         $items = $paper->datasets ?? [];
@@ -521,7 +509,7 @@ class PaperController extends Controller
 
         $items = $paper->datasets ?? [];
         $items = array_values(array_filter($items, fn($i) => $i['id'] !== $request->item_id));
-        
+
         $paper->datasets = $items;
         $paper->save();
 
@@ -556,7 +544,7 @@ class PaperController extends Controller
 
         $items = $paper->code_blocks ?? [];
         $items = array_values(array_filter($items, fn($i) => $i['id'] !== $request->item_id));
-        
+
         $paper->code_blocks = $items;
         $paper->save();
 
@@ -575,17 +563,15 @@ class PaperController extends Controller
         ]);
 
         $datasets = $paper->datasets ?? [];
-        
+
         foreach ($datasets as &$ds) {
             if ($ds['id'] === $request->item_id) {
-                // Update text fields
                 $ds['name'] = $request->name;
                 $ds['link'] = $request->link;
                 $ds['description'] = $request->description;
 
                 // Handle Image Upload
                 if ($request->hasFile('sample_image')) {
-                    // (Optional: Delete old image from storage here if you want strict cleanup)
                     $ds['image_path'] = $request->file('sample_image')->store('dataset_samples', 'public');
                 }
                 break;
@@ -598,7 +584,6 @@ class PaperController extends Controller
         return back()->with('success', 'Dataset updated successfully.');
     }
 
-    // --- FORMULAS ---
     public function addFormula(Request $request, $profileId, $paperId)
     {
         $paper = Paper::where('paperId', $paperId)->firstOrFail();
@@ -608,7 +593,7 @@ class PaperController extends Controller
             'id' => uniqid(),
             'latex' => $request->latex,
             'description' => $request->description,
-            'reference_id' => $request->reference_id 
+            'reference_id' => $request->reference_id
         ];
 
         $items = $paper->formulas ?? [];
@@ -626,7 +611,7 @@ class PaperController extends Controller
 
         $items = $paper->formulas ?? [];
         $items = array_values(array_filter($items, fn($i) => $i['id'] !== $request->item_id));
-        
+
         $paper->formulas = $items;
         $paper->save();
 
@@ -636,7 +621,7 @@ class PaperController extends Controller
     public function finalizeMethodology($profileId, $paperId)
     {
         $paper = Paper::where('paperId', $paperId)->firstOrFail();
-        
+
         $this->authorizeEditor($paper);
 
         $paper->methodology_finalized = !$paper->methodology_finalized;
@@ -646,14 +631,11 @@ class PaperController extends Controller
         return back()->with('success', "Methodology has been $status.");
     }
 
-    // --- RESULTS & ANALYSIS ---
-
     public function paperResults($profileId, $paperId)
     {
         $user = User::where("profileId", $profileId)->firstOrFail();
         $paper = Paper::where('paperId', $paperId)->firstOrFail();
 
-        // Calculate Permissions
         $currentUser = Auth::user();
         $canEdit = false;
         if ($currentUser && $currentUser->lecturer) {
@@ -731,30 +713,26 @@ class PaperController extends Controller
 
         $data = $paper->results_data ?? [];
         $itemId = $request->input('item_id');
-        
+
         foreach ($data as &$item) {
             if ($item['id'] === $itemId) {
-                
-                // 1. Handle Title Rename (NEW)
+
                 if ($request->has('title')) {
                     $item['title'] = $request->input('title');
                 }
 
-                // 2. Handle Adding Analysis Point
                 if ($request->has('new_point')) {
                     $item['analysis'][] = $request->input('new_point');
                 }
-                
-                // 3. Handle Removing Analysis Point
+
                 if ($request->has('remove_point_index')) {
                     array_splice($item['analysis'], $request->input('remove_point_index'), 1);
                 }
 
-                // 4. Handle Table Data Update
                 if ($request->has('table_content')) {
                     $item['content'] = json_decode($request->input('table_content'));
                 }
-                
+
                 break;
             }
         }
@@ -773,7 +751,6 @@ class PaperController extends Controller
         $itemId = $request->input('item_id');
         $data = $paper->results_data ?? [];
 
-        // Filter out the item
         $data = array_values(array_filter($data, function($item) use ($itemId) {
             return $item['id'] !== $itemId;
         }));
@@ -796,14 +773,11 @@ class PaperController extends Controller
         return back()->with('success', "Results section has been $status.");
     }
 
-    // --- CONCLUSION ---
-
     public function paperConclusion($profileId, $paperId)
     {
         $user = User::where("profileId", $profileId)->firstOrFail();
         $paper = Paper::where('paperId', $paperId)->firstOrFail();
 
-        // Calculate Permissions
         $currentUser = Auth::user();
         $canEdit = false;
         if ($currentUser && $currentUser->lecturer) {
@@ -829,7 +803,7 @@ class PaperController extends Controller
         $paper->conclusion_summary = $request->input('summary');
         $paper->conclusion_limitations = $request->input('limitations');
         $paper->conclusion_future_works = $request->input('future_works');
-        
+
         $paper->save();
 
         return back()->with('success', 'Conclusion saved successfully.');

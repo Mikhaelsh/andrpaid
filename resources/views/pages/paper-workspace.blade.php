@@ -10,28 +10,14 @@
     @include('partials.navbarPaper', ['paper' => $paper])
 
     <div class="container py-5">
-
-        {{-- Header --}}
         <div class="d-flex justify-content-between align-items-center mb-5">
             <div>
                 <h3 class="fw-bold text-dark mb-1">Research Workspace</h3>
                 <p class="text-muted mb-0">Select a module to begin writing or editing.</p>
             </div>
-            {{-- Global Actions --}}
-            <div>
-                <button class="btn btn-outline-secondary btn-sm me-2">
-                    <i class="bi bi-clock-history me-1"></i> History
-                </button>
-                <button class="btn btn-primary btn-sm">
-                    <i class="bi bi-file-earmark-pdf me-1"></i> Preview PDF
-                </button>
-            </div>
         </div>
 
-        {{-- The 4 Modules Grid --}}
         <div class="row g-4">
-
-            {{-- 1. LITERATURE REVIEW --}}
             <div class="col-md-6">
                 <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/lit-review" class="text-decoration-none">
                     <div class="workspace-card h-100 p-4">
@@ -39,7 +25,6 @@
                             <div class="module-icon bg-primary bg-opacity-10 text-primary">
                                 <i class="bi bi-book"></i>
                             </div>
-                            {{-- DYNAMIC STATUS BADGE --}}
                             @php
                                 $refs = $paper->references_data;
                                 if(is_string($refs)) $refs = json_decode($refs, true);
@@ -59,10 +44,8 @@
                         <h5 class="fw-bold text-dark mb-2">Literature Review</h5>
                         <p class="text-muted small mb-4">Manage references, key points, and synthesize your theoretical framework.</p>
 
-                        {{-- Mini Footer --}}
                         <div class="d-flex justify-content-between align-items-center border-top pt-3">
                             @php
-                                // Safety check: Decode if it's a string, default to empty array if null
                                 $refs = $paper->references_data;
                                 if(is_string($refs)) $refs = json_decode($refs, true);
                                 $refCount = is_array($refs) ? count($refs) : 0;
@@ -75,7 +58,6 @@
                 </a>
             </div>
 
-            {{-- 2. METHODOLOGY --}}
             <div class="col-md-6">
                 <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/methodology" class="text-decoration-none">
                     <div class="workspace-card h-100 p-4">
@@ -83,8 +65,7 @@
                             <div class="module-icon bg-info bg-opacity-10 text-info">
                                 <i class="bi bi-diagram-3"></i>
                             </div>
-                            
-                            {{-- DYNAMIC STATUS BADGE --}}
+
                             @if($paper->methodology_finalized)
                                 <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
                                     <i class="bi bi-check-lg me-1"></i> Finalized
@@ -112,7 +93,6 @@
                 </a>
             </div>
 
-            {{-- 3. RESULTS & ANALYSIS --}}
             <div class="col-md-6">
                 <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results" class="text-decoration-none">
                     <div class="workspace-card h-100 p-4">
@@ -120,8 +100,7 @@
                             <div class="module-icon bg-warning bg-opacity-10 text-warning">
                                 <i class="bi bi-bar-chart-fill"></i>
                             </div>
-                            
-                            {{-- DYNAMIC BADGE --}}
+
                             @php
                                 $items = $paper->results_data ?? [];
                                 $hasItems = !empty($items);
@@ -159,7 +138,6 @@
                 </a>
             </div>
 
-            {{-- 4. CONCLUSION --}}
             <div class="col-md-6">
                 <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/conclusion" class="text-decoration-none">
                     <div class="workspace-card h-100 p-4">
@@ -167,8 +145,7 @@
                             <div class="module-icon bg-success bg-opacity-10 text-success">
                                 <i class="bi bi-check-all"></i>
                             </div>
-                            
-                            {{-- DYNAMIC BADGE --}}
+
                             @php
                                 $hasContent = !empty($paper->conclusion_summary);
                             @endphp

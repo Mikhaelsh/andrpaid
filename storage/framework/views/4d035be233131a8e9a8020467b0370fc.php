@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-dark modern-navbar sticky-top">
     <div class="container">
 
-        <a class="navbar-brand d-flex align-items-center" href="/dashboard">
+        <a class="navbar-brand d-flex align-items-center" href="<?php echo e(route('dashboard', ['profileId' => Auth::user()->profileId])); ?>">
             <div class="brand-logo-container me-2">
                 <img src="<?php echo e(asset('images/logo.jpeg')); ?>" alt="Logo" class="brand-logo">
             </div>
@@ -17,7 +17,7 @@
         <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link px-3 <?php echo e(request()->is('dashboard') ? 'active' : ''); ?>" href="/dashboard">
+                    <a class="nav-link px-3 <?php echo e(request()->is('dashboard') ? 'active' : ''); ?>" href="<?php echo e(route('dashboard', ['profileId' => Auth::user()->profileId])); ?>">
                         <i class="bi bi-speedometer2 me-1"></i> Dashboard
                     </a>
                 </li>

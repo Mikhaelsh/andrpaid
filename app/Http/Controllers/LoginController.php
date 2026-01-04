@@ -23,7 +23,9 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-          
+
+            $user = User::where("email", $credentials["email"])->first();
+
             if(!$user->isAdmin()){
                 ActivityLog::create([
                     "user_id" => $user->id,
@@ -40,7 +42,7 @@ class LoginController extends Controller
             'email' => 'The provided credentials do not match our records.',
         ])->withInput();
     }
-          
+
     public function indexForgotPassword(){
         return view("pages.login-forgotPassword");
     }

@@ -1,23 +1,21 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Results & Analysis - ' . $paper->title); ?>
 
-@section('title', 'Results & Analysis - ' . $paper->title)
+<?php $__env->startSection('additionalCSS'); ?>
+    <link rel="stylesheet" href="<?php echo e(asset('styles/paper.css')); ?>">
+<?php $__env->stopSection(); ?>
 
-@section('additionalCSS')
-    <link rel="stylesheet" href="{{ asset('styles/paper.css') }}">
-@endsection
-
-@section('content')
-    @include('partials.navbarPaper', ['paper' => $paper])
+<?php $__env->startSection('content'); ?>
+    <?php echo $__env->make('partials.navbarPaper', ['paper' => $paper], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <div class="container py-5">
 
-        @php
+        <?php
             $isLocked = $paper->results_finalized;
             $canInteract = $canEdit && !$isLocked;
-        @endphp
+        ?>
 
         <div class="mb-4">
-            <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/workspace"
+            <a href="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/workspace"
                 class="text-decoration-none text-muted small fw-bold">
                 <i class="bi bi-arrow-left me-1"></i> Back to Workspace
             </a>
@@ -34,7 +32,7 @@
                 </div>
 
                 <div class="d-flex align-items-center gap-2">
-                    @php
+                    <?php
                         $items = $paper->results_data ?? [];
                         $chartCount = 0;
                         $tableCount = 0;
@@ -46,41 +44,41 @@
                                 $tableCount++;
                             }
                         }
-                    @endphp
+                    ?>
                     <p class="text-muted mb-0 ms-1">
-                        {{ $chartCount }} Charts • {{ $tableCount }} Tables
+                        <?php echo e($chartCount); ?> Charts • <?php echo e($tableCount); ?> Tables
                     </p>
 
-                    @if ($isLocked)
+                    <?php if($isLocked): ?>
                         <span
                             class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 ms-2">
                             <i class="bi bi-lock-fill me-1"></i> Finalized
                         </span>
-                    @else
+                    <?php else: ?>
                         <span class="badge bg-light text-secondary border ms-2">Draft Mode</span>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
 
             <div class="d-flex gap-2">
-                @if ($canEdit)
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/finalize-results" method="POST">
-                        @csrf
-                        @if ($isLocked)
+                <?php if($canEdit): ?>
+                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/finalize-results" method="POST">
+                        <?php echo csrf_field(); ?>
+                        <?php if($isLocked): ?>
                             <button type="submit" class="btn btn-outline-success btn-sm me-2" title="Click to Reopen">
                                 <i class="bi bi-check-circle-fill me-1"></i> Finalized
                             </button>
-                        @else
+                        <?php else: ?>
                             <button type="submit" class="btn btn-dark btn-sm me-2">
                                 <i class="bi bi-check2-circle me-1"></i> Finalize Results
                             </button>
-                        @endif
+                        <?php endif; ?>
                     </form>
-                @endif
+                <?php endif; ?>
 
-                @if ($canInteract)
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/add-table" method="POST">
-                        @csrf
+                <?php if($canInteract): ?>
+                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/results/add-table" method="POST">
+                        <?php echo csrf_field(); ?>
                         <button type="submit" class="btn btn-outline-dark btn-sm">
                             <i class="bi bi-table me-1"></i> Create Table
                         </button>
@@ -88,157 +86,158 @@
                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addChartModal">
                         <i class="bi bi-image me-1"></i> Insert Chart
                     </button>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
 
         <div class="row">
             <div class="col-12">
-                @if (empty($paper->results_data))
+                <?php if(empty($paper->results_data)): ?>
                     <div class="text-center py-5 border rounded-3 bg-light">
                         <i class="bi bi-bar-chart-steps empty-state-icon"></i>
                         <h5 class="fw-bold text-muted">No Results Added</h5>
                         <p class="text-muted small mb-0">Insert charts or create tables to document your findings.</p>
                     </div>
-                @else
-                    @foreach ($paper->results_data as $item)
-                        <div class="result-item-card" id="item-{{ $item['id'] }}">
+                <?php else: ?>
+                    <?php $__currentLoopData = $paper->results_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="result-item-card" id="item-<?php echo e($item['id']); ?>">
                             <div class="result-header">
                                 <span class="fw-bold text-uppercase small text-muted">
-                                    <i class="bi {{ $item['type'] == 'chart' ? 'bi-image' : 'bi-table' }} me-2"></i>
-                                    {{ $item['type'] }}
+                                    <i class="bi <?php echo e($item['type'] == 'chart' ? 'bi-image' : 'bi-table'); ?> me-2"></i>
+                                    <?php echo e($item['type']); ?>
+
                                 </span>
-                                @if ($canInteract)
-                                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/delete"
+                                <?php if($canInteract): ?>
+                                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/results/delete"
                                         method="POST" onsubmit="return confirm('Delete this item?');">
-                                        @csrf
-                                        <input type="hidden" name="item_id" value="{{ $item['id'] }}">
+                                        <?php echo csrf_field(); ?>
+                                        <input type="hidden" name="item_id" value="<?php echo e($item['id']); ?>">
                                         <button type="submit" class="btn btn-link text-danger p-0">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
-                                @endif
+                                <?php endif; ?>
                             </div>
 
                             <div class="result-body">
                                 <div class="mb-3">
-                                    @if ($canInteract)
-                                        <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/update"
+                                    <?php if($canInteract): ?>
+                                        <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/results/update"
                                             method="POST">
-                                            @csrf
-                                            <input type="hidden" name="item_id" value="{{ $item['id'] }}">
+                                            <?php echo csrf_field(); ?>
+                                            <input type="hidden" name="item_id" value="<?php echo e($item['id']); ?>">
                                             <div class="input-group">
                                                 <input type="text" name="title"
                                                     class="form-control fw-bold fs-5 border-0 shadow-none px-0"
-                                                    value="{{ $item['title'] }}" style="background: transparent;"
+                                                    value="<?php echo e($item['title']); ?>" style="background: transparent;"
                                                     onblur="this.form.submit()">
                                                 <button class="btn btn-link text-muted" type="submit"><i
                                                         class="bi bi-pencil small"></i></button>
                                             </div>
                                         </form>
-                                    @else
-                                        <h5 class="fw-bold mb-3">{{ $item['title'] }}</h5>
-                                    @endif
+                                    <?php else: ?>
+                                        <h5 class="fw-bold mb-3"><?php echo e($item['title']); ?></h5>
+                                    <?php endif; ?>
                                 </div>
 
-                                @if ($item['type'] === 'chart')
+                                <?php if($item['type'] === 'chart'): ?>
                                     <div class="text-center bg-light p-3 rounded mb-4">
-                                        <img src="{{ asset('storage/' . $item['content']) }}" alt="Chart"
+                                        <img src="<?php echo e(asset('storage/' . $item['content'])); ?>" alt="Chart"
                                             class="img-fluid rounded shadow-sm" style="max-height: 400px;">
                                     </div>
-                                @elseif($item['type'] === 'table')
+                                <?php elseif($item['type'] === 'table'): ?>
                                     <div class="custom-table-wrapper">
-                                        <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/update"
-                                            method="POST" id="form-table-{{ $item['id'] }}">
-                                            @csrf
-                                            <input type="hidden" name="item_id" value="{{ $item['id'] }}">
+                                        <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/results/update"
+                                            method="POST" id="form-table-<?php echo e($item['id']); ?>">
+                                            <?php echo csrf_field(); ?>
+                                            <input type="hidden" name="item_id" value="<?php echo e($item['id']); ?>">
                                             <input type="hidden" name="table_content"
-                                                id="input-table-{{ $item['id'] }}">
+                                                id="input-table-<?php echo e($item['id']); ?>">
 
-                                            <table class="custom-table" id="table-{{ $item['id'] }}">
-                                                @foreach ($item['content'] as $rowIndex => $row)
+                                            <table class="custom-table" id="table-<?php echo e($item['id']); ?>">
+                                                <?php $__currentLoopData = $item['content']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rowIndex => $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <tr>
-                                                        @foreach ($row as $colIndex => $cell)
-                                                            <td contenteditable="{{ $canInteract ? 'true' : 'false' }}"
-                                                                class="editable-cell">{{ $cell }}</td>
-                                                        @endforeach
+                                                        <?php $__currentLoopData = $row; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $colIndex => $cell): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <td contenteditable="<?php echo e($canInteract ? 'true' : 'false'); ?>"
+                                                                class="editable-cell"><?php echo e($cell); ?></td>
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                     </tr>
-                                                @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </table>
                                         </form>
                                     </div>
 
-                                    @if ($canInteract)
+                                    <?php if($canInteract): ?>
                                         <div class="d-flex gap-2 mb-4">
                                             <button class="btn btn-sm btn-light border"
-                                                onclick="tableAddRow('{{ $item['id'] }}')">+ Row</button>
+                                                onclick="tableAddRow('<?php echo e($item['id']); ?>')">+ Row</button>
                                             <button class="btn btn-sm btn-light border"
-                                                onclick="tableAddCol('{{ $item['id'] }}')">+ Col</button>
+                                                onclick="tableAddCol('<?php echo e($item['id']); ?>')">+ Col</button>
                                             <button class="btn btn-sm btn-light border"
-                                                onclick="saveTable('{{ $item['id'] }}')"><i class="bi bi-save"></i>
+                                                onclick="saveTable('<?php echo e($item['id']); ?>')"><i class="bi bi-save"></i>
                                                 Save Table</button>
                                         </div>
-                                    @endif
-                                @endif
+                                    <?php endif; ?>
+                                <?php endif; ?>
 
                                 <div class="analysis-box">
                                     <h6 class="fw-bold text-primary mb-3"><i class="bi bi-lightbulb me-2"></i>Key Findings
                                         & Analysis</h6>
 
                                     <ul class="bullet-list ps-3 mb-3">
-                                        @if (!empty($item['analysis']))
-                                            @foreach ($item['analysis'] as $index => $point)
+                                        <?php if(!empty($item['analysis'])): ?>
+                                            <?php $__currentLoopData = $item['analysis']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $point): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <li class="d-flex justify-content-between">
-                                                    <span>{{ $point }}</span>
-                                                    @if ($canInteract)
+                                                    <span><?php echo e($point); ?></span>
+                                                    <?php if($canInteract): ?>
                                                         <form
-                                                            action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/update"
+                                                            action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/results/update"
                                                             method="POST" class="d-inline">
-                                                            @csrf
+                                                            <?php echo csrf_field(); ?>
                                                             <input type="hidden" name="item_id"
-                                                                value="{{ $item['id'] }}">
+                                                                value="<?php echo e($item['id']); ?>">
                                                             <input type="hidden" name="remove_point_index"
-                                                                value="{{ $index }}">
+                                                                value="<?php echo e($index); ?>">
                                                             <button type="submit"
                                                                 class="btn btn-link py-0 px-1 text-danger small"><i
                                                                     class="bi bi-x"></i></button>
                                                         </form>
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </li>
-                                            @endforeach
-                                        @else
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        <?php else: ?>
                                             <li class="text-muted fst-italic">No key points added yet.</li>
-                                        @endif
+                                        <?php endif; ?>
                                     </ul>
 
-                                    @if ($canInteract)
-                                        <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/update"
+                                    <?php if($canInteract): ?>
+                                        <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/results/update"
                                             method="POST">
-                                            @csrf
-                                            <input type="hidden" name="item_id" value="{{ $item['id'] }}">
+                                            <?php echo csrf_field(); ?>
+                                            <input type="hidden" name="item_id" value="<?php echo e($item['id']); ?>">
                                             <div class="input-group input-group-sm">
                                                 <input type="text" name="new_point" class="form-control"
                                                     placeholder="Add a key finding (bullet point)..." required>
                                                 <button class="btn btn-dark" type="submit">Add</button>
                                             </div>
                                         </form>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
-                    @endforeach
-                @endif
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 
-    @if ($canInteract)
+    <?php if($canInteract): ?>
         <div class="modal fade" id="addChartModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/add-chart" method="POST"
+                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/results/add-chart" method="POST"
                         enctype="multipart/form-data">
-                        @csrf
+                        <?php echo csrf_field(); ?>
                         <div class="modal-header">
                             <h5 class="modal-title">Insert Chart</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -262,10 +261,10 @@
                 </div>
             </div>
         </div>
-    @endif
-@endsection
+    <?php endif; ?>
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script>
         function tableAddRow(id) {
             const table = document.getElementById('table-' + id);
@@ -305,4 +304,6 @@
             document.getElementById('form-table-' + id).submit();
         }
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Tempat Coding\web programming\andrpaid\resources\views/pages/results.blade.php ENDPATH**/ ?>
