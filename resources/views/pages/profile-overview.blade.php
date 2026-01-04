@@ -64,7 +64,12 @@
                             <div
                                 class="d-flex gap-4 justify-content-center stats-container bg-white bg-opacity-10 p-3 rounded-4 backdrop-blur dynamic-stats-box">
 
-                                @if ($paperCount > 0)
+                                @if ($paperCount == 1)
+                                    <div class="text-center px-3 stat-item">
+                                        <div class="h3 fw-bold text-white mb-0">{{ $paperCount }}</div>
+                                        <div class="small text-white-50">Paper</div>
+                                    </div>
+                                @elseif ($paperCount > 1)
                                     <div class="text-center px-3 stat-item">
                                         <div class="h3 fw-bold text-white mb-0">{{ $paperCount }}</div>
                                         <div class="small text-white-50">Papers</div>

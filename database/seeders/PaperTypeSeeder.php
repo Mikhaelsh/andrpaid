@@ -8,9 +8,6 @@ use Illuminate\Database\Seeder;
 
 class PaperTypeSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $paperTypes = [

@@ -40,8 +40,6 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class,'index'])->name("dashboard");
-
     Route::post("/logout", [LoginController::class,"logoutUser"]);
 
     Route::get("/find", [FindController::class,"index"]);
@@ -90,6 +88,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix("/{profileId}")->group(function(){
+        Route::get("/dashboard", [DashboardController::class, "index"])->name('dashboard');
+
         Route::get("/papers", [PaperController::class,"indexPapers"]);
 
         Route::get("/stars", [PaperController::class,"indexStars"]);
@@ -104,8 +104,62 @@ Route::middleware('auth')->group(function () {
             Route::get("/overview", [PaperController::class,"paperOverview"]);
 
             Route::get("/workspace", [PaperController::class,"paperWorkspace"]);
+            
+            Route::get("/lit-review", [PaperController::class, "LitReview"]);
+
+            Route::post("/add-reference", [PaperController::class,"addReference"]);
+
+            Route::post("/save-synthesis", [PaperController::class, "saveSynthesis"]);
+
+            Route::get("/export-bibtex", [PaperController::class, "exportBibtex"]);
+
+            Route::post("/add-theme", [PaperController::class, "addTheme"]);
+
+            Route::post("/remove-theme", [PaperController::class, "removeTheme"]);
 
             Route::post("/toggle-collaboration", [PaperController::class,"toggleCollaboration"]);
+            
+            Route::get("/lit-review", [PaperController::class, "paperLitReview"]);
+            
+            Route::post("/finalize-lit-review", [PaperController::class, "finalizeLitReview"]);
+
+            Route::get("/methodology", [PaperController::class, "paperMethodology"]);
+
+            Route::post("/save-methodology", [PaperController::class, "saveMethodology"]);
+
+            Route::post("/methodology/add-dataset", [PaperController::class, "addDataset"]);
+
+            Route::post("/methodology/update-dataset", [PaperController::class, "updateDataset"]);
+
+            Route::post("/methodology/remove-dataset", [PaperController::class, "removeDataset"]);
+
+            Route::post("/methodology/add-formula", [PaperController::class, "addFormula"]);
+
+            Route::post("/methodology/remove-formula", [PaperController::class, "removeFormula"]);
+
+            Route::post("/methodology/add-code", [PaperController::class, "addCodeBlock"]);
+
+            Route::post("/methodology/remove-code", [PaperController::class, "removeCodeBlock"]);
+
+            Route::post("/finalize-methodology", [PaperController::class, "finalizeMethodology"]);
+
+            Route::get("/results", [PaperController::class, "paperResults"]);
+
+            Route::post("/results/add-chart", [PaperController::class, "addResultChart"]);
+
+            Route::post("/results/add-table", [PaperController::class, "addResultTable"]);
+
+            Route::post("/results/update", [PaperController::class, "updateResultItem"]);
+
+            Route::post("/results/delete", [PaperController::class, "deleteResultItem"]);
+
+            Route::post("/finalize-results", [PaperController::class, "finalizeResults"]);
+
+            Route::get("/conclusion", [PaperController::class, "paperConclusion"]);
+
+            Route::post("/save-conclusion", [PaperController::class, "saveConclusion"]);
+
+            Route::post("/finalize-conclusion", [PaperController::class, "finalizeConclusion"]);
 
             Route::post("/create-new-project-role", [PaperController::class,"createNewProjectRole"]);
 
@@ -119,6 +173,7 @@ Route::middleware('auth')->group(function () {
 
             Route::prefix("/collaborations")->group(function(){
                 Route::get("/", [CollaborationController::class,"index"]);
+                
 
                 Route::post("/toggle-collaboration", [CollaborationController::class,"toggleCollaboration"]);
 

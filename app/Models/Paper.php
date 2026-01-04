@@ -11,6 +11,19 @@ class Paper extends Model
     use HasFactory, HasUuids;
 
     protected $guarded = ["id"];
+    protected $casts = [
+        'references_data' => 'array', 
+        'openCollaboration' => 'boolean',
+        'themes' => 'array',
+        'lit_review_finalized' => 'boolean',
+        'datasets' => 'array',
+        'formulas' => 'array',
+        'methodology_finalized' => 'boolean',
+        'results_data' => 'array',
+        'results_finalized' => 'boolean',
+        'code_blocks' => 'array',
+        'conclusion_finalized' => 'boolean',
+    ];
 
     protected $with = ["paperStars"];
 
@@ -41,5 +54,10 @@ class Paper extends Model
 
     public function collaborationRequests(){
         return $this->hasMany(CollaborationRequest::class);
+    }
+
+    public function references()
+    {
+        return $this->hasMany(PaperReference::class);
     }
 }

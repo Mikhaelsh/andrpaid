@@ -10,9 +10,6 @@ use Illuminate\Database\Seeder;
 
 class AffiliationSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $user = User::where('name', 'BINUS University')->first();

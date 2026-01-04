@@ -14,20 +14,24 @@
 </head>
 
 <body>
+    <div class="page-wrapper-foot-nav">
 
-    @unless (View::hasSection('hideNavbar'))
-        @include('partials.navbar')
-    @endunless
+        @unless (View::hasSection('hideNavbar'))
+            @include('partials.navbar')
+        @endunless
 
-    @yield('content')
+        <main class="flex-grow-1">
+            @yield('content')
+        </main>
 
-    @unless (View::hasSection('hideFooter'))
-        @include('partials.footer')
-    @endunless
+        @unless (View::hasSection('hideFooter'))
+            @include('partials.footer')
+        @endunless
+
+    </div>
 
     @stack('scripts')
 </body>
-
 </html>
 
 
