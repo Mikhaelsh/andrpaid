@@ -16,9 +16,12 @@ class SettingController extends Controller
     public function index(){
         $user = Auth::user();
 
-        $province = $user->isLecturer() ? $user->lecturer->province : $user->university->province;
+        if($user->isLecturer() || $user->isUniversity()){
+            $province = $user->isLecturer() ? $user->lecturer->province : $user->university->province;
+            $allProvinces = Province::all();
+        }
 
-        $allProvinces = Province::all();
+
 
         if($user->isLecturer()){
             $allUniversities = University::with('user')->get()->sortBy('user.name');
@@ -33,13 +36,18 @@ class SettingController extends Controller
                 "allResearchFields" => $allResearchFields,
             ]);
         } else{
-            return view("pages.settings", [
-                "user"=> $user,
-                "province" => $province,
-                "allProvinces" => $allProvinces,
-            ]);
+            if($user->isUniversity()){
+                return view("pages.settings", [
+                    "user"=> $user,
+                    "province" => $province,
+                    "allProvinces" => $allProvinces,
+                ]);
+            } else{
+                return view("pages.settings", [
+                    "user"=> $user,
+                ]);
+            }
         }
-
     }
 
     public function updatePublicProfile(Request $request){
@@ -60,7 +68,7 @@ class SettingController extends Controller
                 "linkedinUrl" => $validated["linkedin_url"],
                 "portfolioUrl" => $validated["portfolio_url"],
             ]);
-        } else{
+        } else if($user->isUniversity()){
             $validated = $request->validate([
                 'name'          => 'required|string|max:255',
                 'description'    => 'nullable|string',
@@ -74,19 +82,32 @@ class SettingController extends Controller
             $accRole->update([
                 "websiteUrl" => $validated["website_url"],
             ]);
+        } else{
+            $validated = $request->validate([
+                'name'          => 'required|string|max:255',
+                'description'    => 'nullable|string',
+            ]);
         }
 
-        $province = Province::where("provinceId", $validated["province_id"])->first();
+        if(!$user->isAdmin()){
+            $province = Province::where("provinceId", $validated["province_id"])->first();
 
-        $accRole->update([
-            "province_id" => $province->id
-        ]);
+            $accRole->update([
+                "province_id" => $province->id
+            ]);
 
-        $user->update([
-            "name" => $validated["name"],
-            "description"=> $validated["description"],
-            "provinceId"=> $validated["province_id"],
-        ]);
+            $user->update([
+                "name" => $validated["name"],
+                "description"=> $validated["description"],
+                "provinceId"=> $validated["province_id"],
+            ]);
+        } else{
+            $user->update([
+                "name" => $validated["name"],
+                "description"=> $validated["description"],
+            ]);
+        }
+
 
         return redirect("/settings#profile")->with("success", "Your public profile has been updated successfully!");
     }

@@ -1,4 +1,3 @@
-/* Auth Pages Layout */
 .auth-page {
     background: linear-gradient(135deg, var(--light-gray) 0%, #c3cfe2 100%);
     min-height: 100vh;
@@ -7,7 +6,6 @@
     padding: 2rem 0;
 }
 
-/* Auth Card Styling */
 .auth-card {
     border-radius: 12px;
     background: white;
@@ -19,7 +17,6 @@
     padding: 2.5rem;
 }
 
-/* Logo Container */
 .auth-logo-container {
     text-align: center;
     margin-bottom: 2rem;
@@ -36,7 +33,6 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* Form Elements */
 .auth-form .form-label {
     font-weight: 600;
     color: var(--text-color);
@@ -63,7 +59,6 @@
     box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.15);
 }
 
-/* Buttons (General Auth Button) */
 .auth-btn {
     background: linear-gradient(to right, var(--primary-blue), var(--accent-blue));
     border: none;
@@ -79,7 +74,6 @@
     background: linear-gradient(to right, var(--accent-blue), var(--secondary-blue));
 }
 
-/* Password Toggle Button */
 .password-toggle {
     background-color: var(--light-gray);
     border-color: #dee2e6;
@@ -91,8 +85,6 @@
     background-color: #e9ecef;
     color: var(--text-color);
 }
-
-/* --- REGISTER PAGE SPECIFIC STYLES --- */
 
 .role-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -136,9 +128,7 @@
 }
 
 
-/* Responsive Adjustments (Applied to all auth pages) */
 @media (max-width: 992px) {
-    /* Adjust logo size on medium screens */
     .auth-logo {
         width: 120px;
         height: 120px;
@@ -150,13 +140,11 @@
         padding: 1.5rem;
     }
 
-    /* Smallest logo size */
     .auth-logo {
         width: 100px;
         height: 100px;
     }
 
-    /* Register page role card adjustments */
     .role-card {
         margin-bottom: 1.5rem;
     }

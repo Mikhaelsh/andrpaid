@@ -33,6 +33,8 @@ class PaperFactory extends Factory
      */
     public function definition(): array
     {
+        $randomDate = $this->faker->dateTimeBetween('-14 days', 'now');
+
         return [
             'paperId' => $this->faker->uuid(),
             'title' => $this->faker->sentence(6),
@@ -43,9 +45,10 @@ class PaperFactory extends Factory
             'filePath' => null,
             'originalFilename' => null,
             'openCollaboration' => $this->faker->randomElement([true, false]),
-
             'lecturer_id' => Lecturer::factory(),
-            'paper_type_id' => PaperType::inRandomOrder()->first()->id ?? 1
+            'paper_type_id' => PaperType::inRandomOrder()->first()->id ?? 1,
+            'created_at' => $randomDate,
+            'updated_at' => $randomDate,
         ];
     }
 }

@@ -66,8 +66,8 @@ class LecturerSeeder extends Seeder
             "province_id" => $province->id
         ]);
 
-        Lecturer::factory()->count(3)->has(
-            Paper::factory()->count(2),
+        Lecturer::factory()->count(5)->has(
+            Paper::factory()->count(5),
             'papers'
         )->create();
     }

@@ -25,6 +25,13 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+        User::create([
+            'name'=> "Admin",
+            'email'=> "admin@gmail.com",
+            'password' => bcrypt("andrpaid"),
+            'description'=> "Admin is here!"
+        ]);
+
         $this->call([
             ProvinceSeeder::class,
             ResearchFieldSeeder::class,
@@ -32,6 +39,9 @@ class DatabaseSeeder extends Seeder
             LecturerSeeder::class,
             UniversitySeeder::class,
             AffiliationSeeder::class,
+            ActivityLogSeeder::class,
+            ReportTypeSeeder::class,
+            ReportSeeder::class,
         ]);
     }
 }

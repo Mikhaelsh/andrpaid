@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
+            $table->longText("description");
+            $table->string("status")->default("pending"); //pending reviewing resolved dismissed
+            $table->foreignId('report_type_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

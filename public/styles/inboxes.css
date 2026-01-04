@@ -1,0 +1,257 @@
+.inbox-subnav {
+    padding-top: 0.5rem;
+    position: sticky;
+    top: 70px;
+    z-index: 9;
+}
+
+.inbox-subnav .nav-link {
+    color: #6c757d;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.inbox-subnav .nav-link:hover {
+    color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.02);
+}
+
+.inbox-subnav .nav-link.active {
+    color: #0d6efd;
+    border-bottom-color: #0d6efd;
+    font-weight: 600;
+}
+
+.inbox-subnav .nav-link i {
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .inbox-subnav .nav {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+body {
+    background-color: #f8f9fa;
+}
+
+.compose-card {
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+}
+
+.compose-header {
+    background-color: #fff;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.compose-body {
+    padding: 2rem;
+}
+
+.form-label-custom {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    color: #adb5bd;
+    margin-bottom: 0.5rem;
+}
+
+.form-control-custom {
+    border: 1px solid #e9ecef;
+    background-color: #f8f9fa;
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.form-control-custom:focus {
+    background-color: #fff;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+}
+
+.btn-action-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+
+.mail-item {
+    background: white;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 1rem 1.5rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.mail-item:hover {
+    background-color: #fcfcfc;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    z-index: 1;
+    transform: translateY(-1px);
+}
+
+.mail-item.unread {
+    background-color: #ffffff;
+    border-left: 3px solid #0d6efd;
+}
+
+.mail-item.unread .mail-sender,
+.mail-item.unread .mail-subject {
+    font-weight: 700;
+    color: #212529;
+}
+
+.mail-item.read {
+    background-color: #f8f9fa;
+    opacity: 0.9;
+}
+
+.star-btn {
+    color: #cbd5e1;
+    font-size: 1.2rem;
+    background: none;
+    border: none;
+    padding: 0;
+    transition: color 0.2s;
+    z-index: 2;
+}
+
+.star-btn:hover {
+    color: #fbbf24;
+}
+
+.star-btn.starred {
+    color: #fbbf24;
+}
+
+.mail-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.mail-content {
+    flex-grow: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.mail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.2rem;
+}
+
+.mail-sender {
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.mail-date {
+    font-size: 0.75rem;
+    color: #888;
+    white-space: nowrap;
+}
+
+.mail-body-preview {
+    font-size: 0.9rem;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mail-subject {
+    margin-right: 0.5rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: #999;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.draft-recipient {
+    font-weight: 600;
+    color: #495057;
+}
+
+.draft-recipient .prefix {
+    font-weight: 400;
+    color: #adb5bd;
+    margin-right: 4px;
+}
+
+.btn-delete-draft {
+    opacity: 0;
+    transition: opacity 0.2s;
+    color: #dc3545;
+    background: rgba(220, 53, 69, 0.1);
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mail-item:hover .btn-delete-draft {
+    opacity: 1;
+}
+
+.btn-delete-draft:hover {
+    background: #dc3545;
+    color: white;
+}
+
+.sent-recipient {
+    font-weight: 600;
+    color: #333;
+}
+
+.sent-recipient .prefix {
+    font-weight: 400;
+    color: #adb5bd;
+    margin-right: 4px;
+}
+
+.mail-item.sent {
+    background-color: white;
+}
+
+.mail-item.sent:hover {
+    background-color: #f8f9fa;
+}

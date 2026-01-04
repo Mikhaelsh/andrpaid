@@ -18,9 +18,13 @@ class LecturerFactory extends Factory
      */
     public function definition(): array
     {
+        $randomDate = $this->faker->dateTimeBetween('-14 days', 'now');
+
         return [
             'user_id' => User::factory(),
             'province_id' => Province::inRandomOrder()->first()->id ?? 1,
+            'created_at' => $randomDate,
+            'updated_at' => $randomDate,
         ];
     }
 }

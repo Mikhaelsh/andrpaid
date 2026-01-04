@@ -242,18 +242,29 @@
                     </div>
                 </div>
             @empty
+                @php
+                    $isCurrentUser = $user->id === Auth::user()->id;
+                @endphp
+
                 <div class="paper-empty-state text-center d-flex flex-column align-items-center justify-content-center">
                     <div class="empty-state-icon">
                         <i class="bi bi-star"></i>
                     </div>
                     <h4 class="fw-bold text-dark mb-2">No Starred Papers Yet</h4>
-                    <p class="text-muted mb-4 col-md-8 mx-auto" style="font-size: 0.95rem; line-height: 1.6;">
-                        You haven't starred any papers yet (or no papers match your filters).
-                    </p>
-                    <a href="/" class="btn paper-showcase-create-action d-flex align-items-center gap-2">
-                        <i class="bi bi-compass"></i>
-                        Explore Papers
-                    </a>
+                    @if ($isCurrentUser)
+                        <p class="text-muted mb-4 col-md-8 mx-auto" style="font-size: 0.95rem; line-height: 1.6;">
+                            You haven't starred any papers yet (or no papers match your filters).
+                        </p>
+                        <a href="/" class="btn paper-showcase-create-action d-flex align-items-center gap-2">
+                            <i class="bi bi-compass"></i>
+                            Explore Papers
+                        </a>
+                    @else
+                        <p class="text-muted mb-4 col-md-8 mx-auto" style="font-size: 0.95rem; line-height: 1.6;">
+                            This user hasn't starred any papers yet (or no papers match your filters).
+                        </p>
+                    @endif
+
                 </div>
             @endforelse
 

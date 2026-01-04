@@ -1,7 +1,6 @@
 <?php $__env->startSection('title', 'Dashboard'); ?>
 
 <?php $__env->startSection('additionalCSS'); ?>
-    <link rel="stylesheet" href="styles/auth.css">
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>

@@ -1,13 +1,16 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CollaborationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FindController;
+use App\Http\Controllers\InboxController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PaperController;
 use App\Http\Controllers\PaperSettingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -17,9 +20,15 @@ Route::get("/", function () {
 });
 
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'index'])->name("login");
+    Route::prefix("/login")->group(function(){
+        Route::get('/', [LoginController::class, 'index'])->name("login");
 
-    Route::post('/login', [LoginController::class, 'loginUser']);
+        Route::get('/forgot-password', [LoginController::class, 'indexForgotPassword']);
+
+        Route::post('/', [LoginController::class, 'loginUser']);
+
+        Route::post('/reset-password', [LoginController::class, 'resetPassword']);
+    });
 
     Route::prefix('/register')->group(function () {
         Route::get('/', [RegisterController::class,'index']);
@@ -37,6 +46,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/search-user-lecturer', [UserController::class, 'searchUserLecturer'])->name('api.users.search.lecturer');
 
+    Route::post('/report/submit', [ReportController::class, 'submitReport']);
+
     Route::prefix("/settings")->group(function(){
         Route::get("/", [SettingController::class,"index"]);
 
@@ -51,6 +62,29 @@ Route::middleware('auth')->group(function () {
         Route::post("/update-password", [SettingController::class,"updatePassword"]);
 
         Route::post("/delete-account", [SettingController::class,"deleteAccount"]);
+    });
+
+    Route::prefix("/inboxes")->group(function(){
+        Route::get("/", [InboxController::class,"index"]);
+
+        Route::get("/drafts", [InboxController::class,"indexDrafts"]);
+
+        Route::get("/sent", [InboxController::class,"indexSent"]);
+
+        Route::prefix("/compose")->group(function(){
+            Route::get("/", [InboxController::class,"indexCompose"]);
+
+
+            Route::prefix("/{inboxId}")->group(function(){
+                Route::get("/", [InboxController::class,"indexComposeInboxId"]);
+
+                Route::post("/", [InboxController::class,"saveOrSendInbox"]);
+
+                Route::post("/delete-draft", [InboxController::class,"deleteDraftInbox"]);
+            });
+        });
+
+        Route::get("/{inboxId}", [InboxController::class,"indexSpecificInbox"]);
     });
 
     Route::prefix("/{profileId}")->group(function(){
@@ -180,5 +214,45 @@ Route::middleware('auth')->group(function () {
         Route::post("/create-new-paper", [PaperController::class,"createNewPaper"]);
 
         Route::post('/{paperId}/star', [PaperController::class, 'toggleStar']);
+    });
+
+    Route::prefix("/admin-panel")->group(function () {
+        Route::get("/", [AdminController::class,"index"]);
+
+        Route::prefix("/master-data")->group(function () {
+            Route::prefix("/research-fields")->group(function () {
+                Route::get("/", [AdminController::class,"indexResearchFields"]);
+
+                Route::post("/create", [AdminController::class,"createResearchFields"]);
+
+                Route::post("/update", [AdminController::class,"updateResearchFields"]);
+
+                Route::post("/delete", [AdminController::class,"deleteResearchFields"]);
+            });
+
+            Route::prefix("/paper-types")->group(function () {
+                Route::get("/", [AdminController::class,"indexPaperTypes"]);
+
+                Route::post("/create", [AdminController::class,"createPaperTypes"]);
+
+                Route::post("/update", [AdminController::class,"updatePaperTypes"]);
+
+                Route::post("/delete", [AdminController::class,"deletePaperTypes"]);
+            });
+        });
+
+        Route::prefix("/monitoring")->group(function () {
+            Route::get("/activity-logs", [AdminController::class,"indexActivityLogs"]);
+
+            Route::get("/global-statistics", [AdminController::class,"indexGlobalStatistics"]);
+        });
+
+        Route::prefix("/request")->group(function () {
+            Route::prefix("/user-report")->group(function () {
+                Route::get("/", [AdminController::class,"indexUserReport"]);
+
+                Route::post("/{reportId}", [AdminController::class,"manageUserReport"]);
+            });
+        });
     });
 });

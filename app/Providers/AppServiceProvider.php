@@ -22,13 +22,19 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Blade::if('lecturer', function () {
-            // Return true if user is logged in AND is a lecturer
             return Auth::check() && Auth::user()->isLecturer();
         });
 
         Blade::if('university', function () {
-            // Return true if user is logged in AND is a lecturer
             return Auth::check() && Auth::user()->isUniversity();
+        });
+
+        Blade::if('admin', function () {
+            return Auth::check() && Auth::user()->id === 1;
+        });
+
+        Blade::if('notadmin', function () {
+            return Auth::check() && Auth::user()->id !== 1;
         });
     }
 }

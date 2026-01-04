@@ -60,6 +60,10 @@ class User extends Authenticatable
         return $this->university !== null;
     }
 
+    public function isAdmin(){
+        return $this->id === 1;
+    }
+
     public function lecturer(){
         return $this->hasOne(Lecturer::class);
     }
@@ -70,5 +74,17 @@ class User extends Authenticatable
 
     public function paperStars(){
         return $this->hasMany(PaperStar::class);
+    }
+
+    public function activityLogs(){
+        return $this->hasMany(ActivityLog::class);
+    }
+
+    public function reports(){
+        return $this->hasMany(Report::class);
+    }
+
+    public function inboxes(){
+        return $this->hasMany(Inbox::class);
     }
 }
