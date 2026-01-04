@@ -2,37 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view("pages.login");
     }
 
-    public function loginUser(Request $request){
-        $validated = $request->validate([
-            'email'     => 'required',
-            'password'  => 'required'
+    public function loginUser(Request $request)
+    {
+        $credentials = $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required'
         ]);
 
-        $user = User::where('email',$validated['email'])->first();
-
-        if($user && Hash::check($validated['password'], $user->password)) {
-
-            Auth::login($user);
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect('/dashboard');
+            return redirect()->route('dashboard', [
+                'profileId' => Auth::user()->profileId
+            ]);
         }
 
-        return redirect('/login')->with('errorLogin','Invalid username or password.');
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->withInput();
     }
 
-    public function logoutUser(Request $request) {
+    public function logoutUser(Request $request) 
+    {
         Auth::logout();
 
         $request->session()->invalidate();
