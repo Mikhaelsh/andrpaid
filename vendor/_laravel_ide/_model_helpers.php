@@ -1288,8 +1288,30 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
+     * @property mixed $to_user_id
+     * @property mixed $from_user_id
+     * @property bool $is_starred
+     * @property bool $marked_read
+     * @property bool $is_sent
+     * @property string|null $externalUrlMessage
+     * @property string|null $externalUrl
+     * @property string|null $body
+     * @property string|null $subject
+     * @property string $inboxId
      * @property int $id
+     * @property-read \App\Models\User $fromUser
+     * @property-read \App\Models\User $toUser
      * @method static \Illuminate\Database\Eloquent\Builder<Inbox>|Inbox whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Inbox>|Inbox whereInboxid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Inbox>|Inbox whereSubject($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Inbox>|Inbox whereBody($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Inbox>|Inbox whereExternalurl($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Inbox>|Inbox whereExternalurlmessage($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Inbox>|Inbox whereIsSent($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Inbox>|Inbox whereMarkedRead($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Inbox>|Inbox whereIsStarred($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Inbox>|Inbox whereFromUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Inbox>|Inbox whereToUserId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Inbox>|Inbox whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Inbox>|Inbox whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Inbox>|Inbox newModelQuery()
@@ -4807,6 +4829,8 @@ namespace App\Models {
      * @property-read int|null $activityLogs_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Report> $reports
      * @property-read int|null $reports_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Inbox> $inboxes
+     * @property-read int|null $inboxes_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
      * @property-read int|null $notifications_count
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereId($value)

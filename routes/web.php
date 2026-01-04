@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CollaborationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FindController;
+use App\Http\Controllers\InboxController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PaperController;
 use App\Http\Controllers\PaperSettingController;
@@ -63,6 +64,29 @@ Route::middleware('auth')->group(function () {
         Route::post("/update-password", [SettingController::class,"updatePassword"]);
 
         Route::post("/delete-account", [SettingController::class,"deleteAccount"]);
+    });
+
+    Route::prefix("/inboxes")->group(function(){
+        Route::get("/", [InboxController::class,"index"]);
+
+        Route::get("/drafts", [InboxController::class,"indexDrafts"]);
+
+        Route::get("/sent", [InboxController::class,"indexSent"]);
+
+        Route::prefix("/compose")->group(function(){
+            Route::get("/", [InboxController::class,"indexCompose"]);
+
+
+            Route::prefix("/{inboxId}")->group(function(){
+                Route::get("/", [InboxController::class,"indexComposeInboxId"]);
+
+                Route::post("/", [InboxController::class,"saveOrSendInbox"]);
+
+                Route::post("/delete-draft", [InboxController::class,"deleteDraftInbox"]);
+            });
+        });
+
+        Route::get("/{inboxId}", [InboxController::class,"indexSpecificInbox"]);
     });
 
     Route::prefix("/{profileId}")->group(function(){
