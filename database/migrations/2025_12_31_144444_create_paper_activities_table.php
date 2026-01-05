@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('paper_activities', function (Blueprint $table) {
             $table->id();
+            $table->text("description");
+            $table->foreignId('paper_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('type')->index();
             $table->timestamps();
         });
     }

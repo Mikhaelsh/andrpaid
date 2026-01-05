@@ -87,4 +87,8 @@ class User extends Authenticatable
     public function inboxes(){
         return $this->hasMany(Inbox::class);
     }
+
+    public function paperActivites(){
+        return $this->hasMany(PaperActivity::class);
+    }
 }

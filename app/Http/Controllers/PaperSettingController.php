@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Paper;
+use App\Models\PaperActivity;
 use App\Models\PaperType;
 use App\Models\ResearchField;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PaperSettingController extends Controller
 {
@@ -43,6 +45,13 @@ class PaperSettingController extends Controller
         $fieldIds = ResearchField::whereIn('researchFieldId', $inputTags)->pluck('id');
 
         $paper->researchFields()->sync($fieldIds);
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'settings_update',
+            'description' => 'Updated paper details, visibility, and research fields.',
+        ]);
 
 
         return redirect("/" . $user->profileId . "/paper/" . $paper->paperId . "/settings")->with('success', 'Your paper has been updated successfully!');

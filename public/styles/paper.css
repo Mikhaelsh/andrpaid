@@ -507,3 +507,84 @@ iframe {
     font-size: 0.95rem;
     color: #444;
 }
+
+.activity-timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.activity-timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 19px;
+    width: 2px;
+    background: #f0f2f5;
+    z-index: 0;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 50px;
+    padding-bottom: 1.5rem;
+    z-index: 1;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.timeline-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #f0f2f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    z-index: 2;
+}
+
+.icon-collab-open {
+    background: #e6fffa;
+    color: #00b894;
+    border-color: #00b894;
+}
+
+.icon-collab-close {
+    background: #fff5f5;
+    color: #d63031;
+    border-color: #d63031;
+}
+
+.icon-member {
+    background: #eef2ff;
+    color: #4834d4;
+    border-color: #4834d4;
+}
+
+.icon-module {
+    background: #f0f9ff;
+    color: #0984e3;
+    border-color: #0984e3;
+}
+
+.icon-settings {
+    background: #f8f9fa;
+    color: #343a40;
+    border-color: #343a40;
+}
+
+.icon-role {
+    background: #fffaf0;
+    color: #fd7e14;
+    border-color: #fd7e14;
+}

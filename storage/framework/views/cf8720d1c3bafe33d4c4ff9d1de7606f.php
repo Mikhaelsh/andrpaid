@@ -12,7 +12,7 @@
                 <nav class="settings-sidebar position-sticky" style="top: 2rem;">
                     <h5 class="fw-bold mb-4 px-3">Settings</h5>
                     <div class="list-group list-group-flush border-0">
-                        <a href="#profile" class="list-group-item list-group-item-action active border-0 rounded-3 mb-1">
+                        <a href="#profile" class="list-group-item list-group-item-action border-0 rounded-3 mb-1">
                             <i class="bi bi-person-circle me-2"></i> Public Profile
                         </a>
                         <?php if (\Illuminate\Support\Facades\Blade::check('lecturer')): ?>
@@ -150,7 +150,6 @@
                                 ?>
 
                                 <?php if($affiliation && $affiliation->status === 'verified'): ?>
-
                                     <div class="d-flex align-items-center gap-4 mb-4">
                                         <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
                                             style="width: 70px; height: 70px;">
@@ -595,27 +594,6 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const sections = document.querySelectorAll(".settings-section");
-            const navLi = document.querySelectorAll(".settings-sidebar .list-group-item");
-
-            window.onscroll = () => {
-                var current = "";
-                sections.forEach((section) => {
-                    const sectionTop = section.offsetTop;
-                    if (scrollY >= sectionTop - 200) {
-                        current = section.getAttribute("id");
-                    }
-                });
-
-                navLi.forEach((li) => {
-                    li.classList.remove("active");
-                    if (li.getAttribute("href").includes(current)) {
-                        li.classList.add("active");
-                    }
-                });
-            };
-
-
             const deleteInput = document.getElementById('deleteConfirmationInput');
             const deleteBtn = document.getElementById('finalDeleteBtn');
             const confirmationPhrase = "DELETE ACCOUNT";

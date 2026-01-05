@@ -21,7 +21,7 @@
                 <div class="settings-nav">
                     <small class="text-uppercase text-muted fw-bold ps-3 mb-2 d-block"
                         style="font-size: 0.7rem;">Configuration</small>
-                    <a href="#general" class="nav-link-settings active">
+                    <a href="#general" class="nav-link-settings">
                         <i class="bi bi-sliders"></i> General
                     </a>
                     <a href="#publishing" class="nav-link-settings">
@@ -71,7 +71,9 @@
                                     <label for="type" class="form-label">Research Type</label>
                                     <select class="form-select" id="type" name="type">
                                         @foreach ($paperTypes as $paperType)
-                                            <option value="{{ $paperType->id }}" {{ $paper->paperType->name == $paperType->name ? 'selected' : '' }}>{{ $paperType->name }}</option>
+                                            <option value="{{ $paperType->id }}"
+                                                {{ $paper->paperType->name == $paperType->name ? 'selected' : '' }}>
+                                                {{ $paperType->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -172,7 +174,8 @@
                         <span class="small">Type <strong>{{ $paper->title }}</strong> to confirm.</span>
                     </div>
 
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/settings/delete-paper" method="POST">
+                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/settings/delete-paper"
+                        method="POST">
                         @csrf
 
                         <input type="text" class="form-control mb-3" name="confirm_title" id="deleteConfirmInput"
@@ -321,34 +324,6 @@
                 });
             }
 
-            const sections = document.querySelectorAll('.scroll-margin');
-            const navLinks = document.querySelectorAll('.nav-link-settings');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        navLinks.forEach(link => link.classList.remove('active'));
-                        const id = entry.target.getAttribute('id');
-                        const activeLink = document.querySelector(
-                            `.nav-link-settings[href="#${id}"]`);
-                        if (activeLink) activeLink.classList.add('active');
-                    }
-                });
-            }, {
-                rootMargin: '-20% 0px -70% 0px',
-                threshold: 0
-            });
-
-            sections.forEach(section => observer.observe(section));
-
-            window.addEventListener('scroll', () => {
-                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) {
-                    navLinks.forEach(link => link.classList.remove('active'));
-                    const dangerLink = document.querySelector('.nav-link-settings[href="#danger"]');
-                    if (dangerLink) dangerLink.classList.add('active');
-                }
-            });
-
             const deleteInput = document.getElementById('deleteConfirmInput');
             const deleteBtn = document.getElementById('deleteConfirmBtn');
             const expectedTitle = {!! json_encode($paper->title) !!};
@@ -363,7 +338,7 @@
                 });
 
                 const deleteModalEl = document.getElementById('deletePaperModal');
-                deleteModalEl.addEventListener('hidden.bs.modal', function () {
+                deleteModalEl.addEventListener('hidden.bs.modal', function() {
                     deleteInput.value = '';
                     deleteBtn.setAttribute('disabled', 'disabled');
                 });

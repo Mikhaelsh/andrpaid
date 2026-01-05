@@ -197,7 +197,42 @@
 
                 <div style="height: 80px;"></div>
             @endif
-
         </form>
     </div>
+
+    @if (session('success'))
+        <div class="modal fade custom-modal-backdrop" id="statusModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content custom-modal-content type-success text-center p-4">
+
+                    <div class="modal-body px-4 py-4">
+
+                        <div class="modal-icon-wrapper mb-4 mx-auto">
+                            <i class="bi bi-check-lg custom-icon"></i>
+                        </div>
+
+                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
+
+                        <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm" data-bs-dismiss="modal">
+                            CONTINUE
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @push('scripts')
+            <script type="module">
+                if (window.bootstrap) {
+                    setTimeout(() => {
+                        var myModal = new bootstrap.Modal(document.getElementById('statusModal'));
+                        myModal.show();
+                    }, 300);
+                }
+            </script>
+        @endpush
+    @endif
 @endsection

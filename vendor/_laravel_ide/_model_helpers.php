@@ -1949,6 +1949,21 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
+     * @property boolean $conclusion_finalized
+     * @property string|null $conclusion_future_works
+     * @property string|null $conclusion_limitations
+     * @property string|null $conclusion_summary
+     * @property boolean $results_finalized
+     * @property array|null $results_data
+     * @property boolean $methodology_finalized
+     * @property array|null $code_blocks
+     * @property array|null $formulas
+     * @property array|null $datasets
+     * @property string|null $methodology_xml
+     * @property boolean $lit_review_finalized
+     * @property array|null $themes
+     * @property string|null $synthesis_text
+     * @property array|null $references_data
      * @property mixed $paper_type_id
      * @property mixed $lecturer_id
      * @property boolean $openCollaboration
@@ -1971,6 +1986,8 @@ namespace App\Models {
      * @property-read int|null $collaborations_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CollaborationRequest> $collaborationRequests
      * @property-read int|null $collaborationRequests_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PaperActivity> $paperActivities
+     * @property-read int|null $paperActivities_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PaperReference> $references
      * @property-read int|null $references_count
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereId($value)
@@ -1985,6 +2002,21 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereOpencollaboration($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereLecturerId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper wherePaperTypeId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereReferencesData($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereSynthesisText($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereThemes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereLitReviewFinalized($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereMethodologyXml($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereDatasets($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereFormulas($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereCodeBlocks($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereMethodologyFinalized($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereResultsData($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereResultsFinalized($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereConclusionSummary($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereConclusionLimitations($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereConclusionFutureWorks($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereConclusionFinalized($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Paper>|Paper newModelQuery()
@@ -2292,8 +2324,18 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string $type
+     * @property mixed $user_id
+     * @property mixed $paper_id
+     * @property string $description
      * @property int $id
+     * @property-read \App\Models\Paper $paper
+     * @property-read \App\Models\User $user
      * @method static \Illuminate\Database\Eloquent\Builder<PaperActivity>|PaperActivity whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperActivity>|PaperActivity whereDescription($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperActivity>|PaperActivity wherePaperId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperActivity>|PaperActivity whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperActivity>|PaperActivity whereType($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PaperActivity>|PaperActivity whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PaperActivity>|PaperActivity whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PaperActivity>|PaperActivity newModelQuery()
@@ -2599,7 +2641,29 @@ namespace App\Models {
     /**
      * App\Models\PaperReference
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property boolean $is_analyzed
+     * @property array|null $key_points
+     * @property string|null $url
+     * @property string|null $publication
+     * @property mixed $year
+     * @property string $author
+     * @property string $title
+     * @property mixed $paper_id
+     * @property int $id
      * @property-read \App\Models\Paper $paper
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperReference>|PaperReference whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperReference>|PaperReference wherePaperId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperReference>|PaperReference whereTitle($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperReference>|PaperReference whereAuthor($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperReference>|PaperReference whereYear($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperReference>|PaperReference wherePublication($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperReference>|PaperReference whereUrl($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperReference>|PaperReference whereKeyPoints($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperReference>|PaperReference whereIsAnalyzed($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperReference>|PaperReference whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<PaperReference>|PaperReference whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<PaperReference>|PaperReference newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<PaperReference>|PaperReference newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<PaperReference>|PaperReference query()
@@ -5137,6 +5201,8 @@ namespace App\Models {
      * @property-read int|null $reports_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Inbox> $inboxes
      * @property-read int|null $inboxes_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PaperActivity> $paperActivites
+     * @property-read int|null $paperActivites_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
      * @property-read int|null $notifications_count
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereId($value)

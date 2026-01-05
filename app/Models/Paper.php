@@ -12,7 +12,7 @@ class Paper extends Model
 
     protected $guarded = ["id"];
     protected $casts = [
-        'references_data' => 'array', 
+        'references_data' => 'array',
         'openCollaboration' => 'boolean',
         'themes' => 'array',
         'lit_review_finalized' => 'boolean',
@@ -54,6 +54,10 @@ class Paper extends Model
 
     public function collaborationRequests(){
         return $this->hasMany(CollaborationRequest::class);
+    }
+
+    public function paperActivities(){
+        return $this->hasMany(PaperActivity::class);
     }
 
     public function references()

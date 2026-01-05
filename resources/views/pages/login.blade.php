@@ -51,7 +51,7 @@
             </div>
 
             <div class="form-links">
-                <a href="/forgot-password">Forgot password?</a>
+                <a href="/login/forgot-password">Forgot password?</a>
             </div>
 
             <div class="button-wrapper">

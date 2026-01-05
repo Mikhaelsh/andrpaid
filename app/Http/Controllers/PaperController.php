@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Collaboration;
 use App\Models\Paper;
+use App\Models\PaperActivity;
 use App\Models\PaperStar;
 use App\Models\PaperType;
 use App\Models\ResearchField;
@@ -225,13 +226,15 @@ class PaperController extends Controller
     }
 
     public function paperOverview($profileId, $paperId){
-        $user = User::where("profileId", $profileId)->first();
+        $user = User::where("profileId", $profileId)->firstOrFail();
+        $paper = Paper::where("paperId", $paperId)->firstOrFail();
 
-        $paper = $user->lecturer->papers->where("paperId", $paperId)->first();
+        $paperActivities = $paper->paperActivities()->latest()->simplePaginate(5);
 
         return view("pages.paper", [
             "user" => $user,
             "paper" => $paper,
+            "paperActivities" => $paperActivities
         ]);
     }
 
@@ -343,6 +346,13 @@ class PaperController extends Controller
         $paper->references_data = $currentRefs;
         $paper->save();
 
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Added reference: " . $validated['title'],
+        ]);
+
         return back()->with('success', 'Reference added successfully.');
     }
 
@@ -354,6 +364,13 @@ class PaperController extends Controller
 
         $paper->synthesis_text = $request->input('synthesis_text');
         $paper->save();
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Updated the Literature Review synthesis draft.",
+        ]);
 
         return back()->with('success', 'Synthesis draft saved successfully.');
     }
@@ -402,6 +419,13 @@ class PaperController extends Controller
             $currentThemes[] = $request->theme_name;
             $paper->themes = $currentThemes;
             $paper->save();
+
+            PaperActivity::create([
+                'paper_id' => $paper->id,
+                'user_id' => Auth::id(),
+                'type' => 'module_update',
+                'description' => "Added theme: " . $request->theme_name . " to Literature Review.",
+            ]);
         }
 
         return back();
@@ -414,13 +438,19 @@ class PaperController extends Controller
 
         $currentThemes = $paper->themes ?? [];
 
-        // Filter out the theme to remove
         $updatedThemes = array_values(array_filter($currentThemes, function($theme) use ($themeToRemove) {
             return $theme !== $themeToRemove;
         }));
 
         $paper->themes = $updatedThemes;
         $paper->save();
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Removed theme: " . $themeToRemove . " from Literature Review.",
+        ]);
 
         return back();
     }
@@ -435,6 +465,14 @@ class PaperController extends Controller
         $paper->save();
 
         $status = $paper->lit_review_finalized ? 'finalized' : 're-opened';
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => ucfirst($status) . " the Literature Review section.",
+        ]);
+
         return back()->with('success', "Literature review has been $status.");
     }
 
@@ -468,6 +506,13 @@ class PaperController extends Controller
         $paper->methodology_xml = $request->input('xml');
         $paper->save();
 
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Updated the Methodology Diagram.",
+        ]);
+
         return response()->json(['status' => 'success', 'message' => 'Diagram saved successfully']);
     }
 
@@ -499,6 +544,13 @@ class PaperController extends Controller
         $paper->datasets = $items;
         $paper->save();
 
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Added new dataset: " . $request->name,
+        ]);
+
         return back()->with('success', 'Dataset added successfully.');
     }
 
@@ -512,6 +564,13 @@ class PaperController extends Controller
 
         $paper->datasets = $items;
         $paper->save();
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Removed dataset",
+        ]);
 
         return back()->with('success', 'Dataset removed.');
     }
@@ -534,6 +593,13 @@ class PaperController extends Controller
         $paper->code_blocks = $items;
         $paper->save();
 
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Added code block: " . $request->title,
+        ]);
+
         return back()->with('success', 'Code block embedded.');
     }
 
@@ -547,6 +613,13 @@ class PaperController extends Controller
 
         $paper->code_blocks = $items;
         $paper->save();
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Removed code block",
+        ]);
 
         return back()->with('success', 'Code block removed.');
     }
@@ -581,6 +654,13 @@ class PaperController extends Controller
         $paper->datasets = $datasets;
         $paper->save();
 
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Updated dataset details",
+        ]);
+
         return back()->with('success', 'Dataset updated successfully.');
     }
 
@@ -601,6 +681,13 @@ class PaperController extends Controller
         $paper->formulas = $items;
         $paper->save();
 
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Added a new mathematical formula.",
+        ]);
+
         return back()->with('success', 'Formula added.');
     }
 
@@ -615,6 +702,13 @@ class PaperController extends Controller
         $paper->formulas = $items;
         $paper->save();
 
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Removed a formula.",
+        ]);
+
         return back()->with('success', 'Formula removed.');
     }
 
@@ -628,6 +722,14 @@ class PaperController extends Controller
         $paper->save();
 
         $status = $paper->methodology_finalized ? 'finalized' : 're-opened';
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => ucfirst($status) . " the Methodology section.",
+        ]);
+
         return back()->with('success', "Methodology has been $status.");
     }
 
@@ -662,7 +764,6 @@ class PaperController extends Controller
             'title' => 'required|string'
         ]);
 
-        // Upload Logic
         $path = $request->file('chart_image')->store('charts', 'public');
 
         $newItem = [
@@ -677,6 +778,13 @@ class PaperController extends Controller
         $data[] = $newItem;
         $paper->results_data = $data;
         $paper->save();
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Added a new Result Chart: " . $request->title,
+        ]);
 
         return back()->with('success', 'Chart added successfully.');
     }
@@ -703,6 +811,13 @@ class PaperController extends Controller
         $paper->results_data = $data;
         $paper->save();
 
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Created a new Result Table",
+        ]);
+
         return back()->with('success', 'Table created successfully.');
     }
 
@@ -714,23 +829,29 @@ class PaperController extends Controller
         $data = $paper->results_data ?? [];
         $itemId = $request->input('item_id');
 
+        $activityDescription = "Updated a result item.";
+
         foreach ($data as &$item) {
             if ($item['id'] === $itemId) {
 
                 if ($request->has('title')) {
                     $item['title'] = $request->input('title');
+                    $activityDescription = "Renamed result item to: " . $item['title'];
                 }
 
                 if ($request->has('new_point')) {
                     $item['analysis'][] = $request->input('new_point');
+                    $activityDescription = "Added an analysis point to: " . $item['title'];
                 }
 
                 if ($request->has('remove_point_index')) {
                     array_splice($item['analysis'], $request->input('remove_point_index'), 1);
+                    $activityDescription = "Removed an analysis point from: " . $item['title'];
                 }
 
                 if ($request->has('table_content')) {
                     $item['content'] = json_decode($request->input('table_content'));
+                    $activityDescription = "Updated table data for: " . $item['title'];
                 }
 
                 break;
@@ -739,6 +860,13 @@ class PaperController extends Controller
 
         $paper->results_data = $data;
         $paper->save();
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => $activityDescription,
+        ]);
 
         return back()->with('success', 'Updated successfully.');
     }
@@ -757,6 +885,13 @@ class PaperController extends Controller
 
         $paper->results_data = $data;
         $paper->save();
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Deleted result item",
+        ]);
 
         return back()->with('success', 'Item removed.');
     }
@@ -799,12 +934,18 @@ class PaperController extends Controller
         $paper = Paper::where('paperId', $paperId)->firstOrFail();
         $this->authorizeEditor($paper);
 
-        // Update all three fields at once
         $paper->conclusion_summary = $request->input('summary');
         $paper->conclusion_limitations = $request->input('limitations');
         $paper->conclusion_future_works = $request->input('future_works');
 
         $paper->save();
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => 'Updated the conclusion, limitations, and future works section.',
+        ]);
 
         return back()->with('success', 'Conclusion saved successfully.');
     }
@@ -818,6 +959,14 @@ class PaperController extends Controller
         $paper->save();
 
         $status = $paper->conclusion_finalized ? 'finalized' : 're-opened';
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => ucfirst($status) . " the Conclusion section.",
+        ]);
+
         return back()->with('success', "Conclusion section has been $status.");
     }
 }

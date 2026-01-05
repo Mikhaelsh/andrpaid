@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Collaboration;
 use App\Models\CollaborationRequest;
 use App\Models\Paper;
+use App\Models\PaperActivity;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -62,8 +63,19 @@ class CollaborationController extends Controller
         $user = User::where("profileId", $profileId)->firstOrFail();
         $paper = Paper::where('paperId', $paperId)->with('lecturer.user')->firstOrFail();
 
+        $newState = !$paper->openCollaboration;
+
         $paper->update([
-            "openCollaboration" => !$paper->openCollaboration
+            "openCollaboration" => $newState
+        ]);
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => $newState ? 'collab_open' : 'collab_close',
+            'description' => $newState
+                ? 'Opened collaboration for public requests.'
+                : 'Closed collaboration status.',
         ]);
 
         return redirect("/" . $user->profileId . "/paper/" . $paper->paperId . "/collaborations");
@@ -79,6 +91,13 @@ class CollaborationController extends Controller
             "paper_id" => $paper->id
         ]);
 
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'role_created',
+            'description' => "Defined a new research role: " . $request["role"] . ".",
+        ]);
+
         return redirect("/" . $user->profileId . "/paper/" . $paper->paperId . "/collaborations#roles")->with('success', 'New role has been created successfully!');
     }
 
@@ -86,7 +105,18 @@ class CollaborationController extends Controller
         $user = User::where("profileId", $profileId)->firstOrFail();
         $paper = Paper::where('paperId', $paperId)->with('lecturer.user')->firstOrFail();
 
-        Collaboration::where("id", $request["roleId"])->delete();
+        $role = Collaboration::where("id", $request["roleId"])->first();
+
+        $roleName = $role->role;
+
+        $role->delete();
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'settings_update',
+            'description' => "Removed the role: " . $roleName . ".",
+        ]);
 
         return redirect("/" . $user->profileId . "/paper/" . $paper->paperId . "/collaborations#roles")->with('success', 'Role has been removed successfully!');
     }
@@ -152,6 +182,13 @@ class CollaborationController extends Controller
             "lecturer_id" => Auth::user()->lecturer->id
         ]);
 
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'role_assigned',
+            'description' => "Accepted the invitation to join as " . $collaboration->role . ".",
+        ]);
+
         return redirect("/" . $user->profileId . "/paper/" . $paper->paperId . "/collaborations#invitations")->with('success', 'Role has been accepted successfully! Welcome!');
     }
 
@@ -180,6 +217,15 @@ class CollaborationController extends Controller
         $collaboration = Collaboration::where("id", $collaborationRequest->collaboration->id)->first();
         $collaboration->update([
             "lecturer_id" =>$collaborationRequest->fromLecturer->id
+        ]);
+
+        $applicantName = $collaborationRequest->fromLecturer->user->name;
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'role_assigned',
+            'description' => "Accepted " . $applicantName . " for the role of " . $collaboration->role . ".",
         ]);
 
         return redirect("/" . $user->profileId . "/paper/" . $paper->paperId . "/collaborations#roles")->with('success', 'Request has been accepted successfully!');
@@ -242,6 +288,16 @@ class CollaborationController extends Controller
         $collaboration = Collaboration::where('id', $request["slot_id"])->first();
         $collaboration->update([
             "lecturer_id" => null,
+        ]);
+
+        $removedMemberName = $collaboration->lecturer->user->name;
+        $roleName = $collaboration->role;
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'role_assigned',
+            'description' => "Removed " . $removedMemberName . " from the role of " . $roleName . ".",
         ]);
 
         // message goes to inbox
