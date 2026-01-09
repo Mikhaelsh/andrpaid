@@ -39,13 +39,6 @@
                     </a>
                 </li>
             @endif
-
-            <li class="nav-item">
-                <a class="nav-link {{ request()->is('*/followers') ? 'active' : '' }}" href="/{{ $navbarProfileData["profileId"] }}/followers">
-                    <i class="bi bi-people me-2"></i>Followers
-                    <span class="badge-counter">1.2k</span>
-                </a>
-            </li>
         </ul>
     </div>
 </nav>
