@@ -26,18 +26,32 @@
 
                 @notadmin
                 <li class="nav-item">
-                    <a class="nav-link px-3 {{ request()->is('dashboard') ? 'active' : '' }}" href="{{ route('dashboard', ['profileId' => Auth::user()->profileId]) }}">
+                    <a class="nav-link px-3 {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard', ['profileId' => Auth::user()->profileId]) }}">
                         <i class="bi bi-speedometer2 me-1"></i> Dashboard
                     </a>
                 </li>
-                @endnotadmin
-                
+
                 <li class="nav-item">
                     <a class="nav-link px-3 {{ request()->is('find') ? 'active' : '' }}" href="/find">
                         <i class="bi bi-search me-1"></i> Find
                     </a>
                 </li>
 
+                @university
+                <li class="nav-item">
+                    <a class="nav-link px-3 position-relative {{ request()->is('affiliations*') ? 'active' : '' }}"
+                        href="/affiliations">
+                        <i class="bi bi-person-check-fill me-1"></i> Affiliations
+
+                            @if(isset($pendingRequestsCount) && $pendingRequestsCount > 0)
+                                <span class="position-absolute top-20 right-20 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" style="width: 10px; height: 10px;">
+                                <span class="visually-hidden">New requests</span>
+                            </span>
+                        @endif
+                    </a>
+                </li>
+                @enduniversity
+                @endnotadmin
             </ul>
 
             <ul class="navbar-nav ms-auto align-items-center">
@@ -46,7 +60,7 @@
                         <i class="bi bi-inbox-fill" style="font-size: 1.3rem;"></i>
 
                         @php
-                            $unreadInboxCount = \App\Models\Inbox::where("to_user_id", Auth::user()->id)->where("marked_read", false)->get()->count();
+                            $unreadInboxCount = \App\Models\Inbox::where("to_user_id", Auth::user()->id)->where("marked_read", false)->count();
                         @endphp
 
                         @if ($unreadInboxCount != 0)

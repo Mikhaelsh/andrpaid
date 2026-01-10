@@ -137,7 +137,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h6 class="fw-bold text-uppercase text-muted small mb-0 tracking-wide">Research Team</h6>
 
-                        @if ($paper->lecturer->id === Auth::user()->lecturer->id)
+                        @if (Auth::user()->isLecturer() && $paper->lecturer->id === Auth::user()->lecturer->id)
                             <a href="/{{ $paper->lecturer->user->profileId }}/paper/{{ $paper->paperId }}/collaborations"
                                 class="text-decoration-none small fw-bold text-primary">
                                 Manage

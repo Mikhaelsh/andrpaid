@@ -21,7 +21,7 @@ class LecturerMiddleware
         }
 
         if (!Auth::user()->isLecturer()) {
-            return redirect('/dashboard');
+            return redirect(Auth::user()->profileId . '/dashboard');
         }
 
         return $next($request);

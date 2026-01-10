@@ -8,8 +8,6 @@ use App\Models\Inbox;
 use App\Models\Lecturer;
 use App\Models\Paper;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -23,10 +21,8 @@ class DashboardController extends Controller
                             ->where('marked_read', false)
                             ->count();
 
-        // Base Data
         $data = [
             'user' => $user,
-            'navbarProfileData' => $user,
             'messageCount' => $messageCount,
             'unreadMessages' => $unreadMessages,
         ];
@@ -35,7 +31,7 @@ class DashboardController extends Controller
             $university = $user->university;
 
             $approvedLecturerIds = Affiliation::where('university_id', $university->id)
-                ->where('status', 'accepted')
+                ->where('status', 'verified')
                 ->pluck('lecturer_id');
 
             $data['lecturerCount'] = $approvedLecturerIds->count();
@@ -49,8 +45,7 @@ class DashboardController extends Controller
             $data['activePapers'] = Paper::with(['lecturer.user', 'paperType'])
                 ->whereIn('lecturer_id', $approvedLecturerIds)
                 ->latest('updated_at')
-                ->take(5)
-                ->get();
+                ->paginate(5);
 
             $data['totalStars'] = Paper::whereIn('lecturer_id', $approvedLecturerIds)
                 ->withCount('paperStars')
@@ -62,6 +57,8 @@ class DashboardController extends Controller
                 ->inRandomOrder()
                 ->take(3)
                 ->get();
+
+            $data["navbarProfileData"] = ProfileController::getNavbarProfileUniversityData($profileId);
 
             $data['isUniversity'] = true;
         } elseif ($user->lecturer) {
@@ -79,8 +76,7 @@ class DashboardController extends Controller
                 ->where('lecturer_id', $lecturer->id)
                 ->orWhereHas('collaborations', fn($q) => $q->where('lecturer_id', $lecturer->id))
                 ->latest('updated_at')
-                ->take(5)
-                ->get();
+                ->paginate(5);
 
             $data['totalStars'] = Paper::where('lecturer_id', $lecturer->id)
                 ->withCount('paperStars')
@@ -92,6 +88,10 @@ class DashboardController extends Controller
                 ->inRandomOrder()
                 ->take(3)
                 ->get();
+
+            $data['affiliation'] = Affiliation::where('lecturer_id', $lecturer->id)->first();
+
+            $data["navbarProfileData"] = ProfileController::getNavbarProfileLecturerData($profileId);
 
             $data['isUniversity'] = false;
         } else if($user->isAdmin()){

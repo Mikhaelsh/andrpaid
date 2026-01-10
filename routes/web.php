@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AffiliationController;
 use App\Http\Controllers\CollaborationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FindController;
@@ -42,7 +43,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post("/logout", [LoginController::class,"logoutUser"]);
 
-    Route::get("/find", [FindController::class,"index"]);
+    Route::get("/find", [FindController::class,"index"])->middleware(['university', 'lecturer']);
 
     Route::get('/search-user-lecturer', [UserController::class, 'searchUserLecturer'])->name('api.users.search.lecturer');
 
@@ -87,6 +88,26 @@ Route::middleware('auth')->group(function () {
         Route::get("/{inboxId}", [InboxController::class,"indexSpecificInbox"]);
     });
 
+    Route::middleware('university')->group(function(){
+        Route::prefix("/affiliations")->group(function(){
+            Route::get('/', [AffiliationController::class, 'index']);
+
+            Route::post('/accept', [AffiliationController::class, 'acceptRequest'])->name('affiliation.accept');
+
+            Route::post('/reject', [AffiliationController::class, 'rejectRequest'])->name('affiliation.reject');
+        });
+    });
+
+    Route::middleware('lecturer')->group(function(){
+        Route::prefix("/papers")->group(function () {
+            Route::get("/create", [PaperController::class,"indexCreatePaper"]);
+
+            Route::post("/create-new-paper", [PaperController::class,"createNewPaper"]);
+
+            Route::post('/{paperId}/star', [PaperController::class, 'toggleStar']);
+        });
+    });
+
     Route::prefix("/{profileId}")->group(function(){
         Route::get("/dashboard", [DashboardController::class, "index"])->name('dashboard');
 
@@ -95,8 +116,6 @@ Route::middleware('auth')->group(function () {
         Route::get("/stars", [PaperController::class,"indexStars"]);
 
         Route::get("/overview", [ProfileController::class,"indexOverview"]);
-
-        Route::get("/followers", [ProfileController::class,"indexFollowers"]);
 
         Route::get("/researchers", [ProfileController::class,"indexResearchers"]);
 
@@ -210,14 +229,6 @@ Route::middleware('auth')->group(function () {
                 Route::post('/apply-for-role', [CollaborationController::class, 'applyForRole']);
             });
         });
-    });
-
-    Route::prefix("/papers")->group(function () {
-        Route::get("/create", [PaperController::class,"indexCreatePaper"]);
-
-        Route::post("/create-new-paper", [PaperController::class,"createNewPaper"]);
-
-        Route::post('/{paperId}/star', [PaperController::class, 'toggleStar']);
     });
 
     Route::middleware('admin')->group(function() {

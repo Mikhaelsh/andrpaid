@@ -96,7 +96,9 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
-    <?php echo $__env->make('partials.navbarProfile', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    <?php if (\Illuminate\Support\Facades\Blade::check('notadmin')): ?>
+        <?php echo $__env->make('partials.navbarProfile', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    <?php endif; ?>
 
     <div class="container py-5">
         <div class="welcome-banner shadow">
@@ -109,11 +111,13 @@
                             tasks</span> requiring your attention today.
                     </p>
                 </div>
+                <?php if (\Illuminate\Support\Facades\Blade::check('lecturer')): ?>
                 <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
                     <a href="/papers/create" class="btn btn-light text-primary fw-bold px-4 py-2 shadow-sm">
                         <i class="bi bi-plus-lg me-2"></i>New Project
                     </a>
                 </div>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -169,6 +173,99 @@
 
         <div class="row g-5">
             <div class="col-lg-8">
+                <?php if(isset($isUniversity) && !$isUniversity): ?>
+                    <?php if(isset($affiliation) && $affiliation->status === 'rejected'): ?>
+                        <div class="alert alert-danger border-0 shadow-sm d-flex align-items-center p-4 mb-4" role="alert"
+                            style="border-radius: 16px;">
+                            <i class="bi bi-x-circle-fill fs-1 me-4 text-danger"></i>
+                            <div>
+                                <h5 class="fw-bold text-danger mb-1">Affiliation Request Rejected</h5>
+                                <p class="mb-2 small text-dark">
+                                    Reason: "<?php echo e($affiliation->rejection_reason ?? 'No reason provided.'); ?>"
+                                </p>
+                                <a href="/settings#academic" class="btn btn-sm btn-danger fw-bold rounded-pill">
+                                    Update & Resubmit
+                                </a>
+                            </div>
+                        </div>
+                    <?php elseif(isset($affiliation) && $affiliation->status === 'pending'): ?>
+                        <div class="alert alert-warning border-0 shadow-sm d-flex align-items-center p-4 mb-4"
+                            role="alert" style="border-radius: 16px; background-color: #fff8e1;">
+                            <i class="bi bi-hourglass-split fs-1 me-4 text-warning"></i>
+                            <div>
+                                <h5 class="fw-bold text-warning mb-1">Affiliation Pending</h5>
+                                <p class="mb-0 small text-muted">
+                                    Your request to join
+                                    <strong><?php echo e($affiliation->university->user->name ?? 'University'); ?></strong> is currently
+                                    under review.
+                                </p>
+                            </div>
+                        </div>
+                    <?php elseif(!isset($affiliation)): ?>
+                        <div class="card border-0 shadow-sm mb-4 position-relative overflow-hidden"
+                            style="background: linear-gradient(120deg, #e3f2fd 0%, #ffffff 100%); border-radius: 16px; border-left: 5px solid #0d6efd !important;">
+
+                            <div class="position-absolute top-0 end-0 opacity-10 pe-3 pt-2">
+                                <i class="bi bi-building-fill-exclamation" style="font-size: 5rem; color: #0d6efd;"></i>
+                            </div>
+
+                            <div class="card-body p-4 position-relative z-1">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-white text-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center me-3 flex-shrink-0"
+                                            style="width: 56px; height: 56px;">
+                                            <i class="bi bi-bell-fill fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="fw-bold mb-1 text-dark">Hey, looks like you haven't joined a
+                                                university yet!</h5>
+                                            <p class="text-secondary mb-0" style="max-width: 600px; font-size: 0.95rem;">
+                                                You currently don't have any pending requests or active affiliations.
+                                                Linking your account allows you to get verified and collaborate officially.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <a href="/settings#academic"
+                                        class="btn btn-primary rounded-pill fw-bold px-4 py-2 shadow-sm">
+                                        Request Affiliation <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <?php if(isset($isUniversity) && $isUniversity && $pendingRequestsCount > 0): ?>
+                    <div class="card border-0 shadow-sm mb-4 position-relative overflow-hidden"
+                        style="background: linear-gradient(135deg, #fff3cd 0%, #ffffff 100%); border-radius: 16px; border-left: 5px solid #ffc107 !important;">
+
+                        
+                        <div class="position-absolute top-0 end-0 opacity-10 pe-3 pt-2">
+                            <i class="bi bi-person-plus-fill" style="font-size: 5rem; color: #ffc107;"></i>
+                        </div>
+
+                        <div class="card-body p-4 position-relative z-1">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning bg-opacity-10 text-warning rounded-circle shadow-sm d-flex align-items-center justify-content-center me-3 flex-shrink-0"
+                                        style="width: 56px; height: 56px;">
+                                        <i class="bi bi-exclamation-lg fs-3 fw-bold"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="fw-bold mb-1 text-dark">Action Required</h5>
+                                        <p class="text-secondary mb-0" style="max-width: 600px; font-size: 0.95rem;">
+                                            You have <strong><?php echo e($pendingRequestsCount); ?> pending affiliation request(s)</strong> from lecturers waiting for verification.
+                                        </p>
+                                    </div>
+                                </div>
+                                <a href="#" class="btn btn-warning text-dark fw-bold rounded-pill px-4 py-2 shadow-sm">
+                                    Review Requests <i class="bi bi-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="fw-bold text-dark mb-0">Active Collaborations</h5>
                     <a href="#" class="text-decoration-none small fw-bold">View All</a>
@@ -244,6 +341,11 @@
                             </div>
                         </div>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+                    <div class="mt-4">
+                        <?php echo e($activePapers->links('pagination::bootstrap-5')); ?>
+
+                    </div>
                 <?php else: ?>
                     <div class="text-center py-5 border rounded-3 bg-light">
                         <i class="bi bi-folder-plus text-muted opacity-50 mb-3" style="font-size: 3rem;"></i>

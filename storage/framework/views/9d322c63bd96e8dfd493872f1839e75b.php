@@ -33,13 +33,4 @@
     <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
 <?php /**PATH C:\Tempat Coding\web programming\andrpaid\resources\views/layouts/app.blade.php ENDPATH**/ ?>

@@ -26,18 +26,32 @@
 
                 <?php if (\Illuminate\Support\Facades\Blade::check('notadmin')): ?>
                 <li class="nav-item">
-                    <a class="nav-link px-3 <?php echo e(request()->is('dashboard') ? 'active' : ''); ?>" href="<?php echo e(route('dashboard', ['profileId' => Auth::user()->profileId])); ?>">
+                    <a class="nav-link px-3 <?php echo e(request()->routeIs('dashboard') ? 'active' : ''); ?>" href="<?php echo e(route('dashboard', ['profileId' => Auth::user()->profileId])); ?>">
                         <i class="bi bi-speedometer2 me-1"></i> Dashboard
                     </a>
                 </li>
-                <?php endif; ?>
-                
+
                 <li class="nav-item">
                     <a class="nav-link px-3 <?php echo e(request()->is('find') ? 'active' : ''); ?>" href="/find">
                         <i class="bi bi-search me-1"></i> Find
                     </a>
                 </li>
 
+                <?php if (\Illuminate\Support\Facades\Blade::check('university')): ?>
+                <li class="nav-item">
+                    <a class="nav-link px-3 position-relative <?php echo e(request()->is('affiliations*') ? 'active' : ''); ?>"
+                        href="/affiliations">
+                        <i class="bi bi-person-check-fill me-1"></i> Affiliations
+
+                            <?php if(isset($pendingRequestsCount) && $pendingRequestsCount > 0): ?>
+                                <span class="position-absolute top-20 right-20 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" style="width: 10px; height: 10px;">
+                                <span class="visually-hidden">New requests</span>
+                            </span>
+                        <?php endif; ?>
+                    </a>
+                </li>
+                <?php endif; ?>
+                <?php endif; ?>
             </ul>
 
             <ul class="navbar-nav ms-auto align-items-center">
@@ -46,7 +60,7 @@
                         <i class="bi bi-inbox-fill" style="font-size: 1.3rem;"></i>
 
                         <?php
-                            $unreadInboxCount = \App\Models\Inbox::where("to_user_id", Auth::user()->id)->where("marked_read", false)->get()->count();
+                            $unreadInboxCount = \App\Models\Inbox::where("to_user_id", Auth::user()->id)->where("marked_read", false)->count();
                         ?>
 
                         <?php if($unreadInboxCount != 0): ?>
