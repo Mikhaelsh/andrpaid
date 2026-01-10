@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Find Researchers')
+@section('title', __('find.title'))
 
 @section('additionalCSS')
     <style>
@@ -58,8 +58,8 @@
 
     <div class="search-header text-center">
         <div class="container">
-            <h1 class="fw-bold text-dark mb-3">Connect with Researchers</h1>
-            <p class="text-muted mb-4 fs-5">Discover experts, collaborators, and mentors across Indonesia.</p>
+            <h1 class="fw-bold text-dark mb-3">{{ __('find.header_title') }}</h1>
+            <p class="text-muted mb-4 fs-5">{{ __('find.header_subtitle') }}</p>
 
             <div class="row justify-content-center">
                 <div class="col-lg-8">
@@ -75,18 +75,17 @@
                             <span class="input-group-text bg-white border-0 ps-4"><i
                                     class="bi bi-search text-muted"></i></span>
                             <input type="text" name="q" class="form-control border-0"
-                                placeholder="Search by name..." value="{{ request('q') }}">
-                            <button class="btn btn-primary px-5 fw-bold" type="submit">Search</button>
+                                placeholder="{{ __('find.placeholder_search') }}" value="{{ request('q') }}">
+                            <button class="btn btn-primary px-5 fw-bold" type="submit">{{ __('find.btn_search') }}</button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            {{-- Reset Filters Link --}}
             @if (request()->hasAny(['q', 'region', 'sort']))
                 <div class="mt-3">
                     <a href="/find" class="text-decoration-none text-danger small fw-bold">
-                        <i class="bi bi-x-circle"></i> Clear All Filters
+                        <i class="bi bi-x-circle"></i> {{ __('find.clear_filters') }}
                     </a>
                 </div>
             @endif
@@ -96,21 +95,22 @@
     <div class="container pb-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="fw-bold text-dark mb-0">
-                Found {{ $lecturers->total() }} Researchers
+                {{ __('find.found_researchers', ['count' => $lecturers->total()]) }}
             </h5>
 
             <div class="d-flex gap-2">
                 <div class="dropdown">
                     <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
                         data-bs-toggle="dropdown">
-                        <i class="bi bi-funnel"></i> {{ request('region') ? 'Region: Filtered' : 'All Regions' }}
+                        <i class="bi bi-funnel"></i>
+                        {{ request('region') ? __('find.filter_region_label') : __('find.filter_region_all') }}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0"
                         style="max-height: 300px; overflow-y: auto;">
                         <li>
                             <a class="dropdown-item {{ !request('region') ? 'active' : '' }}"
                                 href="{{ request()->fullUrlWithQuery(['region' => null]) }}">
-                                All Regions
+                                {{ __('find.filter_region_all') }}
                             </a>
                         </li>
                         <li>
@@ -130,25 +130,25 @@
                 <div class="dropdown">
                     <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
                         data-bs-toggle="dropdown">
-                        <i class="bi bi-sort-down"></i> Sort
+                        <i class="bi bi-sort-down"></i> {{ __('find.sort_button') }}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
                         <li>
                             <a class="dropdown-item {{ !request('sort') ? 'active' : '' }}"
                                 href="{{ request()->fullUrlWithQuery(['sort' => null]) }}">
-                                Relevance (Default)
+                                {{ __('find.sort_relevance') }}
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item {{ request('sort') == 'newest' ? 'active' : '' }}"
                                 href="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}">
-                                Newest Joined
+                                {{ __('find.sort_newest') }}
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item {{ request('sort') == 'name_asc' ? 'active' : '' }}"
                                 href="{{ request()->fullUrlWithQuery(['sort' => 'name_asc']) }}">
-                                Name (A-Z)
+                                {{ __('find.sort_name_asc') }}
                             </a>
                         </li>
                     </ul>
@@ -170,7 +170,8 @@
                                         {{ $lecturer->user->name }}
                                     </a>
                                 </h5>
-                                <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-2">Lecturer</span>
+                                <span
+                                    class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-2">{{ __('find.role_lecturer') }}</span>
                             </div>
                         </div>
 
@@ -178,7 +179,7 @@
                             <div class="d-flex align-items-center text-muted small mb-2">
                                 <i class="bi bi-building me-2"></i>
                                 <span class="text-truncate">
-                                    {{ $lecturer->affiliation->university->user->name ?? 'Independent' }}
+                                    {{ $lecturer->affiliation->university->user->name ?? __('find.independent') }}
                                 </span>
                             </div>
                             <div class="d-flex align-items-center text-muted small">
@@ -190,11 +191,11 @@
                         <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
                             <small class="text-muted">
                                 <i class="bi bi-file-text me-1"></i>
-                                {{ $lecturer->papers->count() }} Papers
+                                {{ __('find.papers_count', ['count' => $lecturer->papers->count()]) }}
                             </small>
                             <a href="/{{ $lecturer->user->profileId }}/overview"
                                 class="btn btn-outline-primary btn-sm btn-connect px-3">
-                                View Profile
+                                {{ __('find.btn_view_profile') }}
                             </a>
                         </div>
                     </div>
@@ -203,8 +204,8 @@
                 <div class="col-12 text-center py-5">
                     <div class="text-muted">
                         <i class="bi bi-search display-1 opacity-25"></i>
-                        <h4 class="mt-3">No researchers found</h4>
-                        <p>Try adjusting your search or filters.</p>
+                        <h4 class="mt-3">{{ __('find.empty_title') }}</h4>
+                        <p>{{ __('find.empty_desc') }}</p>
                     </div>
                 </div>
             @endforelse

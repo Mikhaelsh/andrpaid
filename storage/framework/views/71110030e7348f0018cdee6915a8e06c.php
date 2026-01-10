@@ -1,10 +1,24 @@
 <footer class="glass-footer mt-auto">
     <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center py-4">
 
-        <div class="footer-brand mb-3 mb-md-0">
+        <div class="footer-brand mb-3 mb-md-0 d-flex align-items-center">
             <span class="text-white-50 small">© <?php echo e(date('Y')); ?></span>
-            <span class="fw-bold text-white ms-1">AndRPaid</span>
-            <span class="text-white-50 small ms-1">| All rights reserved.</span>
+            <span class="fw-bold text-white ms-1"><?php echo e(__('footer.brand')); ?></span>
+            <span class="text-white-50 small ms-1 me-3"><?php echo e(__('footer.rights')); ?></span>
+
+            <div class="vr bg-white opacity-25 me-3" style="height: 15px;"></div>
+
+            <div class="d-flex align-items-center gap-2 small">
+                <a href="<?php echo e(route('lang.switch', 'en')); ?>"
+                    class="text-decoration-none <?php echo e(app()->getLocale() == 'en' ? 'text-white fw-bold' : 'text-white-50'); ?>">
+                    EN
+                </a>
+                <span class="text-white-50">/</span>
+                <a href="<?php echo e(route('lang.switch', 'id')); ?>"
+                    class="text-decoration-none <?php echo e(app()->getLocale() == 'id' ? 'text-white fw-bold' : 'text-white-50'); ?>">
+                    ID
+                </a>
+            </div>
         </div>
 
         <?php if (\Illuminate\Support\Facades\Blade::check('notadmin')): ?>
@@ -14,7 +28,7 @@
                     <div class="icon-circle">
                         <i class="bi bi-chat-heart-fill"></i>
                     </div>
-                    <span>Feedback & Reports</span>
+                    <span><?php echo e(__('footer.feedback_btn')); ?></span>
                 </button>
             </div>
         <?php endif; ?>
@@ -35,8 +49,8 @@
                             <i class="bi bi-chat-heart-fill"></i>
                         </div>
                         <div>
-                            <h4 class="horizon-sidebar-title">We Listen</h4>
-                            <p class="horizon-sidebar-text">Your feedback directly shapes the future of AndRPaid.</p>
+                            <h4 class="horizon-sidebar-title"><?php echo e(__('footer.sidebar_title')); ?></h4>
+                            <p class="horizon-sidebar-text"><?php echo e(__('footer.sidebar_desc')); ?></p>
                         </div>
                     </div>
 
@@ -46,15 +60,15 @@
                             <i class="bi bi-x-lg"></i>
                         </button>
 
-                        <h3 class="fw-bold text-dark mb-4">Share Thoughts</h3>
+                        <h3 class="fw-bold text-dark mb-4"><?php echo e(__('footer.modal_title')); ?></h3>
 
                         <form action="/report/submit" method="POST">
                             <?php echo csrf_field(); ?>
 
                             <div class="mb-3">
-                                <label class="horizon-label">Topic</label>
+                                <label class="horizon-label"><?php echo e(__('footer.label_topic')); ?></label>
                                 <select class="horizon-input" name="type" required>
-                                    <option value="" selected disabled>Select...</option>
+                                    <option value="" selected disabled><?php echo e(__('footer.select_placeholder')); ?></option>
                                     <?php $__currentLoopData = $reportTypes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $reportType): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <option value="<?php echo e($reportType->reportTypeId); ?>"><?php echo e($reportType->name); ?></option>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -62,12 +76,14 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="horizon-label">Message</label>
-                                <textarea class="horizon-input" name="description" rows="3" placeholder="What's on your mind?" required></textarea>
+                                <label class="horizon-label"><?php echo e(__('footer.label_message')); ?></label>
+                                <textarea class="horizon-input" name="description" rows="3" placeholder="<?php echo e(__('footer.placeholder_message')); ?>"
+                                    required></textarea>
                             </div>
 
                             <button type="submit" class="horizon-submit-btn">
-                                Send Feedback
+                                <?php echo e(__('footer.btn_submit')); ?>
+
                             </button>
                         </form>
 
@@ -89,11 +105,12 @@
                             <i class="bi bi-check-lg custom-icon"></i>
                         </div>
 
-                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <h4 class="fw-bold mb-3 heading-text"><?php echo e(__('common.success')); ?></h4>
                         <p class="text-muted mb-4 fs-5"><?php echo e(session('successReport')); ?></p>
 
                         <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm" data-bs-dismiss="modal">
-                            CONTINUE
+                            <?php echo e(__('common.continue')); ?>
+
                         </button>
                     </div>
 

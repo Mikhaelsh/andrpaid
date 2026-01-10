@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Sent Messages')
+@section('title', __('inbox.title_read'))
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/inboxes.css') }}">
@@ -17,14 +17,14 @@
                     <div class="message-toolbar">
                         <div>
                             <a href="{{ url()->previous() }}" class="btn btn-light btn-sm rounded-pill px-3 fw-bold text-muted border">
-                                <i class="bi bi-arrow-left me-1"></i> Back
+                                <i class="bi bi-arrow-left me-1"></i> {{ __('inbox.btn_back') }}
                             </a>
                         </div>
                     </div>
 
                     <div class="message-header">
                         <div class="d-flex justify-content-between align-items-start mb-4">
-                            <h4 class="fw-bold mb-0 text-dark">{{ $inbox->subject ?? '(No Subject)' }}</h4>
+                            <h4 class="fw-bold mb-0 text-dark">{{ $inbox->subject ?? __('inbox.no_subject') }}</h4>
                             <span class="badge bg-light text-secondary border">
                                 {{ $inbox->created_at->format('M d, Y, h:i A') }}
                             </span>
@@ -41,15 +41,15 @@
 
                                 <div class="message-meta d-flex flex-column flex-md-row gap-md-2">
                                     <span>
-                                        <span class="text-muted">From:</span>
+                                        <span class="text-muted">{{ __('inbox.label_from') }}</span>
                                         &lt;{{ $inbox->fromUser->email ?? 'no-reply' }}&gt;
                                     </span>
 
                                     <span class="d-none d-md-inline text-muted">•</span>
 
                                     <span>
-                                        <span class="text-muted">To:</span>
-                                        <span class="text-dark fw-medium">{{ $inbox->toUser->name }} &lt;{{ $inbox->fromUser->email ?? 'no-reply' }}&gt; {{ $inbox->toUser->id === Auth::user()->id ? '(Me)' : '' }}</span>
+                                        <span class="text-muted">{{ __('inbox.label_to') }}</span>
+                                        <span class="text-dark fw-medium">{{ $inbox->toUser->name }} &lt;{{ $inbox->fromUser->email ?? 'no-reply' }}&gt; {{ $inbox->toUser->id === Auth::user()->id ? __('inbox.label_me') : '' }}</span>
                                     </span>
                                 </div>
                             </div>
@@ -61,7 +61,7 @@
                             {!! nl2br(e($inbox->body)) !!}
                         @else
                             <div class="text-muted fst-italic p-3 bg-light rounded border border-light">
-                                <i class="bi bi-info-circle me-2"></i> No content provided in this message.
+                                <i class="bi bi-info-circle me-2"></i> {{ __('inbox.empty_content') }}
                             </div>
                         @endif
                     </div>

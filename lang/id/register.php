@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'title' => 'Daftar',
+    'join_header' => 'Bergabung dengan AndRPaid',
+    'join_subheader' => 'Pilih peran yang paling sesuai dengan Anda.',
+    'role_lecturer' => 'Dosen',
+    'desc_lecturer' => 'Untuk dosen yang mencari kontrak pengajaran dan akademik.',
+    'btn_join_lecturer' => 'Gabung sebagai Dosen',
+    'role_university' => 'Universitas',
+    'desc_university' => 'Untuk universitas yang mencari dan mengelola talenta akademik.',
+    'btn_join_university' => 'Gabung sebagai Universitas',
+    'already_have_account' => 'Sudah punya akun?',
+    'sign_in_link' => 'Masuk di sini',
+    'sign_in' => 'Masuk',
+    'register_role_title' => 'Pendaftaran :role',
+    'create_account_subheader' => 'Buat akun baru Anda.',
+    'placeholder_name_example' => 'Nama (contoh: :example)',
+    'placeholder_email_example' => 'Email (contoh: :example)',
+    'placeholder_bio' => 'Bio Singkat (Opsional, maks 200 karakter)',
+    'select_province' => 'Pilih Provinsi Anda...',
+    'placeholder_password' => 'Buat kata sandi',
+    'placeholder_confirm_password' => 'Konfirmasi kata sandi',
+    'btn_register_role' => 'Daftar :role',
+    'back_to_roles' => 'Kembali ke Pemilihan Peran',
+];

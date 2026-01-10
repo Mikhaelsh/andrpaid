@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Manage Affiliations')
+@section('title', __('affiliations.title'))
 
 @section('content')
     @include('partials.navbarProfile', ['user' => $user])
@@ -8,8 +8,8 @@
     <div class="container py-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="fw-bold text-dark mb-1">Affiliations</h2>
-                <p class="text-muted mb-0">Manage lecturer requests and view your university's network.</p>
+                <h2 class="fw-bold text-dark mb-1">{{ __('affiliations.header_title') }}</h2>
+                <p class="text-muted mb-0">{{ __('affiliations.header_desc') }}</p>
             </div>
         </div>
 
@@ -21,7 +21,7 @@
                             <i class="bi bi-people-fill fs-4"></i>
                         </div>
                         <div>
-                            <h6 class="text-muted text-uppercase small fw-bold mb-1">Total Lecturers</h6>
+                            <h6 class="text-muted text-uppercase small fw-bold mb-1">{{ __('affiliations.stat_total') }}</h6>
                             <h3 class="fw-bold mb-0">{{ $stats['total_lecturers'] }}</h3>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                             <i class="bi bi-hourglass-split fs-4"></i>
                         </div>
                         <div>
-                            <h6 class="text-muted text-uppercase small fw-bold mb-1">Pending Requests</h6>
+                            <h6 class="text-muted text-uppercase small fw-bold mb-1">{{ __('affiliations.stat_pending') }}</h6>
                             <h3 class="fw-bold mb-0">{{ $stats['pending_requests'] }}</h3>
                         </div>
                     </div>
@@ -47,7 +47,8 @@
                 <div class="card-header bg-warning bg-opacity-10 border-0 p-4">
                     <div class="d-flex align-items-center gap-2">
                         <i class="bi bi-exclamation-circle-fill text-warning fs-5"></i>
-                        <h5 class="fw-bold text-dark mb-0">Pending Verification Requests ({{ $pendingRequests->count() }})
+                        <h5 class="fw-bold text-dark mb-0">
+                            {{ __('affiliations.pending_section_title', ['count' => $pendingRequests->count()]) }}
                         </h5>
                     </div>
                 </div>
@@ -56,10 +57,10 @@
                         <table class="table table-hover align-middle mb-0">
                             <thead class="bg-light">
                                 <tr>
-                                    <th class="ps-4 py-3 text-secondary small text-uppercase">Lecturer</th>
-                                    <th class="py-3 text-secondary small text-uppercase">NIDN</th>
-                                    <th class="py-3 text-secondary small text-uppercase">Requested On</th>
-                                    <th class="pe-4 py-3 text-end text-secondary small text-uppercase">Actions</th>
+                                    <th class="ps-4 py-3 text-secondary small text-uppercase">{{ __('affiliations.th_lecturer') }}</th>
+                                    <th class="py-3 text-secondary small text-uppercase">{{ __('affiliations.th_nidn') }}</th>
+                                    <th class="py-3 text-secondary small text-uppercase">{{ __('affiliations.th_requested') }}</th>
+                                    <th class="pe-4 py-3 text-end text-secondary small text-uppercase">{{ __('affiliations.th_actions') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -85,7 +86,7 @@
                                                 <button class="btn btn-outline-danger btn-sm rounded-pill px-3"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#rejectModal{{ $req->id }}">
-                                                    Reject
+                                                    {{ __('affiliations.btn_reject') }}
                                                 </button>
 
                                                 <form action="{{ route('affiliation.accept') }}" method="POST">
@@ -94,7 +95,7 @@
                                                         value="{{ $req->id }}">
                                                     <button type="submit"
                                                         class="btn btn-success btn-sm rounded-pill px-3 fw-bold">
-                                                        <i class="bi bi-check-lg me-1"></i> Verify
+                                                        <i class="bi bi-check-lg me-1"></i> {{ __('affiliations.btn_verify') }}
                                                     </button>
                                                 </form>
                                             </div>
@@ -108,25 +109,27 @@
                                                             <input type="hidden" name="affiliation_id"
                                                                 value="{{ $req->id }}">
                                                             <div class="modal-header border-0 pb-0">
-                                                                <h5 class="modal-title fw-bold text-danger">Reject Request
+                                                                <h5 class="modal-title fw-bold text-danger">
+                                                                    {{ __('affiliations.modal_reject_title') }}
                                                                 </h5>
                                                                 <button type="button" class="btn-close"
                                                                     data-bs-dismiss="modal"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <p class="text-muted mb-3">Please provide a reason for
-                                                                    rejecting
+                                                                <p class="text-muted mb-3">
+                                                                    {{ __('affiliations.modal_reject_desc') }}
                                                                     <strong>{{ $req->lecturer->user->name }}</strong>.
                                                                 </p>
-                                                                <textarea name="reason" class="form-control bg-light border-0" rows="3" placeholder="Reason (e.g. Invalid NIDN)"
+                                                                <textarea name="reason" class="form-control bg-light border-0" rows="3" placeholder="{{ __('affiliations.placeholder_reason') }}"
                                                                     required></textarea>
                                                             </div>
                                                             <div class="modal-footer border-0 pt-0">
                                                                 <button type="button" class="btn btn-light rounded-pill"
-                                                                    data-bs-dismiss="modal">Cancel</button>
+                                                                    data-bs-dismiss="modal">{{ __('affiliations.btn_cancel') }}</button>
                                                                 <button type="submit"
-                                                                    class="btn btn-danger rounded-pill px-4">Confirm
-                                                                    Reject</button>
+                                                                    class="btn btn-danger rounded-pill px-4">
+                                                                    {{ __('affiliations.btn_confirm_reject') }}
+                                                                </button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -145,7 +148,7 @@
         <div class="card border-0 shadow-sm" style="border-radius: 16px;">
             <div class="card-header bg-white border-bottom border-light p-4">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold text-dark mb-0">Affiliated Lecturers</h5>
+                    <h5 class="fw-bold text-dark mb-0">{{ __('affiliations.affiliated_section_title') }}</h5>
                 </div>
             </div>
             <div class="card-body p-0">
@@ -154,10 +157,10 @@
                         <table class="table table-hover align-middle mb-0">
                             <thead class="bg-light">
                                 <tr>
-                                    <th class="ps-4 py-3 text-secondary small text-uppercase">Lecturer</th>
-                                    <th class="py-3 text-secondary small text-uppercase">NIDN</th>
-                                    <th class="py-3 text-secondary small text-uppercase">Joined</th>
-                                    <th class="pe-4 py-3 text-end text-secondary small text-uppercase">Status</th>
+                                    <th class="ps-4 py-3 text-secondary small text-uppercase">{{ __('affiliations.th_lecturer') }}</th>
+                                    <th class="py-3 text-secondary small text-uppercase">{{ __('affiliations.th_nidn') }}</th>
+                                    <th class="py-3 text-secondary small text-uppercase">{{ __('affiliations.th_joined') }}</th>
+                                    <th class="pe-4 py-3 text-end text-secondary small text-uppercase">{{ __('affiliations.th_status') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -182,7 +185,7 @@
                                         <td class="pe-4 text-end">
                                             <span
                                                 class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
-                                                <i class="bi bi-check-circle-fill me-1"></i> Verified
+                                                <i class="bi bi-check-circle-fill me-1"></i> {{ __('affiliations.status_verified') }}
                                             </span>
                                         </td>
                                     </tr>
@@ -199,7 +202,7 @@
                         <div class="bg-light rounded-circle d-inline-flex p-3 mb-3">
                             <i class="bi bi-people text-secondary fs-1"></i>
                         </div>
-                        <h6 class="text-muted">No lecturers affiliated yet.</h6>
+                        <h6 class="text-muted">{{ __('affiliations.empty_state') }}</h6>
                     </div>
                 @endif
             </div>
@@ -218,12 +221,12 @@
                             <i class="bi bi-check-lg custom-icon"></i>
                         </div>
 
-                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <h4 class="fw-bold mb-3 heading-text">{{ __('common.success') }}</h4>
                         <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
 
                         <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm"
                             data-bs-dismiss="modal">
-                            CONTINUE
+                            {{ __('common.continue') }}
                         </button>
                     </div>
 

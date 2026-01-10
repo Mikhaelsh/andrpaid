@@ -14,11 +14,22 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function () {
     return redirect("/login");
 });
+
+Route::get('/lang/{locale}', function ($locale) {
+    if (! in_array($locale, ['en', 'id'])) {
+        abort(400);
+    }
+
+    Cookie::queue('user_locale', $locale, 525600);
+
+    return redirect()->back();
+})->name('lang.switch');
 
 Route::middleware('guest')->group(function () {
     Route::prefix("/login")->group(function(){
@@ -43,7 +54,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post("/logout", [LoginController::class,"logoutUser"]);
 
-    Route::get("/find", [FindController::class,"index"])->middleware(['university', 'lecturer']);
+    Route::get("/find", [FindController::class,"index"]);
 
     Route::get('/search-user-lecturer', [UserController::class, 'searchUserLecturer'])->name('api.users.search.lecturer');
 

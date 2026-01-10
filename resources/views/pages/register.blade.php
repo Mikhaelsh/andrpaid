@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Register')
+@section('title', __('register.title'))
 @section('hideNavbar', true)
 @section('hideFooter', true)
 
@@ -66,6 +66,11 @@
 
 @section('content')
     <div class="login-page-wrapper">
+        <div class="auth-lang-switch shadow-sm">
+            <a href="{{ route('lang.switch', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
+            <span class="text-muted">|</span>
+            <a href="{{ route('lang.switch', 'id') }}" class="{{ app()->getLocale() == 'id' ? 'active' : '' }}">ID</a>
+        </div>
 
         <ul class="theme-picker">
             <li data-theme="barney" class="barney"></li>
@@ -81,8 +86,8 @@
             <div class="form auth-3d-form wide-panel">
                 <div class="header-section">
                     <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="auth-logo">
-                    <h1>Join AndRPaid</h1>
-                    <p>Choose the role that best describes you.</p>
+                    <h1>{{ __('register.join_header') }}</h1>
+                    <p>{{ __('register.join_subheader') }}</p>
                 </div>
 
                 <div class="row g-4 mt-2">
@@ -91,14 +96,14 @@
                             <div class="role-icon mb-3">
                                 <i class='bx bxs-id-card'></i>
                             </div>
-                            <h3 class="h5 fw-bold text-white mb-2">Lecturer</h3>
+                            <h3 class="h5 fw-bold text-white mb-2">{{ __('register.role_lecturer') }}</h3>
                             <p class="small text-white-50 mb-4">
-                                For lecturers seeking teaching and academic contracts.
+                                {{ __('register.desc_lecturer') }}
                             </p>
                             <div class="button-wrapper mt-auto w-100">
                                 <a href="/register/lecturer" style="text-decoration: none;">
                                     <button type="button">
-                                        Join as Lecturer
+                                        {{ __('register.btn_join_lecturer') }}
                                         <i class='bx bx-right-arrow-alt'></i>
                                     </button>
                                 </a>
@@ -111,14 +116,14 @@
                             <div class="role-icon mb-3">
                                 <i class='bx bxs-graduation'></i>
                             </div>
-                            <h3 class="h5 fw-bold text-white mb-2">University</h3>
+                            <h3 class="h5 fw-bold text-white mb-2">{{ __('register.role_university') }}</h3>
                             <p class="small text-white-50 mb-4">
-                                For Universities looking to hire and manage academic talent.
+                                {{ __('register.desc_university') }}
                             </p>
                             <div class="button-wrapper mt-auto w-100">
                                 <a href="/register/university" style="text-decoration: none;">
                                     <button type="button">
-                                        Join as University
+                                        {{ __('register.btn_join_university') }}
                                         <i class='bx bx-right-arrow-alt'></i>
                                     </button>
                                 </a>
@@ -128,17 +133,21 @@
                 </div>
 
                 <div class="form-footer">
-                    <p>Already have an account? <a href="/login">Sign in here</a></p>
+                    <p>{{ __('register.already_have_account') }} <a href="/login">{{ __('register.sign_in_link') }}</a></p>
                 </div>
             </div>
         @elseif ($type === 'specificRole')
+            @php
+                $roleName = $role === 'lecturer' ? __('register.role_lecturer') : __('register.role_university');
+            @endphp
+
             <form action="/register/{{ $role }}/insert" method="POST" class="form auth-3d-form">
                 @csrf
 
                 <div class="header-section">
                     <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="auth-logo">
-                    <h1>{{ Str::ucfirst($role) }} Register</h1>
-                    <p>Create your new account.</p>
+                    <h1>{{ __('register.register_role_title', ['role' => $roleName]) }}</h1>
+                    <p>{{ __('register.create_account_subheader') }}</p>
                 </div>
 
                 @if ($errors->any())
@@ -154,25 +163,25 @@
 
                 <div class="input-wrapper">
                     <input type="text" name="name"
-                        placeholder="Name (e.g., {{ $role === 'lecturer' ? 'Waguri' : 'Univology' }})"
+                        placeholder="{{ __('register.placeholder_name_example', ['example' => $role === 'lecturer' ? 'Waguri' : 'Univology']) }}"
                         value="{{ old('name') }}" required />
                     <i class='bx bxs-building'></i>
                 </div>
 
                 <div class="input-wrapper">
                     <input type="email" name="email"
-                        placeholder="Email (e.g., {{ $role === 'lecturer' ? 'waguri@binus.ac.id' : 'univology@uni.edu' }})"
+                        placeholder="{{ __('register.placeholder_email_example', ['example' => $role === 'lecturer' ? 'waguri@binus.ac.id' : 'univology@uni.edu']) }}"
                         value="{{ old('email') }}" required />
                     <i class='bx bxs-envelope'></i>
                 </div>
 
                 <div class="input-wrapper">
-                    <textarea name="description" rows="2" placeholder="Short Bio (Optional, max 200 chars)" maxlength="200">{{ old('description') }}</textarea>
+                    <textarea name="description" rows="2" placeholder="{{ __('register.placeholder_bio') }}" maxlength="200">{{ old('description') }}</textarea>
                 </div>
 
                 <div class="input-wrapper">
                     <select name="province" required>
-                        <option value="" disabled selected>Select Your Province...</option>
+                        <option value="" disabled selected>{{ __('register.select_province') }}</option>
                         @foreach ($provinces as $province)
                             <option value="{{ $province->provinceId }}"
                                 {{ old('province') === $province->provinceId ? 'selected' : '' }}>
@@ -183,18 +192,18 @@
                 </div>
 
                 <div class="input-wrapper">
-                    <input type="password" name="password" placeholder="Create a password" required />
+                    <input type="password" name="password" placeholder="{{ __('register.placeholder_password') }}" required />
                     <i class='bx bxs-lock-alt'></i>
                 </div>
 
                 <div class="input-wrapper">
-                    <input type="password" name="confirmPassword" placeholder="Confirm password" required />
+                    <input type="password" name="confirmPassword" placeholder="{{ __('register.placeholder_confirm_password') }}" required />
                     <i class='bx bxs-lock-alt'></i>
                 </div>
 
                 <div class="button-wrapper mt-3">
                     <button type="submit">
-                        Register {{ Str::ucfirst($role) }}
+                        {{ __('register.btn_register_role', ['role' => $roleName]) }}
                         <i class='bx bx-right-arrow-alt'></i>
                     </button>
                 </div>
@@ -202,10 +211,10 @@
                 <div class="form-footer">
                     <p>
                         <a href="/register">
-                            <i class='bx bx-arrow-back'></i> Back to Role Selection
+                            <i class='bx bx-arrow-back'></i> {{ __('register.back_to_roles') }}
                         </a>
                     </p>
-                    <p class="mt-2">Already have an account? <a href="/login">Sign In</a></p>
+                    <p class="mt-2">{{ __('register.already_have_account') }} <a href="/login">{{ __('register.sign_in') }}</a></p>
                 </div>
             </form>
         @endif

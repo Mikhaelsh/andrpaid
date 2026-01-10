@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Stars')
+@section('title', __('stars.title'))
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/profile.css') }}">
@@ -11,8 +11,8 @@
 
     <div style="background-color: #0d1117; padding-top: 2rem;">
         <div class="container text-white pb-3">
-            <h3>{{ $user->name }}'s Starred Papers</h3>
-            <p>{{ $papers->count() ?? '0' }} Starred Paper{{ $papers->count() == 1 ? '' : 's' }}</p>
+            <h3>{{ __('stars.header_title', ['name' => $user->name]) }}</h3>
+            <p>{{ $papers->count() > 0 ? trans_choice('stars.starred_count', $papers->count()) : __('stars.no_starred_count') }}</p>
         </div>
     </div>
 
@@ -23,16 +23,15 @@
             <div class="paper-showcase-control-bar d-flex flex-grow-1 gap-2 w-90 p-2">
 
                 <div class="position-relative flex-grow-1">
-                    <i
-                        class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary opacity-75"></i>
+                    <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary opacity-75"></i>
                     <input type="text" id="clientSearchInput" class="form-control paper-showcase-search-input ps-5"
-                        placeholder="Search starred titles or authors..." name="search" value="{{ request('search') }}">
+                        placeholder="{{ __('stars.search_placeholder') }}" name="search" value="{{ request('search') }}">
                 </div>
 
                 <button class="btn paper-showcase-filter-trigger d-flex align-items-center gap-2" type="button"
                     data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas">
                     <i class="bi bi-sliders2"></i>
-                    <span class="d-none d-md-inline">Filters</span>
+                    <span class="d-none d-md-inline">{{ __('stars.btn_filters') }}</span>
                 </button>
             </div>
         </div>
@@ -40,7 +39,7 @@
 
         <div class="offcanvas offcanvas-end paper-filter-offcanvas" tabindex="-1" id="filterOffcanvas">
             <div class="offcanvas-header border-bottom">
-                <h5 class="offcanvas-title fw-bold">Refine Results</h5>
+                <h5 class="offcanvas-title fw-bold">{{ __('stars.filter_title') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
 
@@ -48,66 +47,66 @@
                 <form id="filterForm" action="{{ url()->current() }}" method="GET">
 
                     <div class="mb-4">
-                        <label class="filter-section-label fw-bold mb-2">Sort By</label>
+                        <label class="filter-section-label fw-bold mb-2">{{ __('stars.label_sort') }}</label>
                         <select class="form-select filter-modern-select" name="sort">
-                            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest First</option>
-                            <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest First</option>
-                            <option value="stars" {{ request('sort') == 'stars' ? 'selected' : '' }}>Most Stars</option>
+                            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>{{ __('stars.sort_newest') }}</option>
+                            <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>{{ __('stars.sort_oldest') }}</option>
+                            <option value="stars" {{ request('sort') == 'stars' ? 'selected' : '' }}>{{ __('stars.sort_stars') }}</option>
                         </select>
                     </div>
 
                     <div class="mb-4">
-                        <label class="filter-section-label fw-bold mb-2">Status</label>
+                        <label class="filter-section-label fw-bold mb-2">{{ __('stars.label_status') }}</label>
                         <div class="d-flex flex-wrap gap-2">
                             <input type="checkbox" class="btn-check" id="status-draft" name="status[]" value="draft"
                                 {{ in_array('draft', request('status', [])) ? 'checked' : '' }}>
                             <label class="btn btn-outline-secondary btn-sm rounded-pill" for="status-draft">
-                                <i class="bi bi-pencil-square me-1"></i> Draft
+                                <i class="bi bi-pencil-square me-1"></i> {{ __('stars.status_draft') }}
                             </label>
 
                             <input type="checkbox" class="btn-check" id="status-finalized" name="status[]" value="finalized"
                                 {{ in_array('finalized', request('status', [])) ? 'checked' : '' }}>
                             <label class="btn btn-outline-secondary btn-sm rounded-pill" for="status-finalized">
-                                <i class="bi bi-check-circle-fill me-1"></i> Finalized
+                                <i class="bi bi-check-circle-fill me-1"></i> {{ __('stars.status_finalized') }}
                             </label>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="filter-section-label fw-bold mb-2">Visibility</label>
+                        <label class="filter-section-label fw-bold mb-2">{{ __('stars.label_visibility') }}</label>
                         <div class="d-flex flex-wrap gap-2">
                             <input type="checkbox" class="btn-check" id="vis-public" name="visibility[]" value="public"
                                 {{ in_array('public', request('visibility', [])) ? 'checked' : '' }}>
                             <label class="btn btn-outline-secondary btn-sm rounded-pill" for="vis-public">
-                                <i class="bi bi-globe-americas me-1"></i> Public
+                                <i class="bi bi-globe-americas me-1"></i> {{ __('stars.vis_public') }}
                             </label>
 
                             <input type="checkbox" class="btn-check" id="vis-private" name="visibility[]" value="private"
                                 {{ in_array('private', request('visibility', [])) ? 'checked' : '' }}>
                             <label class="btn btn-outline-secondary btn-sm rounded-pill" for="vis-private">
-                                <i class="bi bi-lock-fill me-1"></i> Private
+                                <i class="bi bi-lock-fill me-1"></i> {{ __('stars.vis_private') }}
                             </label>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="filter-section-label fw-bold mb-2">Open Collaboration</label>
+                        <label class="filter-section-label fw-bold mb-2">{{ __('stars.label_collab') }}</label>
                         <div class="d-flex flex-wrap gap-2">
                             <input type="checkbox" class="btn-check" id="collab-yes" name="collab[]" value="1"
                                 {{ in_array('1', request('collab', [])) ? 'checked' : '' }}>
-                            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="collab-yes">Yes</label>
+                            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="collab-yes">{{ __('stars.yes') }}</label>
 
                             <input type="checkbox" class="btn-check" id="collab-no" name="collab[]" value="0"
                                 {{ in_array('0', request('collab', [])) ? 'checked' : '' }}>
-                            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="collab-no">No</label>
+                            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="collab-no">{{ __('stars.no') }}</label>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="filter-section-label fw-bold mb-2">Paper Type</label>
+                        <label class="filter-section-label fw-bold mb-2">{{ __('stars.label_type') }}</label>
                         <div class="multi-select-wrapper" id="paper-type-wrapper">
                             <div class="multi-select-box">
-                                <input type="text" class="search-input-tag" placeholder="Search types..."
+                                <input type="text" class="search-input-tag" placeholder="{{ __('stars.search_types') }}"
                                     autocomplete="off">
                             </div>
                             <div class="multi-select-dropdown"></div>
@@ -116,10 +115,10 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="filter-section-label fw-bold mb-2">Research Field</label>
+                        <label class="filter-section-label fw-bold mb-2">{{ __('stars.label_field') }}</label>
                         <div class="multi-select-wrapper" id="research-field-wrapper">
                             <div class="multi-select-box">
-                                <input type="text" class="search-input-tag" placeholder="Search fields..."
+                                <input type="text" class="search-input-tag" placeholder="{{ __('stars.search_fields') }}"
                                     autocomplete="off">
                             </div>
                             <div class="multi-select-dropdown"></div>
@@ -138,12 +137,12 @@
                 <div class="d-flex gap-2">
                     <a href="{{ url()->current() }}"
                         class="btn btn-light flex-grow-1 border fw-bold text-decoration-none text-center pt-2">
-                        Clear
+                        {{ __('stars.btn_clear') }}
                     </a>
                     <button type="button"
                         class="btn paper-showcase-create-action flex-grow-1 w-100 justify-content-center"
                         onclick="document.getElementById('filterForm').submit();">
-                        Apply Filters
+                        {{ __('stars.btn_apply') }}
                     </button>
                 </div>
             </div>
@@ -172,8 +171,8 @@
 
                                 @if ($paper->openCollaboration)
                                     <span class="paper-status-badge collab-open"
-                                        title="This author is looking for collaborators">
-                                        <i class="bi bi-people-fill me-1"></i> Open Collab
+                                        title="Looking for collaborators">
+                                        <i class="bi bi-people-fill me-1"></i> {{ __('stars.badge_collab') }}
                                     </span>
                                 @endif
                             </div>
@@ -184,7 +183,7 @@
 
                             <div class="d-flex align-items-center gap-2 mb-2">
                                 <span class="small text-muted fw-bold text-uppercase"
-                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">Fields:</span>
+                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">{{ __('stars.fields') }}</span>
                                 @foreach ($paper->researchFields as $researchField)
                                     <span
                                         class="badge bg-light text-secondary border fw-bold">{{ $researchField->name }}</span>
@@ -219,7 +218,7 @@
 
                                 <div class="col-auto">
                                     <span class="paper-meta-text text-muted">
-                                        Updated {{ $paper->updated_at->diffForHumans() }}
+                                        {{ __('stars.updated') }} {{ $paper->updated_at->diffForHumans() }}
                                     </span>
                                 </div>
 
@@ -233,7 +232,7 @@
 
                             <button class="btn {{ $isStarred ? 'btn-warning' : 'paper-action-star-btn' }}"
                                 id="star-btn-{{ $paper->paperId }}" onclick="toggleStar(`{{ $paper->paperId }}`)"
-                                title="Unstar this paper">
+                                title="{{ __('stars.tooltip_unstar') }}">
 
                                 <i class="bi {{ $isStarred ? 'bi-star-fill' : 'bi-star' }}"
                                     id="star-icon-{{ $paper->paperId }}"></i>
@@ -250,18 +249,18 @@
                     <div class="empty-state-icon">
                         <i class="bi bi-star"></i>
                     </div>
-                    <h4 class="fw-bold text-dark mb-2">No Starred Papers Yet</h4>
+                    <h4 class="fw-bold text-dark mb-2">{{ __('stars.empty_title') }}</h4>
                     @if ($isCurrentUser)
                         <p class="text-muted mb-4 col-md-8 mx-auto" style="font-size: 0.95rem; line-height: 1.6;">
-                            You haven't starred any papers yet (or no papers match your filters).
+                            {{ __('stars.empty_self') }}
                         </p>
                         <a href="/" class="btn paper-showcase-create-action d-flex align-items-center gap-2">
                             <i class="bi bi-compass"></i>
-                            Explore Papers
+                            {{ __('stars.btn_explore') }}
                         </a>
                     @else
                         <p class="text-muted mb-4 col-md-8 mx-auto" style="font-size: 0.95rem; line-height: 1.6;">
-                            This user hasn't starred any papers yet (or no papers match your filters).
+                            {{ __('stars.empty_other') }}
                         </p>
                     @endif
 
@@ -272,14 +271,13 @@
                 <div class="text-muted opacity-50 mb-2">
                     <i class="bi bi-search" style="font-size: 3rem;"></i>
                 </div>
-                <h5 class="fw-bold text-muted">No matching papers found</h5>
-                <p class="text-muted small">Try adjusting your search terms.</p>
+                <h5 class="fw-bold text-muted">{{ __('stars.no_match_title') }}</h5>
+                <p class="text-muted small">{{ __('stars.no_match_desc') }}</p>
             </div>
         </div>
     </div>
 
     @push('scripts')
-        {{-- Client Side Search Logic --}}
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const searchInput = document.getElementById('clientSearchInput');
@@ -315,8 +313,9 @@
                 }
             });
         </script>
+    @endpush
 
-        {{-- Multi-Select Dropdown Logic --}}
+    @push('scripts')
         <script type="module">
             document.addEventListener('DOMContentLoaded', function() {
                 function initMultiSelect(wrapperId, data, inputName) {
@@ -434,8 +433,9 @@
                 }
             });
         </script>
+    @endpush
 
-        {{-- Star Toggle Logic --}}
+    @push('scripts')
         <script>
             async function toggleStar(paperId) {
                 const btn = document.getElementById(`star-btn-${paperId}`);

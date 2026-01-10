@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Create New Paper')
+@section('title', __('papersCreate.title'))
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/papers.css') }}">
@@ -13,9 +13,9 @@
             <div class="col-lg-8">
 
                 <div class="mb-5 border-bottom pb-3">
-                    <h2 class="fw-bold text-dark mb-1">Create a new paper repository</h2>
+                    <h2 class="fw-bold text-dark mb-1">{{ __('papersCreate.header_title') }}</h2>
                     <p class="text-muted">
-                        A paper repository contains all your paper informations, and the final PDF version.
+                        {{ __('papersCreate.header_desc') }}
                     </p>
                 </div>
 
@@ -23,7 +23,7 @@
                     @csrf
 
                     <div class="mb-4">
-                        <label class="form-label fw-bold text-dark">Owner & Paper Title <span
+                        <label class="form-label fw-bold text-dark">{{ __('papersCreate.label_owner_title') }} <span
                                 class="text-danger">*</span></label>
                         <div class="d-flex align-items-center gap-2">
 
@@ -38,16 +38,16 @@
 
                             <div class="flex-grow-1">
                                 <input type="text" name="title" class="form-control paper-form-input"
-                                    placeholder="e.g. Analysis of AI Transformers" required autofocus>
+                                    placeholder="{{ __('papersCreate.placeholder_title') }}" required autofocus>
                             </div>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label fw-bold text-dark">Description <span
-                                class="text-muted fw-normal">(Optional)</span></label>
+                        <label class="form-label fw-bold text-dark">{{ __('papersCreate.label_description') }} <span
+                                class="text-muted fw-normal">{{ __('papersCreate.optional') }}</span></label>
                         <textarea name="description" class="form-control paper-form-input" rows="3"
-                            placeholder="Briefly describe what this research is about..."></textarea>
+                            placeholder="{{ __('papersCreate.placeholder_description') }}"></textarea>
                     </div>
 
                     <hr class="my-4 text-secondary opacity-25">
@@ -56,9 +56,9 @@
                         <div class="row g-3">
 
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-dark mb-1">Paper Type</label>
+                                <label class="form-label fw-bold text-dark mb-1">{{ __('papersCreate.label_type') }}</label>
                                 <select name="paperType" class="form-select paper-form-select" required>
-                                    <option value="" disabled selected>Select The Paper Type...</option>
+                                    <option value="" disabled selected>{{ __('papersCreate.select_type') }}</option>
                                     @foreach ($paperTypes as $paperType)
                                         <option value="{{ $paperType->paperTypeId }}">{{ $paperType->name }}</option>
                                     @endforeach
@@ -67,8 +67,8 @@
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold text-dark mb-1">
-                                    Research Fields <span class="text-danger">*</span>
-                                    <span class="text-muted fw-normal small ms-1">(Max 3)</span>
+                                    {{ __('papersCreate.label_fields') }} <span class="text-danger">*</span>
+                                    <span class="text-muted fw-normal small ms-1">{{ __('papersCreate.max_fields') }}</span>
                                 </label>
 
                                 <div class="field-selector-wrapper position-relative" id="fieldSelector">
@@ -79,7 +79,7 @@
                                         <input type="text" id="field-search-input"
                                             class="border-0 bg-transparent p-0 m-0"
                                             style="outline: none; flex-grow: 1; min-width: 100px;"
-                                            placeholder="Select or search..." autocomplete="off">
+                                            placeholder="{{ __('papersCreate.placeholder_fields') }}" autocomplete="off">
                                     </div>
 
                                     <div class="field-dropdown-menu shadow-sm border rounded-3 mt-1 d-none" id="field-list">
@@ -89,12 +89,17 @@
                                     </div>
 
                                     <div id="field-error-msg" class="text-danger small mt-1 d-none">
-                                        Please select at least one research field.
+                                        {{ __('papersCreate.error_fields') }}
                                     </div>
                                 </div>
 
                                 <script>
                                     window.researchFieldsData = {!! json_encode($researchFields) !!};
+                                    window.lang = {
+                                        no_fields_found: "{{ __('papersCreate.no_fields_found') }}",
+                                        max_tooltip: "{{ __('papersCreate.max_tooltip') }}",
+                                        placeholder: "{{ __('papersCreate.placeholder_fields') }}"
+                                    };
                                 </script>
                             </div>
 
@@ -104,7 +109,7 @@
                     <hr class="my-4 text-secondary opacity-25">
 
                     <div class="mb-5">
-                        <label class="form-label fw-bold text-dark mb-3">Visibility</label>
+                        <label class="form-label fw-bold text-dark mb-3">{{ __('papersCreate.label_visibility') }}</label>
 
                         <div class="visibility-option mb-2">
                             <input type="radio" name="visibility" id="vis-public" value="public" checked>
@@ -113,9 +118,8 @@
                                     <i class="bi bi-globe-americas fs-4"></i>
                                 </div>
                                 <div>
-                                    <div class="fw-bold text-dark">Public</div>
-                                    <div class="small text-muted">Anyone on the internet can see this repository. You choose
-                                        who can edit.</div>
+                                    <div class="fw-bold text-dark">{{ __('papersCreate.vis_public') }}</div>
+                                    <div class="small text-muted">{{ __('papersCreate.vis_public_desc') }}</div>
                                 </div>
                             </label>
                         </div>
@@ -127,8 +131,8 @@
                                     <i class="bi bi-lock-fill fs-4"></i>
                                 </div>
                                 <div>
-                                    <div class="fw-bold text-dark">Private</div>
-                                    <div class="small text-muted">You choose who can see and edit to this repository.
+                                    <div class="fw-bold text-dark">{{ __('papersCreate.vis_private') }}</div>
+                                    <div class="small text-muted">{{ __('papersCreate.vis_private_desc') }}
                                     </div>
                                 </div>
                             </label>
@@ -137,9 +141,10 @@
 
                     <div class="d-flex align-items-center gap-3 border-top pt-4">
                         <button type="submit" class="btn btn-create-repo py-2 px-4">
-                            Create Repository
+                            {{ __('papersCreate.btn_create') }}
                         </button>
-                        <a href="/{{ Auth::user()->profileId }}/papers" class="btn btn-link text-decoration-none text-secondary">Cancel</a>
+                        <a href="/{{ Auth::user()->profileId }}/papers"
+                            class="btn btn-link text-decoration-none text-secondary">{{ __('papersCreate.btn_cancel') }}</a>
                     </div>
 
                 </form>
@@ -210,7 +215,7 @@
                     dropdown.innerHTML = '';
 
                     if (fields.length === 0) {
-                        dropdown.innerHTML = '<div class="p-2 text-muted small text-center">No fields found</div>';
+                        dropdown.innerHTML = `<div class="p-2 text-muted small text-center">${window.lang.no_fields_found}</div>`;
                         return;
                     }
 
@@ -227,7 +232,7 @@
                             div.classList.add('selected');
                         } else if (isFull) {
                             div.classList.add('disabled');
-                            div.title = "Maximum 3 fields allowed";
+                            div.title = window.lang.max_tooltip;
                         }
 
                         // Click Handler
@@ -297,7 +302,7 @@
                     if (selectedIds.length > 0) {
                         searchInput.placeholder = "";
                     } else {
-                        searchInput.placeholder = "Select or search...";
+                        searchInput.placeholder = window.lang.placeholder;
                     }
                 }
 

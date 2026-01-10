@@ -309,7 +309,7 @@ class AdminController extends Controller
 
     public function manageUserReport($reportId, Request $request){
         $report = Report::where("id", $reportId)->first();
-        
+
         $report->update([
             "status" => $request["status"]
         ]);

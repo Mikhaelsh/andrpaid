@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Workspace - ' . $paper->title)
+@section('title', __('paperWorkspace.title_prefix') . $paper->title)
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/paper.css') }}">
@@ -12,8 +12,8 @@
     <div class="container py-5">
         <div class="d-flex justify-content-between align-items-center mb-5">
             <div>
-                <h3 class="fw-bold text-dark mb-1">Research Workspace</h3>
-                <p class="text-muted mb-0">Select a module to begin writing or editing.</p>
+                <h3 class="fw-bold text-dark mb-1">{{ __('paperWorkspace.header_title') }}</h3>
+                <p class="text-muted mb-0">{{ __('paperWorkspace.header_desc') }}</p>
             </div>
         </div>
 
@@ -33,16 +33,16 @@
 
                             @if($paper->lit_review_finalized)
                                 <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
-                                    <i class="bi bi-check-lg me-1"></i> Finalized
+                                    <i class="bi bi-check-lg me-1"></i> {{ __('paperWorkspace.status_finalized') }}
                                 </span>
                             @elseif($refCount > 0)
-                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">In Progress</span>
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">{{ __('paperWorkspace.status_in_progress') }}</span>
                             @else
-                                <span class="badge bg-light text-secondary border">Draft</span>
+                                <span class="badge bg-light text-secondary border">{{ __('paperWorkspace.status_draft') }}</span>
                             @endif
                         </div>
-                        <h5 class="fw-bold text-dark mb-2">Literature Review</h5>
-                        <p class="text-muted small mb-4">Manage references, key points, and synthesize your theoretical framework.</p>
+                        <h5 class="fw-bold text-dark mb-2">{{ __('paperWorkspace.module_lit_review') }}</h5>
+                        <p class="text-muted small mb-4">{{ __('paperWorkspace.desc_lit_review') }}</p>
 
                         <div class="d-flex justify-content-between align-items-center border-top pt-3">
                             @php
@@ -51,8 +51,8 @@
                                 $refCount = is_array($refs) ? count($refs) : 0;
                             @endphp
 
-                            <span class="small text-muted">{{ $refCount }} References</span>
-                            <span class="small fw-bold text-primary">Open <i class="bi bi-arrow-right ms-1"></i></span>
+                            <span class="small text-muted">{{ __('paperWorkspace.footer_references', ['count' => $refCount]) }}</span>
+                            <span class="small fw-bold text-primary">{{ __('paperWorkspace.open') }} <i class="bi bi-arrow-right ms-1"></i></span>
                         </div>
                     </div>
                 </a>
@@ -68,26 +68,26 @@
 
                             @if($paper->methodology_finalized)
                                 <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
-                                    <i class="bi bi-check-lg me-1"></i> Finalized
+                                    <i class="bi bi-check-lg me-1"></i> {{ __('paperWorkspace.status_finalized') }}
                                 </span>
                             @elseif(!empty($paper->methodology_xml))
-                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">In Progress</span>
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">{{ __('paperWorkspace.status_in_progress') }}</span>
                             @else
-                                <span class="badge bg-light text-secondary border">Empty</span>
+                                <span class="badge bg-light text-secondary border">{{ __('paperWorkspace.status_empty') }}</span>
                             @endif
                         </div>
-                        <h5 class="fw-bold text-dark mb-2">Methodology</h5>
-                        <p class="text-muted small mb-4">Design your research flow, diagram your process, and define variables.</p>
+                        <h5 class="fw-bold text-dark mb-2">{{ __('paperWorkspace.module_methodology') }}</h5>
+                        <p class="text-muted small mb-4">{{ __('paperWorkspace.desc_methodology') }}</p>
 
                         <div class="d-flex justify-content-between align-items-center border-top pt-3">
                             <span class="small text-muted">
                                 @if(!empty($paper->methodology_xml))
-                                    Diagram available
+                                    {{ __('paperWorkspace.footer_diagram_available') }}
                                 @else
-                                    No diagrams yet
+                                    {{ __('paperWorkspace.footer_no_diagrams') }}
                                 @endif
                             </span>
-                            <span class="small fw-bold text-primary">Open <i class="bi bi-arrow-right ms-1"></i></span>
+                            <span class="small fw-bold text-primary">{{ __('paperWorkspace.open') }} <i class="bi bi-arrow-right ms-1"></i></span>
                         </div>
                     </div>
                 </a>
@@ -108,16 +108,16 @@
 
                             @if($paper->results_finalized)
                                 <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
-                                    <i class="bi bi-check-lg me-1"></i> Finalized
+                                    <i class="bi bi-check-lg me-1"></i> {{ __('paperWorkspace.status_finalized') }}
                                 </span>
                             @elseif($hasItems)
-                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">In Progress</span>
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">{{ __('paperWorkspace.status_in_progress') }}</span>
                             @else
-                                <span class="badge bg-light text-secondary border">Empty</span>
+                                <span class="badge bg-light text-secondary border">{{ __('paperWorkspace.status_empty') }}</span>
                             @endif
                         </div>
-                        <h5 class="fw-bold text-dark mb-2">Results & Analysis</h5>
-                        <p class="text-muted small mb-4">Visualize your data using charts and tables, and interpret the findings.</p>
+                        <h5 class="fw-bold text-dark mb-2">{{ __('paperWorkspace.module_results') }}</h5>
+                        <p class="text-muted small mb-4">{{ __('paperWorkspace.desc_results') }}</p>
 
                         <div class="d-flex justify-content-between align-items-center border-top pt-3">
                             @php
@@ -130,9 +130,9 @@
                                 }
                             @endphp
                             <span class="small text-muted">
-                                {{ $tableCount }} Tables, {{ $chartCount }} Charts
+                                {{ __('paperWorkspace.footer_results_count', ['tables' => $tableCount, 'charts' => $chartCount]) }}
                             </span>
-                            <span class="small fw-bold text-primary">Open <i class="bi bi-arrow-right ms-1"></i></span>
+                            <span class="small fw-bold text-primary">{{ __('paperWorkspace.open') }} <i class="bi bi-arrow-right ms-1"></i></span>
                         </div>
                     </div>
                 </a>
@@ -152,22 +152,22 @@
 
                             @if($paper->conclusion_finalized)
                                 <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
-                                    <i class="bi bi-check-lg me-1"></i> Finalized
+                                    <i class="bi bi-check-lg me-1"></i> {{ __('paperWorkspace.status_finalized') }}
                                 </span>
                             @elseif($hasContent)
-                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">In Progress</span>
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">{{ __('paperWorkspace.status_in_progress') }}</span>
                             @else
-                                <span class="badge bg-light text-secondary border">Draft</span>
+                                <span class="badge bg-light text-secondary border">{{ __('paperWorkspace.status_draft') }}</span>
                             @endif
                         </div>
-                        <h5 class="fw-bold text-dark mb-2">Conclusion</h5>
-                        <p class="text-muted small mb-4">Summarize findings, limitations, and propose future research directions.</p>
+                        <h5 class="fw-bold text-dark mb-2">{{ __('paperWorkspace.module_conclusion') }}</h5>
+                        <p class="text-muted small mb-4">{{ __('paperWorkspace.desc_conclusion') }}</p>
 
                         <div class="d-flex justify-content-between align-items-center border-top pt-3">
                             <span class="small text-muted">
-                                {{ $hasContent ? 'Draft started' : 'Not started' }}
+                                {{ $hasContent ? __('paperWorkspace.footer_draft_started') : __('paperWorkspace.footer_not_started') }}
                             </span>
-                            <span class="small fw-bold text-primary">Open <i class="bi bi-arrow-right ms-1"></i></span>
+                            <span class="small fw-bold text-primary">{{ __('paperWorkspace.open') }} <i class="bi bi-arrow-right ms-1"></i></span>
                         </div>
                     </div>
                 </a>

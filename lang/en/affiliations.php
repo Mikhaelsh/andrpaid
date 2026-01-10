@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'title' => 'Manage Affiliations',
+    'header_title' => 'Affiliations',
+    'header_desc' => 'Manage lecturer requests and view your university\'s network.',
+    'stat_total' => 'Total Lecturers',
+    'stat_pending' => 'Pending Requests',
+    'pending_section_title' => 'Pending Verification Requests (:count)',
+    'th_lecturer' => 'Lecturer',
+    'th_nidn' => 'NIDN',
+    'th_requested' => 'Requested On',
+    'th_actions' => 'Actions',
+    'btn_reject' => 'Reject',
+    'btn_verify' => 'Verify',
+    'modal_reject_title' => 'Reject Request',
+    'modal_reject_desc' => 'Please provide a reason for rejecting',
+    'placeholder_reason' => 'Reason (e.g. Invalid NIDN)',
+    'btn_cancel' => 'Cancel',
+    'btn_confirm_reject' => 'Confirm Reject',
+    'affiliated_section_title' => 'Affiliated Lecturers',
+    'th_joined' => 'Joined',
+    'th_status' => 'Status',
+    'status_verified' => 'Verified',
+    'empty_state' => 'No lecturers affiliated yet.',
+];

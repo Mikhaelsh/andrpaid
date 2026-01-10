@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Papers')
+@section('title', __('papers.title'))
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/profile.css') }}">
@@ -11,8 +11,8 @@
 
     <div style="background-color: #0d1117; padding-top: 2rem;">
         <div class="container text-white pb-3">
-            <h3>{{ $user->name }}'s Papers</h3>
-            <p>{{ $papers->count() ?? 'No' }} Paper{{ $papers->count() <= 1 ? '' : 's' }}</p>
+            <h3>{{ __('papers.header_title', ['name' => $user->name]) }}</h3>
+            <p>{{ $papers->count() > 0 ? trans_choice('papers.paper_count', $papers->count()) : __('papers.no_papers_count') }}</p>
         </div>
     </div>
 
@@ -23,16 +23,15 @@
             <div class="paper-showcase-control-bar d-flex flex-grow-1 gap-2 w-90 p-2">
 
                 <div class="position-relative flex-grow-1">
-                    <i
-                        class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary opacity-75"></i>
+                    <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary opacity-75"></i>
                     <input type="text" id="clientSearchInput" class="form-control paper-showcase-search-input ps-5"
-                        placeholder="Search titles or authors..." name="search" value="{{ request('search') }}">
+                        placeholder="{{ __('papers.search_placeholder') }}" name="search" value="{{ request('search') }}">
                 </div>
 
                 <button class="btn paper-showcase-filter-trigger d-flex align-items-center gap-2" type="button"
                     data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas">
                     <i class="bi bi-sliders2"></i>
-                    <span class="d-none d-md-inline">Filters</span>
+                    <span class="d-none d-md-inline">{{ __('papers.btn_filters') }}</span>
                 </button>
             </div>
 
@@ -40,7 +39,7 @@
                 @if ($user->lecturer->id === Auth::user()->lecturer->id)
                     <a href="/papers/create" class="btn paper-showcase-create-action d-flex align-items-center gap-2">
                         <div class="icon-box"><i class="bi bi-plus-lg"></i></div>
-                        <span>New Paper</span>
+                        <span>{{ __('papers.btn_new_paper') }}</span>
                     </a>
                 @endif
             @endlecturer
@@ -49,7 +48,7 @@
 
         <div class="offcanvas offcanvas-end paper-filter-offcanvas" tabindex="-1" id="filterOffcanvas">
             <div class="offcanvas-header border-bottom">
-                <h5 class="offcanvas-title fw-bold">Refine Results</h5>
+                <h5 class="offcanvas-title fw-bold">{{ __('papers.filter_title') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
 
@@ -57,64 +56,64 @@
                 <form id="filterForm" action="{{ url()->current() }}" method="GET">
 
                     <div class="mb-4">
-                        <label class="filter-section-label fw-bold mb-2">Sort By</label>
+                        <label class="filter-section-label fw-bold mb-2">{{ __('papers.label_sort') }}</label>
                         <select class="form-select filter-modern-select" name="sort">
-                            <option value="newest" selected>Newest First</option>
-                            <option value="oldest">Oldest First</option>
-                            <option value="stars">Most Stars</option>
+                            <option value="newest" selected>{{ __('papers.sort_newest') }}</option>
+                            <option value="oldest">{{ __('papers.sort_oldest') }}</option>
+                            <option value="stars">{{ __('papers.sort_stars') }}</option>
                         </select>
                     </div>
 
                     <div class="mb-4">
-                        <label class="filter-section-label fw-bold mb-2">Status</label>
+                        <label class="filter-section-label fw-bold mb-2">{{ __('papers.label_status') }}</label>
                         <div class="d-flex flex-wrap gap-2">
                             <input type="checkbox" class="btn-check" id="status-draft" name="status[]" value="draft">
                             <label class="btn btn-outline-secondary btn-sm rounded-pill" for="status-draft">
-                                <i class="bi bi-pencil-square me-1"></i> Draft
+                                <i class="bi bi-pencil-square me-1"></i> {{ __('papers.status_draft') }}
                             </label>
 
                             <input type="checkbox" class="btn-check" id="status-finalized" name="status[]"
                                 value="finalized">
                             <label class="btn btn-outline-secondary btn-sm rounded-pill" for="status-finalized">
-                                <i class="bi bi-check-circle-fill me-1"></i> Finalized
+                                <i class="bi bi-check-circle-fill me-1"></i> {{ __('papers.status_finalized') }}
                             </label>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="filter-section-label fw-bold mb-2">Visibility</label>
+                        <label class="filter-section-label fw-bold mb-2">{{ __('papers.label_visibility') }}</label>
                         <div class="d-flex flex-wrap gap-2">
                             <input type="checkbox" class="btn-check" id="vis-public" name="visibility[]" value="public"
                                 checked>
                             <label class="btn btn-outline-secondary btn-sm rounded-pill" for="vis-public">
-                                <i class="bi bi-globe-americas me-1"></i> Public
+                                <i class="bi bi-globe-americas me-1"></i> {{ __('papers.vis_public') }}
                             </label>
 
                             <input type="checkbox" class="btn-check" id="vis-private" name="visibility[]" value="private">
                             <label class="btn btn-outline-secondary btn-sm rounded-pill" for="vis-private">
-                                <i class="bi bi-lock-fill me-1"></i> Private
+                                <i class="bi bi-lock-fill me-1"></i> {{ __('papers.vis_private') }}
                             </label>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="filter-section-label fw-bold mb-2">Open Collaboration</label>
+                        <label class="filter-section-label fw-bold mb-2">{{ __('papers.label_collab') }}</label>
                         <div class="d-flex flex-wrap gap-2">
                             <input type="checkbox" class="btn-check" id="collab-yes" name="collab[]" value="1"
                                 {{ in_array('1', request('collab', [])) ? 'checked' : '' }}>
-                            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="collab-yes">Yes</label>
+                            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="collab-yes">{{ __('papers.yes') }}</label>
 
                             <input type="checkbox" class="btn-check" id="collab-no" name="collab[]" value="0"
                                 {{ in_array('0', request('collab', [])) ? 'checked' : '' }}>
-                            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="collab-no">No</label>
+                            <label class="btn btn-outline-secondary btn-sm rounded-pill" for="collab-no">{{ __('papers.no') }}</label>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="filter-section-label fw-bold mb-2">Paper Type</label>
+                        <label class="filter-section-label fw-bold mb-2">{{ __('papers.label_type') }}</label>
                         <div class="multi-select-wrapper" id="paper-type-wrapper">
                             <div class="multi-select-box">
-                                <input type="text" class="search-input-tag" placeholder="Search types..."
+                                <input type="text" class="search-input-tag" placeholder="{{ __('papers.search_types') }}"
                                     autocomplete="off">
                             </div>
                             <div class="multi-select-dropdown"></div>
@@ -123,10 +122,10 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="filter-section-label fw-bold mb-2">Research Field</label>
+                        <label class="filter-section-label fw-bold mb-2">{{ __('papers.label_field') }}</label>
                         <div class="multi-select-wrapper" id="research-field-wrapper">
                             <div class="multi-select-box">
-                                <input type="text" class="search-input-tag" placeholder="Search fields..."
+                                <input type="text" class="search-input-tag" placeholder="{{ __('papers.search_fields') }}"
                                     autocomplete="off">
                             </div>
                             <div class="multi-select-dropdown"></div>
@@ -145,13 +144,13 @@
                 <div class="d-flex gap-2">
                     <a href="{{ url()->current() }}"
                         class="btn btn-light flex-grow-1 border fw-bold text-decoration-none text-center pt-2">
-                        Clear
+                        {{ __('papers.btn_clear') }}
                     </a>
 
                     <button type="button"
                         class="btn paper-showcase-create-action flex-grow-1 w-100 justify-content-center"
                         onclick="document.getElementById('filterForm').submit();">
-                        Apply Filters
+                        {{ __('papers.btn_apply') }}
                     </button>
                 </div>
             </div>
@@ -179,7 +178,7 @@
 
                                 @if ($paper->openCollaboration)
                                     <span class="paper-status-badge collab-open" title="Looking for collaborators">
-                                        <i class="bi bi-people-fill me-1"></i> Open Collab
+                                        <i class="bi bi-people-fill me-1"></i> {{ __('papers.badge_collab') }}
                                     </span>
                                 @endif
                             </div>
@@ -190,7 +189,7 @@
 
                             <div class="d-flex align-items-center gap-2 mb-2">
                                 <span class="small text-muted fw-bold text-uppercase"
-                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">Fields:</span>
+                                    style="font-size: 0.7rem; letter-spacing: 0.05em;">{{ __('papers.fields') }}</span>
                                 @foreach ($paper->researchFields as $researchField)
                                     <span
                                         class="badge bg-light text-secondary border fw-bold">{{ $researchField->name }}</span>
@@ -224,7 +223,7 @@
 
                                 <div class="col-auto">
                                     <span class="paper-meta-text text-muted">
-                                        Updated {{ $paper->updated_at->diffForHumans() }}
+                                        {{ __('papers.updated') }} {{ $paper->updated_at->diffForHumans() }}
                                     </span>
                                 </div>
 
@@ -240,7 +239,7 @@
 
                                 <button class="btn {{ $isStarred ? 'btn-warning' : 'paper-action-star-btn' }}"
                                     id="star-btn-{{ $paper->paperId }}" onclick="toggleStar(`{{ $paper->paperId }}`)"
-                                    title="Star this paper">
+                                    title="{{ __('papers.tooltip_star') }}">
 
                                     <i class="bi {{ $isStarred ? 'bi-star-fill' : 'bi-star' }}"
                                         id="star-icon-{{ $paper->paperId }}"></i>
@@ -254,13 +253,12 @@
                     <div class="empty-state-icon">
                         <i class="bi bi-folder2-open"></i>
                     </div>
-                    <h4 class="fw-bold text-dark mb-2">No Research Papers Yet</h4>
+                    <h4 class="fw-bold text-dark mb-2">{{ __('papers.empty_title') }}</h4>
                     <p class="text-muted mb-4 col-md-8 mx-auto" style="font-size: 0.95rem; line-height: 1.6;">
                         @if ($user->isLecturer())
-                            It looks like you haven't created any paper repositories.
-                            Start documenting your research, manage drafts, and collaborate with another lecturer here.
+                            {{ __('papers.empty_lecturer') }}
                         @else
-                            No publications have been uploaded by affiliated researchers yet.
+                            {{ __('papers.empty_university') }}
                             @endlecturer
                     </p>
 
@@ -268,7 +266,7 @@
                         @if ($user->lecturer->id === Auth::user()->lecturer->id)
                             <a href="/papers/create" class="btn paper-showcase-create-action d-flex align-items-center gap-2">
                                 <i class="bi bi-plus-lg"></i>
-                                Create New Paper Repository
+                                {{ __('papers.btn_create') }}
                             </a>
                         @endif
                     @endlecturer
@@ -279,8 +277,8 @@
                 <div class="text-muted opacity-50 mb-2">
                     <i class="bi bi-search" style="font-size: 3rem;"></i>
                 </div>
-                <h5 class="fw-bold text-muted">No matching papers found</h5>
-                <p class="text-muted small">Try adjusting your search terms.</p>
+                <h5 class="fw-bold text-muted">{{ __('papers.no_match_title') }}</h5>
+                <p class="text-muted small">{{ __('papers.no_match_desc') }}</p>
             </div>
         </div>
     </div>
@@ -298,12 +296,12 @@
                             <i class="bi bi-check-lg custom-icon"></i>
                         </div>
 
-                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <h4 class="fw-bold mb-3 heading-text">{{ __('common.success') }}</h4>
                         <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
 
                         <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm"
                             data-bs-dismiss="modal">
-                            CONTINUE
+                            {{ __('common.continue') }}
                         </button>
                     </div>
 
@@ -453,9 +451,9 @@
                                 const tag = document.createElement('div');
                                 tag.className = 'selected-tag';
                                 tag.innerHTML = `
-                            ${item.name}
-                            <span class="remove-tag">&times;</span>
-                        `;
+                                ${item.name}
+                                <span class="remove-tag">&times;</span>
+                            `;
 
                                 tag.querySelector('.remove-tag').addEventListener('click', (e) => {
                                     e.stopPropagation();
@@ -522,8 +520,7 @@
                         });
 
                         const data = await response.json();
-
-                        // Update UI based on server response
+                        
                         if (data.is_starred) {
                             btn.classList.remove('paper-action-star-btn');
                             btn.classList.add('btn-warning');
@@ -542,7 +539,6 @@
                             }
                         }
 
-                        // Update the number
                         countSpan.innerText = data.new_count;
 
                     } catch (error) {

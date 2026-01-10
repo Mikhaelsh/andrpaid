@@ -13,6 +13,6 @@ class ActivityLogSeeder extends Seeder
      */
     public function run(): void
     {
-        ActivityLog::factory(300)->create();
+        ActivityLog::factory(5)->create();
     }
 }

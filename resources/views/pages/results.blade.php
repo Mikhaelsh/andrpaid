@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Results & Analysis - ' . $paper->title)
+@section('title', __('results.title_prefix') . $paper->title)
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/paper.css') }}">
@@ -19,7 +19,7 @@
         <div class="mb-4">
             <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/workspace"
                 class="text-decoration-none text-muted small fw-bold">
-                <i class="bi bi-arrow-left me-1"></i> Back to Workspace
+                <i class="bi bi-arrow-left me-1"></i> {{ __('results.back_workspace') }}
             </a>
         </div>
 
@@ -30,7 +30,7 @@
                         style="width: 45px; height: 45px; font-size: 1.2rem; display:flex; align-items:center; justify-content:center; border-radius:8px;">
                         <i class="bi bi-bar-chart-fill"></i>
                     </div>
-                    <h3 class="fw-bold text-dark mb-0">Results & Analysis</h3>
+                    <h3 class="fw-bold text-dark mb-0">{{ __('results.header_title') }}</h3>
                 </div>
 
                 <div class="d-flex align-items-center gap-2">
@@ -48,16 +48,16 @@
                         }
                     @endphp
                     <p class="text-muted mb-0 ms-1">
-                        {{ $chartCount }} Charts • {{ $tableCount }} Tables
+                        {{ __('results.counts_text', ['charts' => $chartCount, 'tables' => $tableCount]) }}
                     </p>
 
                     @if ($isLocked)
                         <span
                             class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 ms-2">
-                            <i class="bi bi-lock-fill me-1"></i> Finalized
+                            <i class="bi bi-lock-fill me-1"></i> {{ __('results.status_finalized') }}
                         </span>
                     @else
-                        <span class="badge bg-light text-secondary border ms-2">Draft Mode</span>
+                        <span class="badge bg-light text-secondary border ms-2">{{ __('results.status_draft') }}</span>
                     @endif
                 </div>
             </div>
@@ -67,12 +67,13 @@
                     <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/finalize-results" method="POST">
                         @csrf
                         @if ($isLocked)
-                            <button type="submit" class="btn btn-outline-success btn-sm me-2" title="Click to Reopen">
-                                <i class="bi bi-check-circle-fill me-1"></i> Finalized
+                            <button type="submit" class="btn btn-outline-success btn-sm me-2"
+                                title="{{ __('results.tooltip_reopen') }}">
+                                <i class="bi bi-check-circle-fill me-1"></i> {{ __('results.status_finalized') }}
                             </button>
                         @else
                             <button type="submit" class="btn btn-dark btn-sm me-2">
-                                <i class="bi bi-check2-circle me-1"></i> Finalize Results
+                                <i class="bi bi-check2-circle me-1"></i> {{ __('results.btn_finalize') }}
                             </button>
                         @endif
                     </form>
@@ -82,11 +83,11 @@
                     <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/add-table" method="POST">
                         @csrf
                         <button type="submit" class="btn btn-outline-dark btn-sm">
-                            <i class="bi bi-table me-1"></i> Create Table
+                            <i class="bi bi-table me-1"></i> {{ __('results.btn_create_table') }}
                         </button>
                     </form>
                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addChartModal">
-                        <i class="bi bi-image me-1"></i> Insert Chart
+                        <i class="bi bi-image me-1"></i> {{ __('results.btn_insert_chart') }}
                     </button>
                 @endif
             </div>
@@ -97,8 +98,8 @@
                 @if (empty($paper->results_data))
                     <div class="text-center py-5 border rounded-3 bg-light">
                         <i class="bi bi-bar-chart-steps empty-state-icon"></i>
-                        <h5 class="fw-bold text-muted">No Results Added</h5>
-                        <p class="text-muted small mb-0">Insert charts or create tables to document your findings.</p>
+                        <h5 class="fw-bold text-muted">{{ __('results.empty_title') }}</h5>
+                        <p class="text-muted small mb-0">{{ __('results.empty_desc') }}</p>
                     </div>
                 @else
                     @foreach ($paper->results_data as $item)
@@ -110,7 +111,7 @@
                                 </span>
                                 @if ($canInteract)
                                     <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/delete"
-                                        method="POST" onsubmit="return confirm('Delete this item?');">
+                                        method="POST" onsubmit="return confirm('{{ __('results.confirm_delete') }}');">
                                         @csrf
                                         <input type="hidden" name="item_id" value="{{ $item['id'] }}">
                                         <button type="submit" class="btn btn-link text-danger p-0">
@@ -148,7 +149,8 @@
                                     </div>
                                 @elseif($item['type'] === 'table')
                                     <div class="custom-table-wrapper">
-                                        <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/update"
+                                        <form
+                                            action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/update"
                                             method="POST" id="form-table-{{ $item['id'] }}">
                                             @csrf
                                             <input type="hidden" name="item_id" value="{{ $item['id'] }}">
@@ -171,19 +173,20 @@
                                     @if ($canInteract)
                                         <div class="d-flex gap-2 mb-4">
                                             <button class="btn btn-sm btn-light border"
-                                                onclick="tableAddRow('{{ $item['id'] }}')">+ Row</button>
+                                                onclick="tableAddRow('{{ $item['id'] }}')">{{ __('results.btn_add_row') }}</button>
                                             <button class="btn btn-sm btn-light border"
-                                                onclick="tableAddCol('{{ $item['id'] }}')">+ Col</button>
+                                                onclick="tableAddCol('{{ $item['id'] }}')">{{ __('results.btn_add_col') }}</button>
                                             <button class="btn btn-sm btn-light border"
                                                 onclick="saveTable('{{ $item['id'] }}')"><i class="bi bi-save"></i>
-                                                Save Table</button>
+                                                {{ __('results.btn_save_table') }}</button>
                                         </div>
                                     @endif
                                 @endif
 
                                 <div class="analysis-box">
-                                    <h6 class="fw-bold text-primary mb-3"><i class="bi bi-lightbulb me-2"></i>Key Findings
-                                        & Analysis</h6>
+                                    <h6 class="fw-bold text-primary mb-3"><i class="bi bi-lightbulb me-2"></i>
+                                        {{ __('results.analysis_title') }}
+                                    </h6>
 
                                     <ul class="bullet-list ps-3 mb-3">
                                         @if (!empty($item['analysis']))
@@ -207,19 +210,21 @@
                                                 </li>
                                             @endforeach
                                         @else
-                                            <li class="text-muted fst-italic">No key points added yet.</li>
+                                            <li class="text-muted fst-italic">{{ __('results.no_key_points') }}</li>
                                         @endif
                                     </ul>
 
                                     @if ($canInteract)
-                                        <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/update"
+                                        <form
+                                            action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/update"
                                             method="POST">
                                             @csrf
                                             <input type="hidden" name="item_id" value="{{ $item['id'] }}">
                                             <div class="input-group input-group-sm">
                                                 <input type="text" name="new_point" class="form-control"
-                                                    placeholder="Add a key finding (bullet point)..." required>
-                                                <button class="btn btn-dark" type="submit">Add</button>
+                                                    placeholder="{{ __('results.placeholder_point') }}" required>
+                                                <button class="btn btn-dark"
+                                                    type="submit">{{ __('results.btn_add_point') }}</button>
                                             </div>
                                         </form>
                                     @endif
@@ -236,27 +241,27 @@
         <div class="modal fade" id="addChartModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/add-chart" method="POST"
-                        enctype="multipart/form-data">
+                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/results/add-chart"
+                        method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-header">
-                            <h5 class="modal-title">Insert Chart</h5>
+                            <h5 class="modal-title">{{ __('results.modal_chart_title') }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label class="form-label">Chart Title</label>
+                                <label class="form-label">{{ __('results.label_chart_title') }}</label>
                                 <input type="text" name="title" class="form-control"
-                                    placeholder="e.g., Respondent Demographics" required>
+                                    placeholder="{{ __('results.placeholder_chart_title') }}" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Upload Image</label>
+                                <label class="form-label">{{ __('results.label_upload_image') }}</label>
                                 <input type="file" name="chart_image" class="form-control" accept="image/*" required>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Upload Chart</button>
+                            <button type="submit" class="btn btn-primary">{{ __('results.btn_upload_chart') }}</button>
                         </div>
                     </form>
                 </div>
@@ -276,12 +281,12 @@
                             <i class="bi bi-check-lg custom-icon"></i>
                         </div>
 
-                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <h4 class="fw-bold mb-3 heading-text">{{ __('common.success') }}</h4>
                         <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
 
                         <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm"
                             data-bs-dismiss="modal">
-                            CONTINUE
+                            {{ __('common.continue') }}
                         </button>
                     </div>
 
@@ -304,6 +309,12 @@
 
 @push('scripts')
     <script>
+        // Pass localization strings to JS
+        window.lang = {
+            default_header: "{{ __('results.default_table_header') }}",
+            default_data: "{{ __('results.default_table_data') }}"
+        };
+
         function tableAddRow(id) {
             const table = document.getElementById('table-' + id);
             const colCount = table.rows[0].cells.length;
@@ -312,7 +323,7 @@
                 const cell = row.insertCell(i);
                 cell.contentEditable = "true";
                 cell.classList.add('editable-cell');
-                cell.innerText = "Data";
+                cell.innerText = window.lang.default_data;
             }
         }
 
@@ -322,7 +333,7 @@
                 const cell = table.rows[i].insertCell(-1);
                 cell.contentEditable = "true";
                 cell.classList.add('editable-cell');
-                cell.innerText = i === 0 ? "Header" : "Data";
+                cell.innerText = i === 0 ? window.lang.default_header : window.lang.default_data;
             }
         }
 

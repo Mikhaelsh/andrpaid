@@ -316,15 +316,6 @@
     --input-focus-icon-color: var(--frost-input-focus-icon-color);
 }
 
-/*
-body.barney { --bg-color: var(--barney-bg-color); --start: var(--barney-start); --stop: var(--barney-stop); --color: var(--barney-color); --input-focus-icon-color: var(--barney-input-focus-icon-color); }
-body.slate { --bg-color: var(--slate-bg-color); --start: var(--slate-start); --stop: var(--slate-stop); --color: var(--slate-color); --input-focus-icon-color: var(--slate-input-focus-icon-color); }
-body.candy { --bg-color: var(--candy-bg-color); --start: var(--candy-start); --stop: var(--candy-stop); --color: var(--candy-color); --input-focus-icon-color: var(--candy-input-focus-icon-color); }
-body.firewatch { --bg-color: var(--firewatch-bg-color); --start: var(--firewatch-start); --stop: var(--firewatch-stop); --color: var(--firewatch-color); --input-focus-icon-color: var(--firewatch-input-focus-icon-color); }
-body.citrus { --bg-color: var(--citrus-bg-color); --start: var(--citrus-start); --stop: var(--citrus-stop); --color: var(--citrus-color); --input-focus-icon-color: var(--citrus-input-focus-icon-color); }
-body.marsh { --bg-color: var(--marsh-bg-color); --start: var(--marsh-start); --stop: var(--marsh-stop); --color: var(--marsh-color); --input-focus-icon-color: var(--marsh-input-focus-icon-color); }
-body.frost { --bg-color: var(--frost-bg-color); --start: var(--frost-start); --stop: var(--frost-stop); --color: var(--frost-color); --input-focus-icon-color: var(--frost-input-focus-icon-color); } */
-
 body {
     background-color: var(--bg-color);
     transition: background-color 300ms ease-in-out;
@@ -617,4 +608,28 @@ ul.theme-picker li.pressed:after {
 
 .form-footer p {
     margin: 0;
+}
+
+.auth-lang-switch {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    backdrop-filter: blur(5px);
+}
+
+.auth-lang-switch a {
+    text-decoration: none;
+    color: #333;
+    margin: 0 5px;
+}
+
+.auth-lang-switch a.active {
+    color: #0d6efd;
+    text-decoration: underline;
 }

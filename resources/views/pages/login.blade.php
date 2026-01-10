@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Login')
+@section('title', __('login.title'))
 @section('hideNavbar', true)
 @section('hideFooter', true)
 
@@ -11,6 +11,16 @@
 
 @section('content')
     <div class="login-page-wrapper">
+
+        <div class="auth-lang-switch shadow-sm">
+            <a href="{{ route('lang.switch', 'en') }}"
+            class="{{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
+
+            <span class="text-muted">|</span>
+
+            <a href="{{ route('lang.switch', 'id') }}"
+            class="{{ app()->getLocale() == 'id' ? 'active' : '' }}">ID</a>
+        </div>
 
         <ul class="theme-picker">
             <li data-theme="barney" class="barney"></li>
@@ -28,41 +38,41 @@
             <div class="header-section">
                 <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="auth-logo">
                 <h1>AndRPaid</h1>
-                <p>Welcome Back!!!</p>
+                <p>{{ __('login.welcome_back') }}</p>
             </div>
 
             @if (session('errorLogin') || $errors->any())
                 <div class="theme-alert">
                     <i class='bx bx-error-circle'></i>
-                    <span>{{ session('errorLogin') ?? 'Invalid credentials' }}</span>
+                    <span>{{ session('errorLogin') ?? __('login.invalid_credentials') }}</span>
                 </div>
             @endif
 
             <div class="input-wrapper">
-                <input type="email" name="email" placeholder="Enter your email" required autocomplete="email"
+                <input type="email" name="email" placeholder="{{ __('login.placeholder_email') }}" required autocomplete="email"
                     value="{{ old('email') }}" />
                 <i class="bx bxs-user-circle"></i>
             </div>
 
             <div class="input-wrapper">
-                <input type="password" name="password" placeholder="Enter your password" required
+                <input type="password" name="password" placeholder="{{ __('login.placeholder_password') }}" required
                     autocomplete="current-password" />
                 <i class="bx bx-key"></i>
             </div>
 
             <div class="form-links">
-                <a href="/login/forgot-password">Forgot password?</a>
+                <a href="/login/forgot-password">{{ __('login.forgot_password') }}</a>
             </div>
 
             <div class="button-wrapper">
                 <button type="submit">
-                    Sign In
+                    {{ __('login.btn_sign_in') }}
                     <i class="bx bx-right-arrow-alt"></i>
                 </button>
             </div>
 
             <div class="form-footer">
-                <p>New here? <a href="/register">Create an account</a></p>
+                <p>{{ __('login.new_here') }} <a href="/register">{{ __('login.create_account') }}</a></p>
             </div>
         </form>
 
@@ -74,11 +84,14 @@
                             <div class="modal-icon-wrapper mb-4 mx-auto">
                                 <i class="bi bi-check-lg custom-icon"></i>
                             </div>
-                            <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+
+                            <h4 class="fw-bold mb-3 heading-text">{{ __('common.success') }}</h4>
+
                             <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
+
                             <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm"
                                 data-bs-dismiss="modal">
-                                CONTINUE
+                                {{ __('common.continue') }}
                             </button>
                         </div>
                     </div>

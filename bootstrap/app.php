@@ -21,6 +21,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => AdminMiddleware::class,
         ]);
 
+        $middleware->web(append: [
+            \App\Http\Middleware\Localization::class,
+        ]);
+
         $middleware->redirectUsersTo(function () {
             $user = Auth::user();
 

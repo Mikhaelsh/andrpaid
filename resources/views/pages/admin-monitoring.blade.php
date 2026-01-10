@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Monitoring - Activity Logs')
+@section('title', __('adminMonitoring.title'))
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
@@ -17,11 +17,11 @@
                     <div class="mon-card">
                         <div class="mon-card-header">
                             <h6 class="fw-bold mb-0 text-uppercase text-muted small">
-                                Activity Volume
+                                {{ __('adminMonitoring.activity_volume') }}
                                 @if (request('date_from') || request('date_to'))
-                                    <span class="badge bg-primary ms-2">Filtered Range</span>
+                                    <span class="badge bg-primary ms-2">{{ __('adminMonitoring.filtered_range') }}</span>
                                 @else
-                                    <span class="badge bg-light text-dark border ms-2">Last 7 Days</span>
+                                    <span class="badge bg-light text-dark border ms-2">{{ __('adminMonitoring.last_7_days') }}</span>
                                 @endif
                             </h6>
                         </div>
@@ -33,7 +33,7 @@
                 <div class="col-md-4">
                     <div class="mon-card">
                         <div class="mon-card-header">
-                            <h6 class="fw-bold mb-0 text-uppercase text-muted small">Event Distribution</h6>
+                            <h6 class="fw-bold mb-0 text-uppercase text-muted small">{{ __('adminMonitoring.event_distribution') }}</h6>
                         </div>
                         <div class="p-3 position-relative"
                             style="height: 250px; display: flex; align-items: center; justify-content: center;">
@@ -47,12 +47,12 @@
                 <div class="col-lg-3">
                     <div class="filter-sidebar">
                         <div class="mon-card p-4">
-                            <h5 class="fw-bold mb-4"><i class="bi bi-funnel-fill me-2"></i>Filter Logs</h5>
+                            <h5 class="fw-bold mb-4"><i class="bi bi-funnel-fill me-2"></i>{{ __('adminMonitoring.filter_logs') }}</h5>
                             <form action="{{ url()->current() }}" method="GET">
                                 <div class="filter-group mb-3">
-                                    <label>User</label>
+                                    <label>{{ __('adminMonitoring.label_user') }}</label>
                                     <select class="form-select form-select-custom" name="user_id">
-                                        <option value="">All Users</option>
+                                        <option value="">{{ __('adminMonitoring.all_users') }}</option>
                                         @foreach ($users as $u)
                                             <option value="{{ $u->id }}"
                                                 {{ request('user_id') == $u->id ? 'selected' : '' }}>
@@ -63,31 +63,29 @@
                                 </div>
 
                                 <div class="filter-group mb-3">
-                                    <label>Event Type</label>
+                                    <label>{{ __('adminMonitoring.label_event') }}</label>
                                     <select class="form-select form-select-custom" name="type">
-                                        <option value="">All Events</option>
-                                        <option value="login" {{ request('type') == 'login' ? 'selected' : '' }}>Login
-                                        </option>
-                                        <option value="logout" {{ request('type') == 'logout' ? 'selected' : '' }}>Logout
-                                        </option>
+                                        <option value="">{{ __('adminMonitoring.all_events') }}</option>
+                                        <option value="login" {{ request('type') == 'login' ? 'selected' : '' }}>{{ __('adminMonitoring.opt_login') }}</option>
+                                        <option value="logout" {{ request('type') == 'logout' ? 'selected' : '' }}>{{ __('adminMonitoring.opt_logout') }}</option>
                                     </select>
                                 </div>
 
                                 <div class="filter-group mb-3">
-                                    <label>From Date</label>
+                                    <label>{{ __('adminMonitoring.label_from') }}</label>
                                     <input type="date" class="form-control form-control-custom" name="date_from"
                                         value="{{ request('date_from') }}">
                                 </div>
 
                                 <div class="filter-group mb-4">
-                                    <label>To Date</label>
+                                    <label>{{ __('adminMonitoring.label_to') }}</label>
                                     <input type="date" class="form-control form-control-custom" name="date_to"
                                         value="{{ request('date_to') }}">
                                 </div>
 
                                 <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-primary fw-bold">Apply Filters</button>
-                                    <a href="{{ url()->current() }}" class="btn btn-light text-muted">Reset</a>
+                                    <button type="submit" class="btn btn-primary fw-bold">{{ __('adminMonitoring.btn_apply') }}</button>
+                                    <a href="{{ url()->current() }}" class="btn btn-light text-muted">{{ __('adminMonitoring.btn_reset') }}</a>
                                 </div>
                             </form>
                         </div>
@@ -98,9 +96,14 @@
                     <div class="mon-card">
                         <div class="mon-card-header">
                             <div>
-                                <h5 class="fw-bold mb-1">Activity Feed</h5>
-                                <span class="text-muted small">Showing {{ $activityLogs->firstItem() ?? 0 }} -
-                                    {{ $activityLogs->lastItem() ?? 0 }} of {{ $activityLogs->total() }} events</span>
+                                <h5 class="fw-bold mb-1">{{ __('adminMonitoring.feed_title') }}</h5>
+                                <span class="text-muted small">
+                                    {{ __('adminMonitoring.showing_events', [
+                                        'first' => $activityLogs->firstItem() ?? 0,
+                                        'last' => $activityLogs->lastItem() ?? 0,
+                                        'total' => $activityLogs->total()
+                                    ]) }}
+                                </span>
                             </div>
                         </div>
 
@@ -114,13 +117,11 @@
                                                 'logout' => 'type-logout',
                                                 default => 'type-default',
                                             };
-
                                             $iconClass = match ($log->type) {
                                                 'login' => 'bi-box-arrow-in-right',
                                                 'logout' => 'bi-box-arrow-right',
                                                 default => 'bi-circle-fill',
                                             };
-
                                             $badgeClass = match ($log->type) {
                                                 'login' => 'badge-login',
                                                 'logout' => 'badge-logout',
@@ -138,11 +139,10 @@
                                                     <div class="d-flex align-items-center">
                                                         <img src="https://ui-avatars.com/api/?name={{ $log->user->name }}&background=random"
                                                             alt="{{ $log->user->name }}" class="user-avatar-small">
-
                                                         <span class="fw-bold text-dark me-2">{{ $log->user->name }}</span>
-
-                                                        <span
-                                                            class="log-badge {{ $badgeClass }}">{{ ucfirst($log->type) }}</span>
+                                                        <span class="log-badge {{ $badgeClass }}">
+                                                            {{ $log->type == 'login' ? __('adminMonitoring.opt_login') : ($log->type == 'logout' ? __('adminMonitoring.opt_logout') : ucfirst($log->type)) }}
+                                                        </span>
                                                     </div>
                                                     <span class="log-time" title="{{ $log->created_at }}">
                                                         {{ $log->created_at->diffForHumans() }}
@@ -151,11 +151,11 @@
 
                                                 <p class="mb-0 text-muted small">
                                                     @if ($log->type == 'login')
-                                                        User successfully logged into the system.
+                                                        {{ __('adminMonitoring.msg_logged_in') }}
                                                     @elseif($log->type == 'logout')
-                                                        User logged out securely.
+                                                        {{ __('adminMonitoring.msg_logged_out') }}
                                                     @else
-                                                        Performed action: {{ $log->type }}
+                                                        {{ __('adminMonitoring.performed_action', ['type' => $log->type]) }}
                                                     @endif
                                                 </p>
                                                 <div class="text-end mt-1">
@@ -167,16 +167,18 @@
                                     @endforeach
                                 </div>
 
-                                <div class="d-flex justify-content-center mt-4">
-                                    {{ $activityLogs->links('pagination::bootstrap-5') }}
-                                </div>
+                                @if ($activityLogs->hasPages())
+                                    <div class="d-flex justify-content-center mt-4">
+                                        {{ $activityLogs->links('pagination::bootstrap-5') }}
+                                    </div>
+                                @endif
                             @else
                                 <div class="text-center py-5">
                                     <div class="text-muted opacity-50 mb-3">
                                         <i class="bi bi-clipboard-data" style="font-size: 3rem;"></i>
                                     </div>
-                                    <h5 class="fw-bold text-muted">No Logs Found</h5>
-                                    <p class="text-muted small">Try adjusting your filters.</p>
+                                    <h5 class="fw-bold text-muted">{{ __('adminMonitoring.no_logs') }}</h5>
+                                    <p class="text-muted small">{{ __('adminMonitoring.adjust_filters') }}</p>
                                 </div>
                             @endif
                         </div>
@@ -189,10 +191,7 @@
 
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
-
-                    // --- 1. Prepare Data ---
                     const rawData = @json($chartData);
-
                     const labels = [...new Set(rawData.map(item => item.date))].sort();
 
                     const loginData = labels.map(date => {
@@ -205,7 +204,6 @@
                         return entry ? entry.count : 0;
                     });
 
-                    // --- 2. Chart Rendering ---
                     const volumeCtx = document.getElementById('activityVolumeChart').getContext('2d');
 
                     if (labels.length > 0) {
@@ -214,17 +212,17 @@
                             data: {
                                 labels: labels,
                                 datasets: [{
-                                        label: 'Logins',
+                                        label: "{{ __('adminMonitoring.chart_logins') }}",
                                         data: loginData,
                                         borderColor: '#198754',
                                         backgroundColor: 'rgba(25, 135, 84, 0.1)',
                                         tension: 0.4,
                                         fill: true,
-                                        pointRadius: 3, // Make points visible like dashboard
+                                        pointRadius: 3,
                                         pointHoverRadius: 5
                                     },
                                     {
-                                        label: 'Logouts',
+                                        label: "{{ __('adminMonitoring.chart_logouts') }}",
                                         data: logoutData,
                                         borderColor: '#ffc107',
                                         backgroundColor: 'rgba(255, 193, 7, 0.1)',
@@ -237,41 +235,26 @@
                             },
                             options: {
                                 responsive: true,
-                                // Fix: Add interaction mode to 'index' to show all datasets on hover
                                 interaction: {
                                     mode: 'index',
                                     intersect: false,
                                 },
                                 plugins: {
-                                    legend: {
-                                        position: 'top'
-                                    },
-                                    tooltip: {
-                                        mode: 'index',
-                                        intersect: false
-                                    }
+                                    legend: { position: 'top' },
+                                    tooltip: { mode: 'index', intersect: false }
                                 },
                                 scales: {
                                     y: {
                                         beginAtZero: true,
-                                        grid: {
-                                            borderDash: [2, 4]
-                                        },
-                                        ticks: {
-                                            precision: 0 // Avoid decimals (0.5, 1.5)
-                                        }
+                                        grid: { borderDash: [2, 4] },
+                                        ticks: { precision: 0 }
                                     },
-                                    x: {
-                                        grid: {
-                                            display: false
-                                        }
-                                    }
+                                    x: { grid: { display: false } }
                                 }
                             }
                         });
                     }
 
-                    // --- 3. Distribution Chart (Doughnut) ---
                     const totalLogins = loginData.reduce((a, b) => a + b, 0);
                     const totalLogouts = logoutData.reduce((a, b) => a + b, 0);
 
@@ -280,7 +263,7 @@
                         new Chart(distCtx, {
                             type: 'doughnut',
                             data: {
-                                labels: ['Logins', 'Logouts'],
+                                labels: ["{{ __('adminMonitoring.chart_logins') }}", "{{ __('adminMonitoring.chart_logouts') }}"],
                                 datasets: [{
                                     data: [totalLogins, totalLogouts],
                                     backgroundColor: ['#198754', '#ffc107'],
@@ -291,9 +274,7 @@
                                 responsive: true,
                                 maintainAspectRatio: false,
                                 plugins: {
-                                    legend: {
-                                        position: 'bottom'
-                                    }
+                                    legend: { position: 'bottom' }
                                 },
                                 cutout: '70%'
                             }
@@ -304,9 +285,6 @@
         @endpush
     @endif
 
-
-
-
     @if ($type === 'globalStatistics')
         <link rel="stylesheet" href="{{ asset('libs/leaflet/leaflet.css') }}">
 
@@ -315,7 +293,7 @@
                 <div class="col-md-4">
                     <div class="stats-card">
                         <div>
-                            <h6 class="text-muted text-uppercase small fw-bold mb-1">Total Universities</h6>
+                            <h6 class="text-muted text-uppercase small fw-bold mb-1">{{ __('adminMonitoring.total_universities') }}</h6>
                             <h2 class="fw-bold mb-0">{{ number_format($stats['universities']) }}</h2>
                         </div>
                         <div class="stats-icon-box bg-blue-soft"><i class="bi bi-building"></i></div>
@@ -324,7 +302,7 @@
                 <div class="col-md-4">
                     <div class="stats-card">
                         <div>
-                            <h6 class="text-muted text-uppercase small fw-bold mb-1">Total Lecturers</h6>
+                            <h6 class="text-muted text-uppercase small fw-bold mb-1">{{ __('adminMonitoring.total_lecturers') }}</h6>
                             <h2 class="fw-bold mb-0">{{ number_format($stats['lecturers']) }}</h2>
                         </div>
                         <div class="stats-icon-box bg-green-soft"><i class="bi bi-people-fill"></i></div>
@@ -333,7 +311,7 @@
                 <div class="col-md-4">
                     <div class="stats-card">
                         <div>
-                            <h6 class="text-muted text-uppercase small fw-bold mb-1">Total Papers</h6>
+                            <h6 class="text-muted text-uppercase small fw-bold mb-1">{{ __('adminMonitoring.total_papers') }}</h6>
                             <h2 class="fw-bold mb-0">{{ number_format($stats['papers']) }}</h2>
                         </div>
                         <div class="stats-icon-box bg-purple-soft"><i class="bi bi-journal-text"></i></div>
@@ -347,17 +325,17 @@
                         <div class="card-body p-2 position-relative">
                             <div id="adminMap"></div>
                             <div class="position-absolute top-0 end-0 m-3 d-flex gap-2" style="z-index: 500;">
-                                <button class="map-filter-btn active" onclick="setRoleFilter('all')">All</button>
-                                <button class="map-filter-btn" onclick="setRoleFilter('university')">Universities</button>
-                                <button class="map-filter-btn" onclick="setRoleFilter('lecturer')">Lecturers</button>
+                                <button class="map-filter-btn active" onclick="setRoleFilter('all')">{{ __('adminMonitoring.map_all') }}</button>
+                                <button class="map-filter-btn" onclick="setRoleFilter('university')">{{ __('adminMonitoring.map_universities') }}</button>
+                                <button class="map-filter-btn" onclick="setRoleFilter('lecturer')">{{ __('adminMonitoring.map_lecturers') }}</button>
                             </div>
 
                             <div class="position-absolute bottom-0 start-0 m-4 bg-white p-3 rounded-3 shadow-sm"
                                 style="z-index: 500; min-width: 250px;">
-                                <span class="text-muted small fw-bold text-uppercase d-block mb-1">Selected Region</span>
-                                <h5 class="fw-bold text-primary mb-2" id="selectedRegionName">All Indonesia</h5>
+                                <span class="text-muted small fw-bold text-uppercase d-block mb-1">{{ __('adminMonitoring.selected_region') }}</span>
+                                <h5 class="fw-bold text-primary mb-2" id="selectedRegionName">{{ __('adminMonitoring.all_indonesia') }}</h5>
                                 <button class="btn btn-sm btn-outline-secondary w-100" onclick="resetMap()">
-                                    <i class="bi bi-arrow-counterclockwise me-1"></i> Reset View
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i> {{ __('adminMonitoring.reset_view') }}
                                 </button>
                             </div>
                         </div>
@@ -368,7 +346,7 @@
                     <div class="mon-card p-3 h-100">
                         <div class="user-list-wrapper">
                             <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
-                                <h6 class="fw-bold mb-0"><i class="bi bi-geo-alt me-2"></i>User Directory</h6>
+                                <h6 class="fw-bold mb-0"><i class="bi bi-geo-alt me-2"></i>{{ __('adminMonitoring.user_directory') }}</h6>
                                 <span class="badge bg-primary rounded-pill" id="listCountBadge">0 Found</span>
                             </div>
 
@@ -378,7 +356,7 @@
                             <div id="emptyListState" class="text-center py-5 d-none">
                                 <div class="text-muted opacity-50 mb-2"><i class="bi bi-people"
                                         style="font-size: 2rem;"></i></div>
-                                <h6 class="fw-bold text-muted small">No users found</h6>
+                                <h6 class="fw-bold text-muted small">{{ __('adminMonitoring.no_users') }}</h6>
                             </div>
                         </div>
                     </div>
@@ -390,27 +368,27 @@
                     <div class="chart-card h-100">
                         <div class="chart-header">
                             <div>
-                                <h5 class="fw-bold mb-1">Growth Trends</h5>
-                                <p class="text-muted small mb-0">Registrations & Paper submissions</p>
+                                <h5 class="fw-bold mb-1">{{ __('adminMonitoring.growth_trends') }}</h5>
+                                <p class="text-muted small mb-0">{{ __('adminMonitoring.growth_sub') }}</p>
                             </div>
 
                             <form action="{{ url()->current() }}" method="GET"
                                 class="d-flex gap-2 align-items-center">
                                 <input type="hidden" name="type" value="globalStatistics">
                                 <div class="input-group input-group-sm">
-                                    <span class="input-group-text bg-light border-end-0">From</span>
+                                    <span class="input-group-text bg-light border-end-0">{{ __('adminMonitoring.label_from_short') }}</span>
                                     <input type="date" class="form-control border-start-0 ps-1" name="date_from"
                                         value="{{ request('date_from') }}">
                                 </div>
                                 <div class="input-group input-group-sm">
-                                    <span class="input-group-text bg-light border-end-0">To</span>
+                                    <span class="input-group-text bg-light border-end-0">{{ __('adminMonitoring.label_to_short') }}</span>
                                     <input type="date" class="form-control border-start-0 ps-1" name="date_to"
                                         value="{{ request('date_to') }}">
                                 </div>
-                                <button type="submit" class="btn btn-primary btn-sm fw-bold px-3">Filter</button>
+                                <button type="submit" class="btn btn-primary btn-sm fw-bold px-3">{{ __('adminMonitoring.btn_filter') }}</button>
                                 @if (request('date_from'))
                                     <a href="{{ url()->current() }}?type=globalStatistics"
-                                        class="btn btn-light btn-sm border">Reset</a>
+                                        class="btn btn-light btn-sm border">{{ __('adminMonitoring.btn_reset') }}</a>
                                 @endif
                             </form>
                         </div>
@@ -423,7 +401,7 @@
                 <div class="col-lg-4">
                     <div class="chart-card h-100">
                         <div class="chart-header">
-                            <h5 class="fw-bold mb-0">User Composition</h5>
+                            <h5 class="fw-bold mb-0">{{ __('adminMonitoring.user_composition') }}</h5>
                         </div>
                         <div style="height: 250px; display: flex; align-items: center; justify-content: center;">
                             <canvas id="userCompositionChart"></canvas>
@@ -432,11 +410,11 @@
                             <div class="row text-center">
                                 <div class="col-6 border-end">
                                     <h5 class="fw-bold mb-0 text-primary">{{ $stats['universities'] }}</h5>
-                                    <small class="text-muted">Universities</small>
+                                    <small class="text-muted">{{ __('adminMonitoring.map_universities') }}</small>
                                 </div>
                                 <div class="col-6">
                                     <h5 class="fw-bold mb-0 text-success">{{ $stats['lecturers'] }}</h5>
-                                    <small class="text-muted">Lecturers</small>
+                                    <small class="text-muted">{{ __('adminMonitoring.map_lecturers') }}</small>
                                 </div>
                             </div>
                         </div>
@@ -449,6 +427,15 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <script>
+            // Pass localized strings to JS scope
+            window.lang = {
+                all_indonesia: "{{ __('adminMonitoring.all_indonesia') }}",
+                count_found: "{{ __('adminMonitoring.count_found', ['count' => ':count']) }}",
+                chart_univ: "{{ __('adminMonitoring.chart_universities') }}",
+                chart_lect: "{{ __('adminMonitoring.chart_lecturers') }}",
+                chart_paper: "{{ __('adminMonitoring.chart_papers') }}",
+            };
+
             document.addEventListener('DOMContentLoaded', function() {
                 const allUsers = @json($mapData);
                 const geoJsonUrl = "{{ asset('data/indonesia-prov.geojson') }}";
@@ -516,17 +503,13 @@
                         clickedButton.classList.add('active');
                     }
 
-                    if (typeof applyMapFilters === "function") {
-                        applyMapFilters();
-                    } else if (typeof applyFilters === "function") {
-                        applyFilters();
-                    }
+                    applyMapFilters();
                 }
 
                 window.resetMap = function() {
                     map.setView([-2.5489, 118.0149], 5);
                     state.selectedProvince = null;
-                    regionLabel.innerText = "All Indonesia";
+                    regionLabel.innerText = window.lang.all_indonesia;
                     if (geojsonLayer) geojsonLayer.eachLayer(layer => geojsonLayer.resetStyle(layer));
                     applyMapFilters();
                 }
@@ -597,7 +580,7 @@
 
                 function renderList(data) {
                     gridContainer.innerHTML = '';
-                    countBadge.innerText = data.length + ' Found';
+                    countBadge.innerText = window.lang.count_found.replace(':count', data.length);
                     if (data.length === 0) {
                         emptyState.classList.remove('d-none');
                         return;
@@ -676,21 +659,11 @@
                 const commonOptions = {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
+                    interaction: { mode: 'index', intersect: false },
                     plugins: {
                         legend: {
                             position: 'top',
-                            labels: {
-                                usePointStyle: true,
-                                boxWidth: 8,
-                                padding: 15,
-                                font: {
-                                    size: 12
-                                }
-                            }
+                            labels: { usePointStyle: true, boxWidth: 8, padding: 15, font: { size: 12 } }
                         },
                         tooltip: {
                             backgroundColor: 'rgba(255, 255, 255, 0.95)',
@@ -705,30 +678,12 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: {
-                                precision: 0,
-                                color: '#94a3b8',
-                                font: {
-                                    size: 11
-                                }
-                            },
-                            grid: {
-                                color: '#f1f5f9',
-                                borderDash: [4, 4],
-                                drawBorder: false
-                            }
+                            ticks: { precision: 0, color: '#94a3b8', font: { size: 11 } },
+                            grid: { color: '#f1f5f9', borderDash: [4, 4], drawBorder: false }
                         },
                         x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: '#94a3b8',
-                                font: {
-                                    size: 11
-                                },
-                                maxTicksLimit: 7
-                            }
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8', font: { size: 11 }, maxTicksLimit: 7 }
                         }
                     }
                 };
@@ -748,7 +703,7 @@
                     data: {
                         labels: labels,
                         datasets: [{
-                                label: 'Universities',
+                                label: window.lang.chart_univ,
                                 data: getDataSeries(chartDataRaw.universities),
                                 borderColor: '#0d6efd',
                                 backgroundColor: gradUniv,
@@ -759,7 +714,7 @@
                                 pointHoverRadius: 6
                             },
                             {
-                                label: 'Lecturers',
+                                label: window.lang.chart_lect,
                                 data: getDataSeries(chartDataRaw.lecturers),
                                 borderColor: '#198754',
                                 backgroundColor: 'transparent',
@@ -770,7 +725,7 @@
                                 pointHoverRadius: 6
                             },
                             {
-                                label: 'Papers',
+                                label: window.lang.chart_paper,
                                 data: getDataSeries(chartDataRaw.papers),
                                 borderColor: '#6f42c1',
                                 backgroundColor: gradPaper,
@@ -790,7 +745,7 @@
                 new Chart(ctxComp, {
                     type: 'doughnut',
                     data: {
-                        labels: ['Universities', 'Lecturers'],
+                        labels: [window.lang.chart_univ, window.lang.chart_lect],
                         datasets: [{
                             data: [totalStats.universities, totalStats.lecturers],
                             backgroundColor: ['#0d6efd', '#198754'],
@@ -802,13 +757,7 @@
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    usePointStyle: true,
-                                    padding: 20
-                                }
-                            },
+                            legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } },
                             tooltip: commonOptions.plugins.tooltip
                         },
                         cutout: '75%'

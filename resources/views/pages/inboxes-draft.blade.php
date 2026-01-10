@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Drafts')
+@section('title', __('inboxesDraft.title'))
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/inboxes.css') }}">
@@ -13,9 +13,9 @@
         <div class="card border-0 shadow-sm overflow-hidden rounded-3">
             <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold text-secondary">
-                    <i class="bi bi-file-earmark me-2"></i>Drafts
+                    <i class="bi bi-file-earmark me-2"></i>{{ __('inboxesDraft.header') }}
                 </h5>
-                <span class="text-muted small">{{ $draftInboxes->total() }} drafts</span>
+                <span class="text-muted small">{{ __('inboxesDraft.drafts_count', ['count' => $draftInboxes->total()]) }}</span>
             </div>
 
             <div class="list-group list-group-flush">
@@ -40,8 +40,8 @@
                         <div class="mail-content">
                             <div class="mail-header">
                                 <span class="draft-recipient">
-                                    <span class="prefix">To:</span>
-                                    {{ $draft->toUser->name ?? 'No Recipient' }}
+                                    <span class="prefix">{{ __('inboxesDraft.label_to') }}</span>
+                                    {{ $draft->toUser->name ?? __('inboxesDraft.no_recipient') }}
                                 </span>
 
                                 <span class="mail-date">
@@ -50,21 +50,19 @@
                             </div>
 
                             <div class="mail-body-preview">
-                                <span class="text-danger small fw-bold me-2">[Draft]</span>
+                                <span class="text-danger small fw-bold me-2">{{ __('inboxesDraft.draft_tag') }}</span>
                                 <span class="mail-subject text-dark fw-medium">
-                                    {{ $draft->subject ?? '(No Subject)' }}
+                                    {{ $draft->subject ?? __('inboxesDraft.no_subject') }}
                                 </span>
                                 <span class="mx-1 text-muted">-</span>
                                 <span>
-                                    {{ $draft->body ? Str::limit(strip_tags($draft->body), 60) : 'No content...' }}
+                                    {{ $draft->body ? Str::limit(strip_tags($draft->body), 60) : __('inboxesDraft.no_content') }}
                                 </span>
                             </div>
                         </div>
 
-                        <button type="button"
-                                class="btn-delete-draft"
-                                title="Discard Draft"
-                                onclick="event.stopPropagation(); confirmDeleteDraft('/inboxes/compose/{{ $draft->inboxId }}/delete-draft')">
+                        <button type="button" class="btn-delete-draft" title="{{ __('inboxesDraft.tooltip_discard') }}"
+                            onclick="event.stopPropagation(); confirmDeleteDraft('/inboxes/compose/{{ $draft->inboxId }}/delete-draft')">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
@@ -73,10 +71,10 @@
                         <div class="empty-icon text-muted">
                             <i class="bi bi-file-earmark-x"></i>
                         </div>
-                        <h5>No saved drafts</h5>
-                        <p class="small text-muted">Started messages that you haven't sent will appear here.</p>
+                        <h5>{{ __('inboxesDraft.empty_title') }}</h5>
+                        <p class="small text-muted">{{ __('inboxesDraft.empty_desc') }}</p>
                         <a href="/inboxes/compose" class="btn btn-outline-primary btn-sm mt-2 rounded-pill">
-                            Compose New
+                            {{ __('inboxesDraft.btn_compose_new') }}
                         </a>
                     </div>
                 @endforelse
@@ -90,21 +88,22 @@
         </div>
     </div>
 
-    {{-- DELETE CONFIRMATION MODAL --}}
     <div class="modal fade" id="deleteDraftModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content border-0 shadow">
                 <div class="modal-body text-center p-4">
-                    <div class="mb-3 text-danger bg-danger-subtle rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                    <div class="mb-3 text-danger bg-danger-subtle rounded-circle d-inline-flex align-items-center justify-content-center"
+                        style="width: 60px; height: 60px;">
                         <i class="bi bi-trash3-fill fs-3"></i>
                     </div>
-                    <h5 class="fw-bold mb-2">Discard Draft?</h5>
-                    <p class="text-muted small mb-4">This action cannot be undone. The draft will be permanently deleted.</p>
+                    <h5 class="fw-bold mb-2">{{ __('inboxesDraft.discard_title') }}</h5>
+                    <p class="text-muted small mb-4">{{ __('inboxesDraft.discard_desc') }}</p>
                     <form id="deleteDraftForm" method="POST" action="">
                         @csrf
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-danger fw-bold">Yes, Discard</button>
-                            <button type="button" class="btn btn-light text-muted fw-bold" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger fw-bold">{{ __('inboxesDraft.btn_confirm_discard') }}</button>
+                            <button type="button" class="btn btn-light text-muted fw-bold"
+                                data-bs-dismiss="modal">{{ __('inboxesDraft.btn_cancel') }}</button>
                         </div>
                     </form>
                 </div>
@@ -136,11 +135,12 @@
                             <i class="bi bi-check-lg custom-icon"></i>
                         </div>
 
-                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <h4 class="fw-bold mb-3 heading-text">{{ __('common.success') }}</h4>
                         <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
 
-                        <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm" data-bs-dismiss="modal">
-                            CONTINUE
+                        <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm"
+                            data-bs-dismiss="modal">
+                            {{ __('common.continue') }}
                         </button>
                     </div>
 

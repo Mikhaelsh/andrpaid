@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', __('dashboard.title'))
 
 @section('additionalCSS')
     <style>
@@ -107,18 +107,21 @@
             <div class="welcome-pattern"></div>
             <div class="row align-items-center position-relative z-1">
                 <div class="col-lg-8">
-                    <h1 class="fw-bold mb-2">Welcome back, {{ $user->name }}!</h1>
+                    <h1 class="fw-bold mb-2">{{ __('dashboard.welcome', ['name' => $user->name]) }}</h1>
                     <p class="mb-0 opacity-75 fs-5">
-                        You have <span class="fw-bold text-white border-bottom border-2">{{ $pendingRequestsCount }} pending
-                            tasks</span> requiring your attention today.
+                        @if ($pendingRequestsCount > 0)
+                            {!! __('dashboard.pending_tasks_msg', ['count' => $pendingRequestsCount]) !!}
+                        @else
+                            {{ __('dashboard.overview_msg') }}
+                        @endif
                     </p>
                 </div>
                 @lecturer
-                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
-                    <a href="/papers/create" class="btn btn-light text-primary fw-bold px-4 py-2 shadow-sm">
-                        <i class="bi bi-plus-lg me-2"></i>New Project
-                    </a>
-                </div>
+                    <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                        <a href="/papers/create" class="btn btn-light text-primary fw-bold px-4 py-2 shadow-sm">
+                            <i class="bi bi-plus-lg me-2"></i>{{ __('dashboard.new_project') }}
+                        </a>
+                    </div>
                 @endlecturer
             </div>
         </div>
@@ -129,7 +132,8 @@
                     <div class="stat-icon bg-primary bg-opacity-10 text-primary">
                         <i class="bi bi-folder2-open"></i>
                     </div>
-                    <div class="text-muted small fw-bold text-uppercase mb-1">Active Projects</div>
+                    <div class="text-muted small fw-bold text-uppercase mb-1">{{ __('dashboard.stat_active_projects') }}
+                    </div>
                     <h2 class="fw-bold mb-0 text-dark">{{ $activeProjectsCount }}</h2>
                 </div>
             </div>
@@ -139,7 +143,8 @@
                     <div class="stat-icon bg-warning bg-opacity-10 text-warning">
                         <i class="bi bi-person-plus-fill"></i>
                     </div>
-                    <div class="text-muted small fw-bold text-uppercase mb-1">Pending Requests</div>
+                    <div class="text-muted small fw-bold text-uppercase mb-1">{{ __('dashboard.stat_pending_requests') }}
+                    </div>
                     <h2 class="fw-bold mb-0 text-dark">{{ $pendingRequestsCount }}</h2>
                 </div>
             </div>
@@ -149,10 +154,10 @@
                     <div class="stat-icon bg-warning bg-opacity-10 text-warning">
                         <i class="bi bi-star-fill"></i>
                     </div>
-                    <div class="text-muted small fw-bold text-uppercase mb-1">Total Stars</div>
+                    <div class="text-muted small fw-bold text-uppercase mb-1">{{ __('dashboard.stat_total_stars') }}</div>
                     <h2 class="fw-bold mb-0 text-dark">{{ number_format($totalStars) }}</h2>
                     <div class="mt-2 text-muted small" style="font-size: 0.8rem;">
-                        <i class="bi bi-info-circle me-1"></i> Lifetime stars received
+                        <i class="bi bi-info-circle me-1"></i> {{ __('dashboard.stat_stars_desc') }}
                     </div>
                 </div>
             </div>
@@ -162,11 +167,12 @@
                     <div class="stat-icon bg-danger bg-opacity-10 text-danger">
                         <i class="bi bi-chat-left-text-fill"></i>
                     </div>
-                    <div class="text-muted small fw-bold text-uppercase mb-1">Messages</div>
+                    <div class="text-muted small fw-bold text-uppercase mb-1">{{ __('dashboard.stat_messages') }}</div>
                     <div class="d-flex align-items-baseline gap-2">
                         <h2 class="fw-bold mb-0 text-dark">{{ $messageCount }}</h2>
                         @if ($unreadMessages > 0)
-                            <span class="badge bg-danger rounded-pill small">{{ $unreadMessages }} New</span>
+                            <span
+                                class="badge bg-danger rounded-pill small">{{ __('dashboard.stat_new_messages', ['count' => $unreadMessages]) }}</span>
                         @endif
                     </div>
                 </div>
@@ -181,12 +187,12 @@
                             style="border-radius: 16px;">
                             <i class="bi bi-x-circle-fill fs-1 me-4 text-danger"></i>
                             <div>
-                                <h5 class="fw-bold text-danger mb-1">Affiliation Request Rejected</h5>
+                                <h5 class="fw-bold text-danger mb-1">{{ __('dashboard.affiliation_rejected') }}</h5>
                                 <p class="mb-2 small text-dark">
-                                    Reason: "{{ $affiliation->rejection_reason ?? 'No reason provided.' }}"
+                                    {{ __('dashboard.affiliation_rejected_reason', ['reason' => $affiliation->rejection_reason ?? 'No reason provided.']) }}
                                 </p>
                                 <a href="/settings#academic" class="btn btn-sm btn-danger fw-bold rounded-pill">
-                                    Update & Resubmit
+                                    {{ __('dashboard.btn_update_resubmit') }}
                                 </a>
                             </div>
                         </div>
@@ -195,11 +201,9 @@
                             role="alert" style="border-radius: 16px; background-color: #fff8e1;">
                             <i class="bi bi-hourglass-split fs-1 me-4 text-warning"></i>
                             <div>
-                                <h5 class="fw-bold text-warning mb-1">Affiliation Pending</h5>
+                                <h5 class="fw-bold text-warning mb-1">{{ __('dashboard.affiliation_pending') }}</h5>
                                 <p class="mb-0 small text-muted">
-                                    Your request to join
-                                    <strong>{{ $affiliation->university->user->name ?? 'University' }}</strong> is currently
-                                    under review.
+                                    {!! __('dashboard.affiliation_pending_desc', ['university' => $affiliation->university->user->name ?? 'University']) !!}
                                 </p>
                             </div>
                         </div>
@@ -219,17 +223,17 @@
                                             <i class="bi bi-bell-fill fs-4"></i>
                                         </div>
                                         <div>
-                                            <h5 class="fw-bold mb-1 text-dark">Hey, looks like you haven't joined a
-                                                university yet!</h5>
+                                            <h5 class="fw-bold mb-1 text-dark">{{ __('dashboard.affiliation_none_title') }}
+                                            </h5>
                                             <p class="text-secondary mb-0" style="max-width: 600px; font-size: 0.95rem;">
-                                                You currently don't have any pending requests or active affiliations.
-                                                Linking your account allows you to get verified and collaborate officially.
+                                                {{ __('dashboard.affiliation_none_desc') }}
                                             </p>
                                         </div>
                                     </div>
                                     <a href="/settings#academic"
                                         class="btn btn-primary rounded-pill fw-bold px-4 py-2 shadow-sm">
-                                        Request Affiliation <i class="bi bi-arrow-right ms-1"></i>
+                                        {{ __('dashboard.btn_request_affiliation') }} <i
+                                            class="bi bi-arrow-right ms-1"></i>
                                     </a>
                                 </div>
                             </div>
@@ -241,7 +245,6 @@
                     <div class="card border-0 shadow-sm mb-4 position-relative overflow-hidden"
                         style="background: linear-gradient(135deg, #fff3cd 0%, #ffffff 100%); border-radius: 16px; border-left: 5px solid #ffc107 !important;">
 
-                        {{-- Background Icon --}}
                         <div class="position-absolute top-0 end-0 opacity-10 pe-3 pt-2">
                             <i class="bi bi-person-plus-fill" style="font-size: 5rem; color: #ffc107;"></i>
                         </div>
@@ -254,14 +257,14 @@
                                         <i class="bi bi-exclamation-lg fs-3 fw-bold"></i>
                                     </div>
                                     <div>
-                                        <h5 class="fw-bold mb-1 text-dark">Action Required</h5>
+                                        <h5 class="fw-bold mb-1 text-dark">{{ __('dashboard.action_required') }}</h5>
                                         <p class="text-secondary mb-0" style="max-width: 600px; font-size: 0.95rem;">
-                                            You have <strong>{{ $pendingRequestsCount }} pending affiliation request(s)</strong> from lecturers waiting for verification.
+                                            {!! __('dashboard.pending_requests_university_desc', ['count' => $pendingRequestsCount]) !!}
                                         </p>
                                     </div>
                                 </div>
                                 <a href="#" class="btn btn-warning text-dark fw-bold rounded-pill px-4 py-2 shadow-sm">
-                                    Review Requests <i class="bi bi-arrow-right ms-1"></i>
+                                    {{ __('dashboard.btn_review_requests') }} <i class="bi bi-arrow-right ms-1"></i>
                                 </a>
                             </div>
                         </div>
@@ -269,27 +272,27 @@
                 @endif
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="fw-bold text-dark mb-0">Active Collaborations</h5>
-                    <a href="#" class="text-decoration-none small fw-bold">View All</a>
+                    <h5 class="fw-bold text-dark mb-0">{{ __('dashboard.active_collaborations') }}</h5>
+                    <a href="#" class="text-decoration-none small fw-bold">{{ __('dashboard.view_all') }}</a>
                 </div>
 
                 @if ($activePapers->count() > 0)
                     @foreach ($activePapers as $paper)
                         @php
-                            $statusLabel = 'Draft';
+                            $statusLabel = __('dashboard.status_draft');
                             $statusColor = 'secondary';
 
                             if ($paper->conclusion_finalized) {
-                                $statusLabel = 'Published';
+                                $statusLabel = __('dashboard.status_published');
                                 $statusColor = 'success';
                             } elseif ($paper->results_finalized) {
-                                $statusLabel = 'Conclusion';
+                                $statusLabel = __('dashboard.status_conclusion');
                                 $statusColor = 'info';
                             } elseif ($paper->methodology_finalized) {
-                                $statusLabel = 'Results';
+                                $statusLabel = __('dashboard.status_results');
                                 $statusColor = 'warning';
                             } elseif ($paper->lit_review_finalized) {
-                                $statusLabel = 'Methodology';
+                                $statusLabel = __('dashboard.status_methodology');
                                 $statusColor = 'primary';
                             }
                         @endphp
@@ -305,8 +308,7 @@
                                         {{ $paper->paperType->name ?? 'Research' }}
                                     </span>
                                 </div>
-                                <small class="text-muted">{{ $paper->updated_at->diffForHumans(null, true, true) }}
-                                    ago</small>
+                                <small class="text-muted">{{ $paper->updated_at->diffForHumans() }}</small>
                             </div>
 
                             <h5 class="fw-bold text-dark mb-1">
@@ -322,11 +324,11 @@
                             <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-3">
                                 <div class="d-flex align-items-center gap-2 text-muted small">
                                     <i class="bi bi-people-fill"></i>
-                                    <span>Team:</span>
+                                    <span>{{ __('dashboard.team_label') }}</span>
                                     <div class="avatar-group">
                                         <img src="https://ui-avatars.com/api/?name={{ $paper->lecturer->user->name }}&background=random"
                                             class="user-avatar-sm shadow-sm"
-                                            title="Owner: {{ $paper->lecturer->user->name }}">
+                                            title="{{ __('dashboard.owner_tooltip', ['name' => $paper->lecturer->user->name]) }}">
                                     </div>
                                 </div>
 
@@ -344,16 +346,17 @@
                 @else
                     <div class="text-center py-5 border rounded-3 bg-light">
                         <i class="bi bi-folder-plus text-muted opacity-50 mb-3" style="font-size: 3rem;"></i>
-                        <h6 class="fw-bold text-muted">No active projects</h6>
-                        <p class="text-muted small mb-3">You haven't started any research papers yet.</p>
-                        <a href="/papers/create" class="btn btn-outline-primary btn-sm">Create First Project</a>
+                        <h6 class="fw-bold text-muted">{{ __('dashboard.no_projects_title') }}</h6>
+                        <p class="text-muted small mb-3">{{ __('dashboard.no_projects_desc') }}</p>
+                        <a href="/papers/create"
+                            class="btn btn-outline-primary btn-sm">{{ __('dashboard.btn_create_first') }}</a>
                     </div>
                 @endif
             </div>
 
             <div class="col-lg-4">
                 <div class="sidebar-card">
-                    <h6 class="fw-bold text-dark mb-3">Recommended for You</h6>
+                    <h6 class="fw-bold text-dark mb-3">{{ __('dashboard.recommended_title') }}</h6>
 
                     <div class="d-flex flex-column gap-3">
                         @foreach ($recommendations as $rec)
@@ -361,11 +364,11 @@
                                 if ($rec instanceof \App\Models\User) {
                                     $recUser = $rec;
                                     $displayName = $rec->name;
-                                    $subText = 'University';
+                                    $subText = __('dashboard.role_university');
                                 } else {
                                     $recUser = $rec->user;
                                     $displayName = $recUser->name;
-                                    $subText = 'Lecturer';
+                                    $subText = __('dashboard.role_lecturer');
                                 }
                             @endphp
 
@@ -393,7 +396,7 @@
                     </div>
 
                     <div class="mt-4 pt-3 border-top text-center">
-                        <a href="/find" class="text-decoration-none small fw-bold">Explore More</a>
+                        <a href="/find" class="text-decoration-none small fw-bold">{{ __('dashboard.explore_more') }}</a>
                     </div>
                 </div>
             </div>

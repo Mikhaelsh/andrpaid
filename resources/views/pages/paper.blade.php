@@ -18,17 +18,17 @@
                             <div class="section-icon-box text-primary bg-primary bg-opacity-10">
                                 <i class="bi bi-file-earmark-text-fill"></i>
                             </div>
-                            <h4 class="fw-bold mb-0 text-dark">Description</h4>
+                            <h4 class="fw-bold mb-0 text-dark">{{ __('paperOverview.section_description') }}</h4>
                         </div>
 
                         <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
                             <i class="bi bi-bookmark-fill text-muted me-1"></i>
-                            {{ $paper->paperType->name ?? 'Research Paper' }}
+                            {{ $paper->paperType->name ?? __('paperOverview.default_type') }}
                         </span>
                     </div>
 
                     <div class="paper-abstract-text">
-                        {{ $paper->description ?? 'No description provided for this research.' }}
+                        {{ $paper->description ?? __('paperOverview.no_description') }}
                     </div>
                 </div>
 
@@ -37,12 +37,12 @@
                         <div class="section-icon-box text-success bg-success bg-opacity-10">
                             <i class="bi bi-activity"></i>
                         </div>
-                        <h4 class="fw-bold mb-0 text-dark">Recent Activity</h4>
+                        <h4 class="fw-bold mb-0 text-dark">{{ __('paperOverview.section_activity') }}</h4>
                     </div>
 
                     @if ($paperActivities->isEmpty())
                         <div class="timeline-empty-state text-center py-4 border rounded-3 bg-light border-dashed">
-                            <p class="text-muted mb-0 small">No recent updates logged for this paper.</p>
+                            <p class="text-muted mb-0 small">{{ __('paperOverview.no_activity') }}</p>
                         </div>
                     @else
                         <ul class="activity-timeline">
@@ -87,7 +87,7 @@
                                     <div class="timeline-content">
                                         <div class="d-flex justify-content-between align-items-start">
                                             <h6 class="fw-bold text-dark mb-1">
-                                                {{ $activity->user->name ?? 'User' }}
+                                                {{ $activity->user->name ?? __('paperOverview.default_user') }}
                                             </h6>
                                             <span class="text-muted small">
                                                 {{ $activity->created_at->diffForHumans() }}
@@ -102,28 +102,30 @@
                         </ul>
 
                         <div class="mt-4 d-flex justify-content-center gap-2">
-                            @if($paperActivities->onFirstPage())
-                                <button class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center disabled"
-                                        style="width: 32px; height: 32px;" disabled>
+                            @if ($paperActivities->onFirstPage())
+                                <button
+                                    class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center disabled"
+                                    style="width: 32px; height: 32px;" disabled>
                                     <i class="bi bi-chevron-left"></i>
                                 </button>
                             @else
                                 <a href="{{ $paperActivities->previousPageUrl() }}"
-                                class="btn btn-outline-primary btn-sm rounded-circle d-flex align-items-center justify-content-center"
-                                style="width: 32px; height: 32px;">
+                                    class="btn btn-outline-primary btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                                    style="width: 32px; height: 32px;">
                                     <i class="bi bi-chevron-left"></i>
                                 </a>
                             @endif
 
-                            @if($paperActivities->hasMorePages())
+                            @if ($paperActivities->hasMorePages())
                                 <a href="{{ $paperActivities->nextPageUrl() }}"
-                                class="btn btn-outline-primary btn-sm rounded-circle d-flex align-items-center justify-content-center"
-                                style="width: 32px; height: 32px;">
+                                    class="btn btn-outline-primary btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                                    style="width: 32px; height: 32px;">
                                     <i class="bi bi-chevron-right"></i>
                                 </a>
                             @else
-                                <button class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center disabled"
-                                        style="width: 32px; height: 32px;" disabled>
+                                <button
+                                    class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center disabled"
+                                    style="width: 32px; height: 32px;" disabled>
                                     <i class="bi bi-chevron-right"></i>
                                 </button>
                             @endif
@@ -135,12 +137,13 @@
             <div class="col-lg-4">
                 <div class="sidebar-panel p-4 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h6 class="fw-bold text-uppercase text-muted small mb-0 tracking-wide">Research Team</h6>
+                        <h6 class="fw-bold text-uppercase text-muted small mb-0 tracking-wide">
+                            {{ __('paperOverview.sidebar_team') }}</h6>
 
                         @if (Auth::user()->isLecturer() && $paper->lecturer->id === Auth::user()->lecturer->id)
                             <a href="/{{ $paper->lecturer->user->profileId }}/paper/{{ $paper->paperId }}/collaborations"
                                 class="text-decoration-none small fw-bold text-primary">
-                                Manage
+                                {{ __('paperOverview.btn_manage') }}
                             </a>
                         @endif
                     </div>
@@ -153,7 +156,7 @@
                                 <div class="member-avatar flex-shrink-0">
                                     <img src="https://ui-avatars.com/api/?name={{ $paper->lecturer->user->name }}&background=0d6efd&color=fff"
                                         alt="{{ $paper->lecturer->user->name }}">
-                                    <div class="role-badge" title="Lead Researcher">
+                                    <div class="role-badge" title="{{ __('paperOverview.role_lead') }}">
                                         <i class="bi bi-star-fill"></i>
                                     </div>
                                 </div>
@@ -161,7 +164,7 @@
                                 <div class="member-info">
                                     <h6 class="member-name mb-0">{{ $paper->lecturer->user->name }}</h6>
                                     <span class="member-role text-primary fw-bold d-block mb-1"
-                                        style="font-size: 0.85rem;">Lead Researcher</span>
+                                        style="font-size: 0.85rem;">{{ __('paperOverview.role_lead') }}</span>
 
                                     @if ($paper->lecturer->affiliation)
                                         <div class="d-flex align-items-center text-muted small" style="font-size: 0.75rem;">
@@ -210,27 +213,28 @@
                 </div>
 
                 <div class="sidebar-panel p-4">
-                    <h6 class="fw-bold text-uppercase text-muted small mb-3 tracking-wide">Research Fields</h6>
+                    <h6 class="fw-bold text-uppercase text-muted small mb-3 tracking-wide">
+                        {{ __('paperOverview.sidebar_fields') }}</h6>
                     <div class="d-flex flex-wrap gap-2">
                         @forelse($paper->researchFields as $field)
                             <span class="field-tag">{{ $field->name }}</span>
                         @empty
-                            <span class="text-muted small fst-italic">No fields tagged.</span>
+                            <span class="text-muted small fst-italic">{{ __('paperOverview.no_fields') }}</span>
                         @endforelse
                     </div>
                 </div>
 
                 <div class="mt-4 px-2">
                     <div class="d-flex justify-content-between py-2 border-bottom">
-                        <span class="text-muted small">Created</span>
+                        <span class="text-muted small">{{ __('paperOverview.meta_created') }}</span>
                         <span class="fw-medium small text-dark">{{ $paper->created_at->format('M d, Y') }}</span>
                     </div>
                     <div class="d-flex justify-content-between py-2 border-bottom">
-                        <span class="text-muted small">Last Updated</span>
+                        <span class="text-muted small">{{ __('paperOverview.meta_updated') }}</span>
                         <span class="fw-medium small text-dark">{{ $paper->updated_at->diffForHumans() }}</span>
                     </div>
                     <div class="d-flex justify-content-between py-2">
-                        <span class="text-muted small">Visibility</span>
+                        <span class="text-muted small">{{ __('paperOverview.meta_visibility') }}</span>
                         <span
                             class="fw-medium small text-capitalize {{ $paper->visibility == 'public' ? 'text-success' : 'text-secondary' }}">
                             {{ $paper->visibility }}

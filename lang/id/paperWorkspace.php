@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'title_prefix' => 'Ruang Kerja - ',
+    'header_title' => 'Ruang Kerja Penelitian',
+    'header_desc' => 'Pilih modul untuk mulai menulis atau mengedit.',
+    'status_finalized' => 'Selesai',
+    'status_in_progress' => 'Sedang Berjalan',
+    'status_draft' => 'Draf',
+    'status_empty' => 'Kosong',
+    'module_lit_review' => 'Tinjauan Pustaka',
+    'desc_lit_review' => 'Kelola referensi, poin-poin penting, dan sintesis kerangka teoretis Anda.',
+    'footer_references' => ':count Referensi',
+    'open' => 'Buka',
+    'module_methodology' => 'Metodologi',
+    'desc_methodology' => 'Rancang alur penelitian, diagramkan proses, dan tentukan variabel.',
+    'footer_diagram_available' => 'Diagram tersedia',
+    'footer_no_diagrams' => 'Belum ada diagram',
+    'module_results' => 'Hasil & Analisis',
+    'desc_results' => 'Visualisasikan data Anda menggunakan grafik dan tabel, serta interpretasikan temuan.',
+    'footer_results_count' => ':tables Tabel, :charts Grafik',
+    'module_conclusion' => 'Kesimpulan',
+    'desc_conclusion' => 'Rangkum temuan, keterbatasan, dan usulkan arah penelitian masa depan.',
+    'footer_draft_started' => 'Draf dimulai',
+    'footer_not_started' => 'Belum dimulai',
+];

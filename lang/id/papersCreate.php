@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => 'Buat Makalah Baru',
+    'header_title' => 'Buat repositori makalah baru',
+    'header_desc' => 'Repositori makalah berisi semua informasi makalah Anda, dan versi PDF akhir.',
+    'label_owner_title' => 'Pemilik & Judul Makalah',
+    'placeholder_title' => 'mis. Analisis AI Transformers',
+    'label_description' => 'Deskripsi',
+    'optional' => '(Opsional)',
+    'placeholder_description' => 'Jelaskan secara singkat tentang apa penelitian ini...',
+    'label_type' => 'Jenis Makalah',
+    'select_type' => 'Pilih Jenis Makalah...',
+    'label_fields' => 'Bidang Penelitian',
+    'max_fields' => '(Maks 3)',
+    'placeholder_fields' => 'Pilih atau cari...',
+    'error_fields' => 'Silakan pilih setidaknya satu bidang penelitian.',
+    'label_visibility' => 'Visibilitas',
+    'vis_public' => 'Publik',
+    'vis_public_desc' => 'Siapa pun di internet dapat melihat repositori ini. Anda memilih siapa yang dapat mengedit.',
+    'vis_private' => 'Pribadi',
+    'vis_private_desc' => 'Anda memilih siapa yang dapat melihat dan mengedit repositori ini.',
+    'btn_create' => 'Buat Repositori',
+    'btn_cancel' => 'Batal',
+    'no_fields_found' => 'Tidak ada bidang ditemukan',
+    'max_tooltip' => 'Maksimal 3 bidang diperbolehkan',
+];

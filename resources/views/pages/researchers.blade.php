@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Researchers')
+@section('title', __('researchers.title'))
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/researchers.css') }}">
@@ -18,10 +18,10 @@
                         <div id="indonesiaMap"></div>
 
                         <div class="position-absolute bottom-0 start-0 m-4 bg-white p-3 rounded-3 shadow-sm" style="z-index: 500; min-width: 250px;">
-                            <span class="text-muted small fw-bold text-uppercase d-block mb-1">Selected Region</span>
-                            <h5 class="fw-bold text-primary mb-2" id="selectedRegionName">All Indonesia</h5>
+                            <span class="text-muted small fw-bold text-uppercase d-block mb-1">{{ __('researchers.selected_region') }}</span>
+                            <h5 class="fw-bold text-primary mb-2" id="selectedRegionName">{{ __('researchers.all_indonesia') }}</h5>
                             <button class="btn btn-sm btn-outline-secondary w-100" onclick="resetMap()">
-                                <i class="bi bi-arrow-counterclockwise me-1"></i> Reset View
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> {{ __('researchers.btn_reset_view') }}
                             </button>
                         </div>
                     </div>
@@ -31,35 +31,35 @@
             <div class="col-lg-5 col-xl-4">
                 <div class="d-flex flex-column h-100">
                     <div class="d-flex align-items-center justify-content-between mb-3">
-                        <h4 class="fw-bold mb-0">Researchers</h4>
+                        <h4 class="fw-bold mb-0">{{ __('researchers.header_researchers') }}</h4>
                         <span class="badge bg-primary rounded-pill px-3 py-2" id="researcherCountBadge">
-                            0 Found
+                            {{ __('researchers.count_found', ['count' => 0]) }}
                         </span>
                     </div>
 
                     <div class="reseacher-list-container flex-grow-1" style="min-height: 0; display: flex; flex-direction: column;">
-                        
+
                         <div class="d-flex flex-column gap-3 mb-3" id="researcherGrid">
-                          
+
                         </div>
 
                         <div id="emptyState" class="text-center py-5 d-none mt-2">
                             <div class="text-muted opacity-50 mb-3">
                                 <i class="bi bi-geo-alt" style="font-size: 3rem;"></i>
                             </div>
-                            <h5 class="fw-bold text-muted">No Researchers Found</h5>
-                            <p class="text-muted small">No affiliated researchers in this area.</p>
-                            <button class="btn btn-link btn-sm" onclick="resetMap()">Show All</button>
+                            <h5 class="fw-bold text-muted">{{ __('researchers.empty_title') }}</h5>
+                            <p class="text-muted small">{{ __('researchers.empty_desc') }}</p>
+                            <button class="btn btn-link btn-sm" onclick="resetMap()">{{ __('researchers.btn_show_all') }}</button>
                         </div>
 
                         <div id="paginationControls" class="mt-auto pt-3 border-top d-none">
                             <div class="d-flex justify-content-between align-items-center">
                                 <button class="btn btn-outline-secondary btn-sm" id="btnPrev" onclick="changePage(-1)">
-                                    <i class="bi bi-chevron-left"></i> Prev
+                                    <i class="bi bi-chevron-left"></i> {{ __('researchers.btn_prev') }}
                                 </button>
-                                <span class="text-muted small fw-bold" id="pageIndicator">Page 1 of 1</span>
+                                <span class="text-muted small fw-bold" id="pageIndicator">{{ __('researchers.page_indicator', ['current' => 1, 'total' => 1]) }}</span>
                                 <button class="btn btn-outline-secondary btn-sm" id="btnNext" onclick="changePage(1)">
-                                    Next <i class="bi bi-chevron-right"></i>
+                                    {{ __('researchers.btn_next') }} <i class="bi bi-chevron-right"></i>
                                 </button>
                             </div>
                         </div>
@@ -72,19 +72,25 @@
 
     <script src="{{ asset('libs/leaflet/leaflet.js') }}"></script>
 
-<script src="{{ asset('libs/leaflet/leaflet.js') }}"></script>
 <script>
+    window.lang = {
+        count_found: "{{ __('researchers.count_found', ['count' => ':count']) }}",
+        all_indonesia: "{{ __('researchers.all_indonesia') }}",
+        page_indicator: "{{ __('researchers.page_indicator', ['current' => ':current', 'total' => ':total']) }}",
+        unknown: "{{ __('researchers.unknown') }}"
+    };
+
     document.addEventListener('DOMContentLoaded', function() {
-        const ITEMS_PER_PAGE = 5; 
+        const ITEMS_PER_PAGE = 5;
         let currentPage = 1;
-        let currentFilteredData = []; 
-        
+        let currentFilteredData = [];
+
         const allResearchers = @json($researchers);
         const gridContainer = document.getElementById('researcherGrid');
         const countBadge = document.getElementById('researcherCountBadge');
         const emptyState = document.getElementById('emptyState');
         const regionLabel = document.getElementById('selectedRegionName');
-        
+
         const paginationControls = document.getElementById('paginationControls');
         const btnPrev = document.getElementById('btnPrev');
         const btnNext = document.getElementById('btnNext');
@@ -125,31 +131,31 @@
 
         function initList(data) {
             currentFilteredData = data;
-            currentPage = 1; 
-            countBadge.innerText = data.length + ' Found';
-            
+            currentPage = 1;
+            countBadge.innerText = window.lang.count_found.replace(':count', data.length);
+
             if (data.length === 0) {
                 gridContainer.innerHTML = '';
                 emptyState.classList.remove('d-none');
                 paginationControls.classList.add('d-none');
             } else {
                 emptyState.classList.add('d-none');
-                renderPage(); 
+                renderPage();
             }
         }
 
         function renderPage() {
             gridContainer.innerHTML = '';
-            
+
             const start = (currentPage - 1) * ITEMS_PER_PAGE;
             const end = start + ITEMS_PER_PAGE;
             const pageData = currentFilteredData.slice(start, end);
-            
+
             pageData.forEach(researcher => {
-                const userName = researcher.user?.name || 'Unknown';
+                const userName = researcher.user?.name || window.lang.unknown;
                 const avatar = `https://ui-avatars.com/api/?name=${userName}&background=random&size=64`;
                 const profileLink = `/${researcher.user?.profileId}/overview`;
-                const provName = researcher.province?.name || 'Unknown';
+                const provName = researcher.province?.name || window.lang.unknown;
 
                 let tagsHtml = '';
                 if(researcher.research_fields?.length > 0) {
@@ -180,19 +186,19 @@
             });
 
             updatePaginationUI();
-            
+
             document.querySelector('.reseacher-list-container').scrollTop = 0;
         }
 
         function updatePaginationUI() {
             const totalPages = Math.ceil(currentFilteredData.length / ITEMS_PER_PAGE);
-            
+
             if (totalPages <= 1) {
                 paginationControls.classList.add('d-none');
             } else {
                 paginationControls.classList.remove('d-none');
-                pageIndicator.innerText = `Page ${currentPage} of ${totalPages}`;
-                
+                pageIndicator.innerText = window.lang.page_indicator.replace(':current', currentPage).replace(':total', totalPages);
+
                 btnPrev.disabled = currentPage === 1;
                 btnNext.disabled = currentPage === totalPages;
             }
@@ -225,7 +231,7 @@
 
         window.resetMap = function() {
             map.setView([-2.5489, 118.0149], 5);
-            regionLabel.innerText = "All Indonesia";
+            regionLabel.innerText = window.lang.all_indonesia;
             if(geojsonLayer) {
                 geojsonLayer.eachLayer(function (layer) {
                     geojsonLayer.resetStyle(layer);

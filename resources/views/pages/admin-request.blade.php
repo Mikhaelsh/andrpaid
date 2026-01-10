@@ -1,11 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'User Reports & Feedback')
+@section('title', __('adminRequest.title'))
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
     <style>
-        /* Specific Report Styles */
         .report-stat-card {
             background: #fff;
             border-radius: 12px;
@@ -85,8 +84,8 @@
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h4 class="fw-bold mb-1">User Reports Center</h4>
-                <p class="text-muted small mb-0">Manage bugs, feature requests, and user feedback.</p>
+                <h4 class="fw-bold mb-1">{{ __('adminRequest.header_title') }}</h4>
+                <p class="text-muted small mb-0">{{ __('adminRequest.header_sub') }}</p>
             </div>
         </div>
 
@@ -95,29 +94,29 @@
                 <div class="report-stat-card">
                     <div class="stat-icon bg-total"><i class="bi bi-inbox-fill"></i></div>
                     <div>
-                        <h6 class="text-muted text-uppercase small fw-bold mb-0">Total Reports</h6>
-                        <h2 class="fw-bold mb-0">{{ $stats['total'] }}</h2>
+                        <h6 class="text-muted text-uppercase small fw-bold mb-0">{{ __('adminRequest.stat_total') }}</h6>
+                        <h2 class="fw-bold mb-0">{{ number_format($stats['total']) }}</h2>
                     </div>
                 </div>
                 <div class="report-stat-card">
                     <div class="stat-icon bg-pending"><i class="bi bi-hourglass-split"></i></div>
                     <div>
-                        <h6 class="text-muted text-uppercase small fw-bold mb-0">Pending</h6>
-                        <h2 class="fw-bold mb-0 text-warning">{{ $stats['pending'] }}</h2>
+                        <h6 class="text-muted text-uppercase small fw-bold mb-0">{{ __('adminRequest.stat_pending') }}</h6>
+                        <h2 class="fw-bold mb-0 text-warning">{{ number_format($stats['pending']) }}</h2>
                     </div>
                 </div>
                 <div class="report-stat-card">
                     <div class="stat-icon bg-resolved"><i class="bi bi-check-circle-fill"></i></div>
                     <div>
-                        <h6 class="text-muted text-uppercase small fw-bold mb-0">Resolved</h6>
-                        <h2 class="fw-bold mb-0 text-success">{{ $stats['resolved'] }}</h2>
+                        <h6 class="text-muted text-uppercase small fw-bold mb-0">{{ __('adminRequest.stat_resolved') }}</h6>
+                        <h2 class="fw-bold mb-0 text-success">{{ number_format($stats['resolved']) }}</h2>
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-8">
                 <div class="chart-container shadow-sm">
-                    <h6 class="fw-bold mb-3">Response Efficiency (Last 7 Days)</h6>
+                    <h6 class="fw-bold mb-3">{{ __('adminRequest.chart_title') }}</h6>
                     <div style="height: 250px;">
                         <canvas id="reportAnalyticsChart"></canvas>
                     </div>
@@ -132,12 +131,12 @@
                         <div class="input-group">
                             <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
                             <input type="text" name="search" class="form-control border-start-0 ps-0"
-                                placeholder="Search user or ID..." value="{{ request('search') }}">
+                                placeholder="{{ __('adminRequest.filter_search_placeholder') }}" value="{{ request('search') }}">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <select class="form-select" name="type" onchange="this.form.submit()">
-                            <option value="all">All Types</option>
+                            <option value="all">{{ __('adminRequest.filter_all_types') }}</option>
                             @foreach ($reportTypes as $type)
                                 <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
                                     {{ $type->name }}
@@ -147,18 +146,15 @@
                     </div>
                     <div class="col-md-3">
                         <select class="form-select" name="status" onchange="this.form.submit()">
-                            <option value="all">All Statuses</option>
-                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="reviewing" {{ request('status') == 'reviewing' ? 'selected' : '' }}>In Review
-                            </option>
-                            <option value="resolved" {{ request('status') == 'resolved' ? 'selected' : '' }}>Resolved
-                            </option>
-                            <option value="dismissed" {{ request('status') == 'dismissed' ? 'selected' : '' }}>Dismissed
-                            </option>
+                            <option value="all">{{ __('adminRequest.filter_all_statuses') }}</option>
+                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>{{ __('adminRequest.status_pending') }}</option>
+                            <option value="reviewing" {{ request('status') == 'reviewing' ? 'selected' : '' }}>{{ __('adminRequest.status_reviewing') }}</option>
+                            <option value="resolved" {{ request('status') == 'resolved' ? 'selected' : '' }}>{{ __('adminRequest.status_resolved') }}</option>
+                            <option value="dismissed" {{ request('status') == 'dismissed' ? 'selected' : '' }}>{{ __('adminRequest.status_dismissed') }}</option>
                         </select>
                     </div>
                     <div class="col-md-2 text-end">
-                        <a href="{{ url()->current() }}" class="btn btn-light text-muted w-100">Reset</a>
+                        <a href="{{ url()->current() }}" class="btn btn-light text-muted w-100">{{ __('adminRequest.filter_reset') }}</a>
                     </div>
                 </form>
             </div>
@@ -167,13 +163,13 @@
                 <table class="table report-table table-hover mb-0 align-middle">
                     <thead class="bg-light">
                         <tr>
-                            <th class="ps-4">ID</th>
-                            <th>User</th>
-                            <th>Type</th>
-                            <th>Description</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th class="text-end pe-4">Action</th>
+                            <th class="ps-4">{{ __('adminRequest.th_id') }}</th>
+                            <th>{{ __('adminRequest.th_user') }}</th>
+                            <th>{{ __('adminRequest.th_type') }}</th>
+                            <th>{{ __('adminRequest.th_description') }}</th>
+                            <th>{{ __('adminRequest.th_date') }}</th>
+                            <th>{{ __('adminRequest.th_status') }}</th>
+                            <th class="text-end pe-4">{{ __('adminRequest.th_action') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -202,23 +198,19 @@
                                 <td class="text-muted">{{ $report->created_at->format('d M Y') }}</td>
                                 <td>
                                     @if ($report->status === 'pending')
-                                        <span
-                                            class="badge bg-warning-subtle text-warning border border-warning-subtle">Pending</span>
+                                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle">{{ __('adminRequest.status_pending') }}</span>
                                     @elseif($report->status === 'resolved')
-                                        <span
-                                            class="badge bg-success-subtle text-success border border-success-subtle">Resolved</span>
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle">{{ __('adminRequest.status_resolved') }}</span>
                                     @elseif($report->status === 'dismissed')
-                                        <span
-                                            class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Dismissed</span>
+                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">{{ __('adminRequest.status_dismissed') }}</span>
                                     @else
-                                        <span
-                                            class="badge bg-info-subtle text-info border border-info-subtle">{{ ucfirst($report->status) }}</span>
+                                        <span class="badge bg-info-subtle text-info border border-info-subtle">{{ ucfirst($report->status) }}</span>
                                     @endif
                                 </td>
                                 <td class="text-end pe-4">
                                     <button class="btn btn-sm btn-outline-dark"
                                         onclick="openReportModal({{ json_encode($report) }})">
-                                        Manage
+                                        {{ __('adminRequest.btn_manage') }}
                                     </button>
                                 </td>
                             </tr>
@@ -226,7 +218,7 @@
                             <tr>
                                 <td colspan="7" class="text-center py-5 text-muted">
                                     <i class="bi bi-clipboard-x display-6 d-block mb-3 opacity-50"></i>
-                                    No reports found matching your filters.
+                                    {{ __('adminRequest.no_reports') }}
                                 </td>
                             </tr>
                         @endforelse
@@ -234,9 +226,11 @@
                 </table>
             </div>
 
-            <div class="card-footer bg-white border-top-0 py-3">
-                {{ $reports->links('pagination::bootstrap-5') }}
-            </div>
+            @if ($reports->hasPages())
+                <div class="card-footer bg-white border-top-0 py-3">
+                    {{ $reports->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
         </div>
     </div>
 
@@ -244,7 +238,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
                 <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold">Manage Report #<span id="modalReportId"></span></h5>
+                    <h5 class="modal-title fw-bold">{{ __('adminRequest.modal_title') }}<span id="modalReportId"></span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -252,35 +246,35 @@
                         @csrf
 
                         <div class="p-3 bg-light rounded-3 mb-3">
-                            <label class="small text-muted fw-bold text-uppercase">Reported By</label>
+                            <label class="small text-muted fw-bold text-uppercase">{{ __('adminRequest.modal_reported_by') }}</label>
                             <div class="fw-bold text-dark" id="modalUserName">User Name</div>
                             <div class="small text-muted" id="modalUserEmail">email@example.com</div>
                             <div class="mt-2 pt-2 border-top border-secondary-subtle">
-                                <label class="small text-muted fw-bold text-uppercase">Issue Type</label>
+                                <label class="small text-muted fw-bold text-uppercase">{{ __('adminRequest.modal_issue_type') }}</label>
                                 <div class="text-primary fw-bold" id="modalReportType">Bug Report</div>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Description</label>
+                            <label class="form-label fw-bold">{{ __('adminRequest.modal_description') }}</label>
                             <textarea class="form-control bg-white" id="modalDescription" rows="4" readonly></textarea>
                         </div>
 
                         <hr class="text-muted opacity-25">
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Update Status</label>
+                            <label class="form-label fw-bold">{{ __('adminRequest.modal_update_status') }}</label>
                             <select class="form-select form-select-lg" style="font-size: 0.9em;" name="status"
                                 id="modalStatusSelect">
-                                <option value="pending">Pending</option>
-                                <option value="reviewing">In Review</option>
-                                <option value="resolved">Resolved</option>
-                                <option value="dismissed">Dismissed</option>
+                                <option value="pending">{{ __('adminRequest.status_pending') }}</option>
+                                <option value="reviewing">{{ __('adminRequest.status_reviewing') }}</option>
+                                <option value="resolved">{{ __('adminRequest.status_resolved') }}</option>
+                                <option value="dismissed">{{ __('adminRequest.status_dismissed') }}</option>
                             </select>
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary fw-bold py-2">Save Changes</button>
+                            <button type="submit" class="btn btn-primary fw-bold py-2">{{ __('adminRequest.modal_btn_save') }}</button>
                         </div>
                     </form>
                 </div>
@@ -307,7 +301,7 @@
                     data: {
                         labels: dates,
                         datasets: [{
-                                label: 'New Reports',
+                                label: "{{ __('adminRequest.chart_new') }}",
                                 data: incomingData,
                                 borderColor: '#0d6efd',
                                 backgroundColor: gradIncoming,
@@ -317,7 +311,7 @@
                                 pointRadius: 3
                             },
                             {
-                                label: 'Resolved',
+                                label: "{{ __('adminRequest.chart_resolved') }}",
                                 data: resolvedData,
                                 borderColor: '#198754',
                                 backgroundColor: 'transparent',
@@ -404,12 +398,12 @@
                             <i class="bi bi-check-lg custom-icon"></i>
                         </div>
 
-                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <h4 class="fw-bold mb-3 heading-text">{{ __('common.success') }}</h4>
                         <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
 
                         <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm"
                             data-bs-dismiss="modal">
-                            CONTINUE
+                            {{ __('common.continue') }}
                         </button>
                     </div>
 

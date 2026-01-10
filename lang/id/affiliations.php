@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'title' => 'Kelola Afiliasi',
+    'header_title' => 'Afiliasi',
+    'header_desc' => 'Kelola permintaan dosen dan lihat jaringan universitas Anda.',
+    'stat_total' => 'Total Dosen',
+    'stat_pending' => 'Permintaan Tertunda',
+    'pending_section_title' => 'Permintaan Verifikasi Tertunda (:count)',
+    'th_lecturer' => 'Dosen',
+    'th_nidn' => 'NIDN',
+    'th_requested' => 'Diminta Pada',
+    'th_actions' => 'Aksi',
+    'btn_reject' => 'Tolak',
+    'btn_verify' => 'Verifikasi',
+    'modal_reject_title' => 'Tolak Permintaan',
+    'modal_reject_desc' => 'Harap berikan alasan penolakan untuk',
+    'placeholder_reason' => 'Alasan (mis. NIDN Tidak Valid)',
+    'btn_cancel' => 'Batal',
+    'btn_confirm_reject' => 'Konfirmasi Penolakan',
+    'affiliated_section_title' => 'Dosen Terafiliasi',
+    'th_joined' => 'Bergabung',
+    'th_status' => 'Status',
+    'status_verified' => 'Terverifikasi',
+    'empty_state' => 'Belum ada dosen yang berafiliasi.',
+];

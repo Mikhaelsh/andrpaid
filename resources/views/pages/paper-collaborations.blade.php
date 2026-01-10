@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Collaboration - ' . $paper->title)
+@section('title', __('paperCollaborations.title_prefix') . $paper->title)
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/paper.css') }}">
@@ -20,10 +20,9 @@
                                 <i class="bi bi-envelope-paper-heart-fill fs-3"></i>
                             </div>
                             <div>
-                                <h5 class="fw-bold text-dark mb-1">You have been invited!</h5>
+                                <h5 class="fw-bold text-dark mb-1">{{ __('paperCollaborations.invited_title') }}</h5>
                                 <p class="text-muted mb-0">
-                                    <span class="fw-bold text-dark">{{ $myPendingInvite->fromLecturer->user->name }}</span>
-                                    has invited you to join this paper as a
+                                    {!! __('paperCollaborations.invited_text', ['name' => $myPendingInvite->fromLecturer->user->name]) !!}
                                     <span class="badge bg-info text-dark bg-opacity-25 border border-info px-2">
                                         {{ $myPendingInvite->collaboration->role }}
                                     </span>
@@ -38,30 +37,28 @@
                                 @csrf
                                 <input type="hidden" name="invitation_id" value="{{ $myPendingInvite->id }}">
                                 <button type="submit" class="btn btn-primary fw-bold px-4 rounded-pill shadow-sm">
-                                    <i class="bi bi-check-lg me-2"></i> Accept
+                                    <i class="bi bi-check-lg me-2"></i> {{ __('paperCollaborations.btn_accept') }}
                                 </button>
                             </form>
 
                             <button type="button" class="btn btn-outline-danger fw-bold px-4 rounded-pill"
                                 data-bs-toggle="modal" data-bs-target="#rejectInviteModal">
-                                Decline
+                                {{ __('paperCollaborations.btn_decline') }}
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- REJECT MODAL --}}
             <div class="modal fade" id="rejectInviteModal" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content border-0 shadow rounded-4">
                         <div class="modal-header border-bottom-0 pb-0">
-                            <h5 class="modal-title fw-bold">Decline Invitation</h5>
+                            <h5 class="modal-title fw-bold">{{ __('paperCollaborations.modal_decline_title') }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body p-4">
-                            <p class="text-muted small">Are you sure you want to decline this invitation? You can leave a
-                                message explaining why.</p>
+                            <p class="text-muted small">{{ __('paperCollaborations.modal_decline_desc') }}</p>
 
                             <form
                                 action="/{{ $paper->lecturer->user->profileId }}/paper/{{ $paper->paperId }}/collaborations/reject-invitation"
@@ -70,13 +67,15 @@
                                 <input type="hidden" name="invitation_id" value="{{ $myPendingInvite->id }}">
 
                                 <div class="mb-3">
-                                    <textarea name="message" class="form-control bg-light" rows="3" placeholder="Optional: Reason for declining..."></textarea>
+                                    <textarea name="message" class="form-control bg-light" rows="3"
+                                        placeholder="{{ __('paperCollaborations.placeholder_decline_reason') }}"></textarea>
                                 </div>
 
                                 <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-danger fw-bold">Decline Invitation</button>
+                                    <button type="submit"
+                                        class="btn btn-danger fw-bold">{{ __('paperCollaborations.btn_decline_confirm') }}</button>
                                     <button type="button" class="btn btn-light text-muted"
-                                        data-bs-dismiss="modal">Cancel</button>
+                                        data-bs-dismiss="modal">{{ __('paperCollaborations.btn_cancel') }}</button>
                                 </div>
                             </form>
                         </div>
@@ -85,7 +84,6 @@
             </div>
         @endif
 
-        {{-- COLLABORATION STATUS TOGGLE --}}
         @if ($isOwner)
             <div class="card border-0 shadow-sm mb-5 overflow-hidden">
                 <div class="card-body p-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
@@ -95,12 +93,11 @@
                             <i class="bi {{ $paper->openCollaboration ? 'bi-unlock-fill' : 'bi-lock-fill' }} fs-4"></i>
                         </div>
                         <div>
-                            <h5 class="fw-bold mb-1">Collaboration is {{ $paper->openCollaboration ? 'Open' : 'Closed' }}
+                            <h5 class="fw-bold mb-1">
+                                {{ $paper->openCollaboration ? __('paperCollaborations.collab_open') : __('paperCollaborations.collab_closed') }}
                             </h5>
                             <p class="text-muted mb-0 small">
-                                {{ $paper->openCollaboration
-                                    ? 'Other researchers can request to join.'
-                                    : 'Other researchers can not request to join.' }}
+                                {{ $paper->openCollaboration ? __('paperCollaborations.desc_open') : __('paperCollaborations.desc_closed') }}
                             </p>
                         </div>
                     </div>
@@ -110,11 +107,11 @@
                         @csrf
                         @if ($paper->openCollaboration)
                             <button class="btn btn-outline-danger fw-bold rounded-pill px-4">
-                                <i class="bi bi-x-circle me-2"></i> Close Collaboration
+                                <i class="bi bi-x-circle me-2"></i> {{ __('paperCollaborations.btn_close_collab') }}
                             </button>
                         @else
                             <button class="btn btn-success fw-bold rounded-pill px-4">
-                                <i class="bi bi-check-circle me-2"></i> Open Collaboration
+                                <i class="bi bi-check-circle me-2"></i> {{ __('paperCollaborations.btn_open_collab') }}
                             </button>
                         @endif
                     </form>
@@ -126,17 +123,16 @@
             </div>
         @endif
 
-        {{-- TEAM & ROLES --}}
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-4 gap-3" id="roles">
             <div>
-                <h4 class="fw-bold text-dark mb-1">Project Roles & Members</h4>
-                <p class="text-muted mb-0">Manage the structure of your research team.</p>
+                <h4 class="fw-bold text-dark mb-1">{{ __('paperCollaborations.team_title') }}</h4>
+                <p class="text-muted mb-0">{{ __('paperCollaborations.team_desc') }}</p>
             </div>
 
             @if ($isOwner)
                 <button class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold" data-bs-toggle="modal"
                     data-bs-target="#addRoleModal">
-                    <i class="bi bi-plus-lg me-2"></i> Add Role / Slot
+                    <i class="bi bi-plus-lg me-2"></i> {{ __('paperCollaborations.btn_add_role') }}
                 </button>
             @endif
         </div>
@@ -146,8 +142,8 @@
                 <div class="card collab-card h-100 rounded-4 border-primary border-opacity-25">
                     <div class="card-header bg-primary bg-opacity-10 border-0 py-3">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="fw-bold text-primary mb-0 text-uppercase small" style="letter-spacing: 1px;">Lead
-                                Researcher</h6>
+                            <h6 class="fw-bold text-primary mb-0 text-uppercase small" style="letter-spacing: 1px;">
+                                {{ __('paperCollaborations.lead_researcher') }}</h6>
                             <i class="bi bi-star-fill text-warning"></i>
                         </div>
                     </div>
@@ -166,21 +162,18 @@
                                 @endif
                             </div>
                         </div>
-                        <p class="small text-muted mb-0">Owner of the research paper.</p>
+                        <p class="small text-muted mb-0">{{ __('paperCollaborations.owner_desc') }}</p>
                     </div>
                     <div class="card-footer bg-white border-0 pb-4 pt-0">
                         <a href="/{{ $paper->lecturer->user->profileId }}/overview"
-                            class="btn btn-outline-light text-dark border-secondary border-opacity-25 btn-sm w-100 rounded-pill">View
-                            Profile</a>
+                            class="btn btn-outline-light text-dark border-secondary border-opacity-25 btn-sm w-100 rounded-pill">{{ __('paperCollaborations.btn_view_profile') }}</a>
                     </div>
                 </div>
             </div>
 
-            {{-- PROJECT SLOTS --}}
             @foreach ($slots as $slot)
                 <div class="col-md-6 col-lg-4">
                     @if ($slot->lecturer)
-                        {{-- FILLED CARD --}}
                         <div class="card collab-card h-100 rounded-4">
                             <div class="card-header bg-light border-0 py-3">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -196,7 +189,7 @@
                                                         data-bs-toggle="modal" data-bs-target="#editRoleModal"
                                                         data-id="{{ $slot->id }}" data-role="{{ $slot->role }}"
                                                         data-description="{{ $slot->description }}">
-                                                        Edit Role
+                                                        {{ __('paperCollaborations.menu_edit_role') }}
                                                     </button>
                                                 </li>
 
@@ -209,7 +202,7 @@
                                                         type="button" data-bs-toggle="modal"
                                                         data-bs-target="#removeMemberModal" data-id="{{ $slot->id }}"
                                                         data-name="{{ $slot->lecturer->user->name }}">
-                                                        Remove Member
+                                                        {{ __('paperCollaborations.menu_remove_member') }}
                                                     </button>
                                                 </li>
                                             </ul>
@@ -232,12 +225,10 @@
                             </div>
                             <div class="card-footer bg-white border-0 pb-4 pt-0">
                                 <a href="/{{ $slot->lecturer->user->profileId }}/overview"
-                                    class="btn btn-outline-light text-dark border-secondary border-opacity-25 btn-sm w-100 rounded-pill">View
-                                    Profile</a>
+                                    class="btn btn-outline-light text-dark border-secondary border-opacity-25 btn-sm w-100 rounded-pill">{{ __('paperCollaborations.btn_view_profile') }}</a>
                             </div>
                         </div>
                     @else
-                        {{-- VACANT CARD --}}
                         <div class="card vacant-card h-100 rounded-4">
                             <div class="card-header bg-transparent border-0 py-3">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -263,41 +254,44 @@
                                         <i class="bi bi-person-plus fs-4"></i>
                                     </div>
                                 </div>
-                                <h6 class="fw-bold text-dark mb-1">Vacant Position</h6>
+                                <h6 class="fw-bold text-dark mb-1">{{ __('paperCollaborations.vacant_position') }}</h6>
                                 <p class="small text-muted mb-3">{{ $slot->description }}</p>
 
                                 @if ($isOwner)
                                     <button class="btn btn-primary btn-sm rounded-pill px-4 fw-bold invite-trigger"
                                         data-bs-toggle="modal" data-bs-target="#inviteModal"
                                         data-slot-id="{{ $slot->id }}">
-                                        Invite
+                                        {{ __('paperCollaborations.btn_invite') }}
                                     </button>
                                 @else
                                     @if ($paper->openCollaboration)
                                         @php
-                                        $isRequested = false;
+                                            $isRequested = false;
 
-                                        if (Auth::check() && Auth::user()->lecturer) {
-                                            $isRequested = \App\Models\CollaborationRequest::where("collaboration_id", $slot->id)
-                                                ->where("from_lecturer_id", Auth::user()->lecturer->id)
-                                                ->exists();
-                                        }
-                                    @endphp
+                                            if (Auth::check() && Auth::user()->lecturer) {
+                                                $isRequested = \App\Models\CollaborationRequest::where(
+                                                    'collaboration_id',
+                                                    $slot->id,
+                                                )
+                                                    ->where('from_lecturer_id', Auth::user()->lecturer->id)
+                                                    ->exists();
+                                            }
+                                        @endphp
 
-                                    @if ($isRequested)
-                                        <button type="button" class="btn btn-secondary btn-sm rounded-pill px-4 fw-bold" disabled>
-                                            <i class="bi bi-check-circle-fill me-1"></i> Requested
-                                        </button>
-                                    @else
-                                        <button type="button"
-                                            class="btn btn-outline-success btn-sm rounded-pill px-4 fw-bold join-request-trigger"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#joinRequestModal"
-                                            data-slot-id="{{ $slot->id }}"
-                                            data-role-name="{{ $slot->role }}">
-                                            Apply for Role
-                                        </button>
-                                    @endif
+                                        @if ($isRequested)
+                                            <button type="button"
+                                                class="btn btn-secondary btn-sm rounded-pill px-4 fw-bold" disabled>
+                                                <i class="bi bi-check-circle-fill me-1"></i>
+                                                {{ __('paperCollaborations.btn_requested') }}
+                                            </button>
+                                        @else
+                                            <button type="button"
+                                                class="btn btn-outline-success btn-sm rounded-pill px-4 fw-bold join-request-trigger"
+                                                data-bs-toggle="modal" data-bs-target="#joinRequestModal"
+                                                data-slot-id="{{ $slot->id }}" data-role-name="{{ $slot->role }}">
+                                                {{ __('paperCollaborations.btn_apply') }}
+                                            </button>
+                                        @endif
                                     @endif
                                 @endif
                             </div>
@@ -307,13 +301,13 @@
             @endforeach
         </div>
 
-        {{-- INVITATION --}}
         <span id="invitations"></span>
         @if ($isOwner && $invitations->count() != 0)
             <div class="mb-5">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold text-dark mb-0">
-                        <i class="bi bi-send-fill text-secondary me-2"></i> Sent Invitations
+                        <i class="bi bi-send-fill text-secondary me-2"></i>
+                        {{ __('paperCollaborations.section_invitations') }}
                         <span class="badge bg-secondary rounded-pill ms-2">{{ count($invitations) }}</span>
                     </h5>
 
@@ -327,7 +321,7 @@
                             method="POST">
                             @csrf
                             <button type="submit" class="btn btn-link text-muted text-decoration-none btn-sm fw-bold">
-                                <i class="bi bi-trash3 me-1"></i> Clear History
+                                <i class="bi bi-trash3 me-1"></i> {{ __('paperCollaborations.btn_clear_history') }}
                             </button>
                         </form>
                     @endif
@@ -359,7 +353,7 @@
                                             @endif
                                             <div class="d-flex align-items-center">
                                                 <i class="bi bi-briefcase me-1"></i>
-                                                Invited as: <strong
+                                                {{ __('paperCollaborations.invited_as') }} <strong
                                                     class="text-dark ms-1">{{ $inv->collaboration->role }}</strong>
                                             </div>
                                             <div class="d-flex align-items-center">
@@ -375,7 +369,7 @@
                                                     <i class="bi bi-info-circle-fill text-danger mt-1"></i>
                                                     <div>
                                                         <small class="fw-bold text-danger text-uppercase"
-                                                            style="font-size: 0.7rem;">Reason for decline</small>
+                                                            style="font-size: 0.7rem;">{{ __('paperCollaborations.reason_decline') }}</small>
                                                         <p class="mb-0 text-dark small fst-italic">"{{ $inv->message }}"
                                                         </p>
                                                     </div>
@@ -390,17 +384,20 @@
                                         @if ($inv->status === 'pending')
                                             <span
                                                 class="badge bg-warning text-dark bg-opacity-25 border border-warning rounded-pill px-3">
-                                                <i class="bi bi-hourglass-split me-1"></i> Pending
+                                                <i class="bi bi-hourglass-split me-1"></i>
+                                                {{ __('paperCollaborations.status_pending') }}
                                             </span>
                                         @elseif($inv->status === 'accepted')
                                             <span
                                                 class="badge bg-success text-success bg-opacity-10 border border-success rounded-pill px-3">
-                                                <i class="bi bi-check-circle-fill me-1"></i> Accepted
+                                                <i class="bi bi-check-circle-fill me-1"></i>
+                                                {{ __('paperCollaborations.status_accepted') }}
                                             </span>
                                         @elseif($inv->status === 'rejected')
                                             <span
                                                 class="badge bg-danger text-danger bg-opacity-10 border border-danger rounded-pill px-3">
-                                                <i class="bi bi-x-circle-fill me-1"></i> Declined
+                                                <i class="bi bi-x-circle-fill me-1"></i>
+                                                {{ __('paperCollaborations.status_declined') }}
                                             </span>
                                         @endif
                                     </div>
@@ -415,13 +412,15 @@
                                             <button type="submit"
                                                 class="btn btn-outline-danger btn-sm fw-bold px-3 rounded-pill"
                                                 title="Cancel Invitation">
-                                                <i class="bi bi-x-lg me-1"></i> Cancel
+                                                <i class="bi bi-x-lg me-1"></i>
+                                                {{ __('paperCollaborations.btn_cancel_invite') }}
                                             </button>
                                         @else
                                             <button type="submit"
                                                 class="btn btn-light text-muted btn-sm border fw-bold px-3 rounded-pill"
                                                 title="Remove from list">
-                                                <i class="bi bi-trash me-1"></i> Remove
+                                                <i class="bi bi-trash me-1"></i>
+                                                {{ __('paperCollaborations.btn_remove') }}
                                             </button>
                                         @endif
                                     </form>
@@ -431,10 +430,10 @@
                             <div class="mt-3 d-block d-md-none">
                                 @if ($inv->status === 'pending')
                                     <span
-                                        class="badge bg-warning text-dark bg-opacity-25 border border-warning rounded-pill w-100 py-2">Pending</span>
+                                        class="badge bg-warning text-dark bg-opacity-25 border border-warning rounded-pill w-100 py-2">{{ __('paperCollaborations.status_pending') }}</span>
                                 @elseif($inv->status === 'rejected')
                                     <span
-                                        class="badge bg-danger text-danger bg-opacity-10 border border-danger rounded-pill w-100 py-2">Declined</span>
+                                        class="badge bg-danger text-danger bg-opacity-10 border border-danger rounded-pill w-100 py-2">{{ __('paperCollaborations.status_declined') }}</span>
                                 @endif
                             </div>
 
@@ -444,12 +443,12 @@
             </div>
         @endif
 
-        {{-- REQUESTS SECTION --}}
         @if ($isOwner && $requests->count() != 0)
             <div class="mb-5">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold text-dark mb-0">
-                        <i class="bi bi-inbox-fill text-primary me-2"></i> All Requests
+                        <i class="bi bi-inbox-fill text-primary me-2"></i>
+                        {{ __('paperCollaborations.section_requests') }}
                         <span class="badge bg-primary rounded-pill ms-2">{{ count($requests) }}</span>
                     </h5>
 
@@ -458,10 +457,12 @@
                     @endphp
 
                     @if ($hasFinalizedRequests)
-                        <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/collaborations/clear-request-history" method="POST">
+                        <form
+                            action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/collaborations/clear-request-history"
+                            method="POST">
                             @csrf
                             <button type="submit" class="btn btn-link text-muted text-decoration-none btn-sm fw-bold">
-                                <i class="bi bi-trash3 me-1"></i> Clear History
+                                <i class="bi bi-trash3 me-1"></i> {{ __('paperCollaborations.btn_clear_history') }}
                             </button>
                         </form>
                     @endif
@@ -480,18 +481,21 @@
                                     <div class="w-100">
                                         <div class="d-flex align-items-center gap-2 mb-1">
                                             <h6 class="fw-bold mb-0 text-dark">{{ $req->fromLecturer->user->name }}</h6>
-                                            <span class="text-muted small">&bull; {{ $req->created_at->diffForHumans() }}</span>
+                                            <span class="text-muted small">&bull;
+                                                {{ $req->created_at->diffForHumans() }}</span>
                                         </div>
 
                                         <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
                                             @if ($req->toLecturer->affiliation)
                                                 <span class="small text-muted">
-                                                    <i class="bi bi-building me-1"></i> {{ $req->toLecturer->affiliation->university->user->name }}
+                                                    <i class="bi bi-building me-1"></i>
+                                                    {{ $req->toLecturer->affiliation->university->user->name }}
                                                 </span>
                                             @endif
 
                                             <span class="badge bg-light text-dark border fw-normal small">
-                                                Applying for: <strong>{{ $req->collaboration->role }}</strong>
+                                                {{ __('paperCollaborations.applying_for') }}
+                                                <strong>{{ $req->collaboration->role }}</strong>
                                             </span>
                                         </div>
 
@@ -500,11 +504,13 @@
                                         </div>
 
                                         @if ($req->status === 'rejected')
-                                            <div class="bg-danger bg-opacity-10 border border-danger border-opacity-25 rounded-3 p-3 mt-2">
+                                            <div
+                                                class="bg-danger bg-opacity-10 border border-danger border-opacity-25 rounded-3 p-3 mt-2">
                                                 <div class="d-flex gap-2">
                                                     <i class="bi bi-info-circle-fill text-danger mt-1"></i>
                                                     <div>
-                                                        <small class="fw-bold text-danger text-uppercase" style="font-size: 0.7rem;">You declined this request</small>
+                                                        <small class="fw-bold text-danger text-uppercase"
+                                                            style="font-size: 0.7rem;">{{ __('paperCollaborations.you_declined') }}</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -514,36 +520,47 @@
 
                                 <div class="d-flex flex-column align-items-end gap-2 mt-2 mt-md-0">
                                     @if ($req->status === 'accepted')
-                                        <span class="badge bg-success text-success bg-opacity-10 border border-success rounded-pill px-3 py-2">
-                                            <i class="bi bi-check-circle-fill me-1"></i> Accepted
+                                        <span
+                                            class="badge bg-success text-success bg-opacity-10 border border-success rounded-pill px-3 py-2">
+                                            <i class="bi bi-check-circle-fill me-1"></i>
+                                            {{ __('paperCollaborations.status_accepted') }}
                                         </span>
                                     @elseif ($req->status === 'rejected')
-                                        <span class="badge bg-danger text-danger bg-opacity-10 border border-danger rounded-pill px-3 py-2">
-                                            <i class="bi bi-x-circle-fill me-1"></i> Declined
+                                        <span
+                                            class="badge bg-danger text-danger bg-opacity-10 border border-danger rounded-pill px-3 py-2">
+                                            <i class="bi bi-x-circle-fill me-1"></i>
+                                            {{ __('paperCollaborations.status_declined') }}
                                         </span>
                                     @endif
 
                                     @if ($req->status === 'pending')
-                                        <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/collaborations/accept-request" method="POST" class="w-100">
+                                        <form
+                                            action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/collaborations/accept-request"
+                                            method="POST" class="w-100">
                                             @csrf
                                             <input type="hidden" name="requestId" value="{{ $req->id }}">
-                                            <button type="submit" class="btn btn-primary btn-sm fw-bold px-3 w-100 mb-2">Accept</button>
+                                            <button type="submit"
+                                                class="btn btn-primary btn-sm fw-bold px-3 w-100 mb-2">{{ __('paperCollaborations.btn_accept_request') }}</button>
                                         </form>
 
                                         <button type="button"
                                             class="btn btn-outline-danger btn-sm fw-bold px-3 w-100 reject-request-trigger"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#rejectRequestModal"
+                                            data-bs-toggle="modal" data-bs-target="#rejectRequestModal"
                                             data-request-id="{{ $req->id }}"
                                             data-applicant-name="{{ $req->toLecturer->user->name }}">
-                                            Reject
+                                            {{ __('paperCollaborations.btn_reject_request') }}
                                         </button>
                                     @else
-                                        <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/collaborations/remove-request" method="POST">
+                                        <form
+                                            action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/collaborations/remove-request"
+                                            method="POST">
                                             @csrf
                                             <input type="hidden" name="requestId" value="{{ $req->id }}">
-                                            <button type="submit" class="btn btn-light text-muted btn-sm border fw-bold px-3 rounded-pill" title="Remove from list">
-                                                <i class="bi bi-trash me-1"></i> Remove
+                                            <button type="submit"
+                                                class="btn btn-light text-muted btn-sm border fw-bold px-3 rounded-pill"
+                                                title="Remove from list">
+                                                <i class="bi bi-trash me-1"></i>
+                                                {{ __('paperCollaborations.btn_remove') }}
                                             </button>
                                         </form>
                                     @endif
@@ -556,12 +573,11 @@
         @endif
     </div>
 
-    {{-- JOIN REQUEST MODAL --}}
     <div class="modal fade" id="joinRequestModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow rounded-4">
                 <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold">Apply for Position</h5>
+                    <h5 class="modal-title fw-bold">{{ __('paperCollaborations.modal_apply_title') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
@@ -572,8 +588,7 @@
                             <i class="bi bi-briefcase-fill small"></i>
                         </div>
                         <div class="small text-muted">
-                            You are applying for the role of <strong id="applyRoleName" class="text-dark"></strong>.
-                            The lead researcher will review your application.
+                            {!! __('paperCollaborations.apply_alert') !!}
                         </div>
                     </div>
 
@@ -584,14 +599,14 @@
                         <input type="hidden" name="slot_id" id="applySlotId">
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Message</label>
+                            <label class="form-label fw-semibold">{{ __('paperCollaborations.label_message') }}</label>
                             <textarea class="form-control bg-light" name="message" rows="4"
-                                placeholder="Briefly explain your expertise and how you plan to contribute to this specific role..." required></textarea>
+                                placeholder="{{ __('paperCollaborations.placeholder_apply_message') }}" required></textarea>
                         </div>
 
                         <div class="d-grid">
                             <button type="submit" class="btn btn-success fw-bold py-2">
-                                Send Request
+                                {{ __('paperCollaborations.btn_send_request') }}
                             </button>
                         </div>
                     </form>
@@ -600,12 +615,11 @@
         </div>
     </div>
 
-    {{-- EDIT ROLE MODAL --}}
     <div class="modal fade" id="editRoleModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow rounded-4">
                 <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold">Edit Role Details</h5>
+                    <h5 class="modal-title fw-bold">{{ __('paperCollaborations.modal_edit_title') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
@@ -616,15 +630,18 @@
                         <input type="hidden" name="slot_id" id="editSlotId">
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Role Title</label>
+                            <label
+                                class="form-label fw-semibold">{{ __('paperCollaborations.label_role_title') }}</label>
                             <input type="text" class="form-control" name="role" id="editRoleTitle" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Description</label>
+                            <label
+                                class="form-label fw-semibold">{{ __('paperCollaborations.label_description') }}</label>
                             <textarea class="form-control" rows="3" name="description" id="editRoleDesc" required></textarea>
                         </div>
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary fw-bold">Save Changes</button>
+                            <button type="submit"
+                                class="btn btn-primary fw-bold">{{ __('paperCollaborations.btn_save_changes') }}</button>
                         </div>
                     </form>
                 </div>
@@ -632,12 +649,11 @@
         </div>
     </div>
 
-    {{-- REMOVE MEMBER MODAL --}}
     <div class="modal fade" id="removeMemberModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow rounded-4">
                 <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold text-danger">Remove Researcher</h5>
+                    <h5 class="modal-title fw-bold text-danger">{{ __('paperCollaborations.modal_remove_title') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
@@ -650,29 +666,28 @@
 
                         <div class="mb-4">
                             <p class="text-dark mb-1">
-                                Are you sure you want to remove <strong id="removeMemberName"
-                                    class="text-primary"></strong> from this project?
+                                {!! __('paperCollaborations.remove_confirm') !!}
                             </p>
                             <p class="small text-muted mb-0">
-                                This action will move them out of the team and make the slot vacant again.
+                                {{ __('paperCollaborations.remove_desc') }}
                             </p>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label fw-bold small text-uppercase text-muted"
                                 style="letter-spacing: 0.5px;">
-                                Reason for removal (Optional)
+                                {{ __('paperCollaborations.label_remove_reason') }}
                             </label>
                             <textarea class="form-control bg-light border-0" name="reason" rows="3"
-                                placeholder="e.g., Contribution phase completed, Changed research focus..."></textarea>
+                                placeholder="{{ __('paperCollaborations.placeholder_remove_reason') }}"></textarea>
                         </div>
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-danger fw-bold py-2">
-                                Confirm Removal
+                                {{ __('paperCollaborations.btn_confirm_removal') }}
                             </button>
                             <button type="button" class="btn btn-light text-muted fw-bold py-2" data-bs-dismiss="modal">
-                                Cancel
+                                {{ __('paperCollaborations.btn_cancel') }}
                             </button>
                         </div>
                     </form>
@@ -681,12 +696,11 @@
         </div>
     </div>
 
-    {{-- ADD ROLE MODAL --}}
     <div class="modal fade" id="addRoleModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow rounded-4">
                 <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold">Create New Role</h5>
+                    <h5 class="modal-title fw-bold">{{ __('paperCollaborations.modal_create_title') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
@@ -694,21 +708,24 @@
                         method="POST">
                         @csrf
                         <div class="mb-3">
-                            <label class="form-label fw-semibold" for="role">Role Title</label>
-                            <input type="text" class="form-control" placeholder="e.g. Data Analyst, Reviewer"
-                                name="role" id="role" required>
+                            <label class="form-label fw-semibold"
+                                for="role">{{ __('paperCollaborations.label_role_title') }}</label>
+                            <input type="text" class="form-control"
+                                placeholder="{{ __('paperCollaborations.placeholder_role_title') }}" name="role"
+                                id="role" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold" for="description">Description</label>
-                            <textarea class="form-control" rows="3" placeholder="Describe what this person will do..." name="description"
-                                id="description" required></textarea>
+                            <label class="form-label fw-semibold"
+                                for="description">{{ __('paperCollaborations.label_description') }}</label>
+                            <textarea class="form-control" rows="3" placeholder="{{ __('paperCollaborations.placeholder_role_desc') }}"
+                                name="description" id="description" required></textarea>
                         </div>
                         <div class="alert alert-light border small text-muted">
-                            <i class="bi bi-info-circle me-1"></i> This will create a vacant card on the board. You can
-                            invite a researcher to this slot afterwards.
+                            <i class="bi bi-info-circle me-1"></i> {{ __('paperCollaborations.create_alert') }}
                         </div>
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary fw-bold">Create Slot</button>
+                            <button type="submit"
+                                class="btn btn-primary fw-bold">{{ __('paperCollaborations.btn_create_slot') }}</button>
                         </div>
                     </form>
                 </div>
@@ -716,22 +733,21 @@
         </div>
     </div>
 
-    {{-- INVITE MODAL --}}
     <div class="modal fade" id="inviteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow rounded-4">
                 <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold">Assign Researcher</h5>
+                    <h5 class="modal-title fw-bold">{{ __('paperCollaborations.modal_assign_title') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
                     <input type="hidden" id="targetSlotId">
 
-                    <p class="text-muted small mb-3">Search for a researcher to fill this role.</p>
+                    <p class="text-muted small mb-3">{{ __('paperCollaborations.assign_desc') }}</p>
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
                         <input type="text" id="userSearchInput" class="form-control border-start-0 bg-light"
-                            placeholder="Search by name or email..." autocomplete="off">
+                            placeholder="{{ __('paperCollaborations.placeholder_search_user') }}" autocomplete="off">
                     </div>
 
                     <div id="userSearchResults" class="list-group mb-3">
@@ -741,7 +757,6 @@
         </div>
     </div>
 
-    {{-- SUCCESS MODAL --}}
     @if (session('success'))
         <div class="modal fade custom-modal-backdrop" id="statusModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -754,12 +769,12 @@
                             <i class="bi bi-check-lg custom-icon"></i>
                         </div>
 
-                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <h4 class="fw-bold mb-3 heading-text">{{ __('paperCollaborations.success_title') }}</h4>
                         <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
 
                         <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm"
                             data-bs-dismiss="modal">
-                            CONTINUE
+                            {{ __('paperCollaborations.btn_continue') }}
                         </button>
                     </div>
 
@@ -779,40 +794,42 @@
         @endpush
     @endif
 
-    {{-- REJECT REQUEST MODAL --}}
     <div class="modal fade" id="rejectRequestModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow rounded-4">
                 <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold text-danger">Decline Request</h5>
+                    <h5 class="modal-title fw-bold text-danger">
+                        {{ __('paperCollaborations.modal_reject_request_title') }}
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/collaborations/reject-request" method="POST">
+                    <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/collaborations/reject-request"
+                        method="POST">
                         @csrf
                         <input type="hidden" name="requestId" id="rejectRequestId">
 
                         <div class="mb-3">
                             <p class="text-dark mb-1">
-                                You are declining the request from <strong id="rejectApplicantName" class="text-dark"></strong>.
+                                {!! __('paperCollaborations.reject_request_desc') !!}
                             </p>
                             <p class="small text-muted">
-                                Please provide a reason. This will be visible to the applicant.
+                                {{ __('paperCollaborations.reject_request_sub') }}
                             </p>
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label fw-bold small text-uppercase text-muted">Reason for rejection</label>
-                            <textarea class="form-control bg-light"
-                                    name="message"
-                                    rows="3"
-                                    placeholder="e.g. Expertise does not match..."
-                                    required></textarea>
+                            <label
+                                class="form-label fw-bold small text-uppercase text-muted">{{ __('paperCollaborations.label_reject_reason') }}</label>
+                            <textarea class="form-control bg-light" name="message" rows="3"
+                                placeholder="{{ __('paperCollaborations.placeholder_reject_reason') }}" required></textarea>
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-danger fw-bold py-2">Confirm Rejection</button>
-                            <button type="button" class="btn btn-light text-muted fw-bold py-2" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit"
+                                class="btn btn-danger fw-bold py-2">{{ __('paperCollaborations.btn_confirm_rejection') }}</button>
+                            <button type="button" class="btn btn-light text-muted fw-bold py-2"
+                                data-bs-dismiss="modal">{{ __('paperCollaborations.btn_cancel') }}</button>
                         </div>
                     </form>
                 </div>
@@ -867,7 +884,7 @@
 
                 if (filteredUsers.length === 0) {
                     resultsContainer.innerHTML =
-                        '<div class="text-muted small text-center p-3">No users found.</div>';
+                        '<div class="text-muted small text-center p-3">{{ __('paperCollaborations.no_users_found') }}</div>';
                     return;
                 }
 
@@ -884,7 +901,7 @@
                 <div class="w-100">
                     <div class="d-flex justify-content-between">
                         <h6 class="mb-0 small fw-bold text-dark">${user.name}</h6>
-                        <span class="badge bg-primary rounded-pill small">Invite</span>
+                        <span class="badge bg-primary rounded-pill small">{{ __('paperCollaborations.btn_list_invite') }}</span>
                     </div>
                     <small class="text-muted" style="font-size: 0.7rem;">${user.email}</small>
                 </div>
@@ -926,14 +943,11 @@
             const joinRequestModal = document.getElementById('joinRequestModal');
             if (joinRequestModal) {
                 joinRequestModal.addEventListener('show.bs.modal', function(event) {
-                    // 1. Get the button that triggered the modal
                     const button = event.relatedTarget;
 
-                    // 2. Extract data
                     const slotId = button.getAttribute('data-slot-id');
                     const roleName = button.getAttribute('data-role-name');
 
-                    // 3. Update Modal Content
                     document.getElementById('applySlotId').value = slotId;
                     document.getElementById('applyRoleName').textContent = roleName;
                 });
@@ -942,14 +956,11 @@
             const rejectRequestModal = document.getElementById('rejectRequestModal');
             if (rejectRequestModal) {
                 rejectRequestModal.addEventListener('show.bs.modal', function(event) {
-                    // 1. Get the button that triggered the modal
                     const button = event.relatedTarget;
 
-                    // 2. Extract info from data attributes
                     const requestId = button.getAttribute('data-request-id');
                     const applicantName = button.getAttribute('data-applicant-name');
 
-                    // 3. Update the modal content
                     document.getElementById('rejectRequestId').value = requestId;
                     document.getElementById('rejectApplicantName').textContent = applicantName;
                 });

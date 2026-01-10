@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Inbox')
+@section('title', __('inboxes.title'))
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/inboxes.css') }}">
@@ -12,8 +12,8 @@
     <div class="container py-4">
         <div class="card border-0 shadow-sm overflow-hidden rounded-3">
             <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold">Inbox</h5>
-                <span class="text-muted small">{{ $inboxes->total() }} messages</span>
+                <h5 class="mb-0 fw-bold">{{ __('inboxes.header') }}</h5>
+                <span class="text-muted small">{{ __('inboxes.messages_count', ['count' => $inboxes->total()]) }}</span>
             </div>
 
             <div class="list-group list-group-flush">
@@ -27,16 +27,16 @@
                         <div class="mail-content">
                             <div class="mail-header">
                                 <span class="mail-sender">
-                                    {{ $inbox->fromUser->name ?? 'System Notification' }}
+                                    {{ $inbox->fromUser->name ?? __('inboxes.system_notification') }}
                                 </span>
                                 <span class="mail-date">
                                     {{ $inbox->created_at->diffForHumans() }}
                                 </span>
                             </div>
                             <div class="mail-body-preview">
-                                <span class="mail-subject">{{ $inbox->subject ?? '(No Subject)' }}</span>
+                                <span class="mail-subject">{{ $inbox->subject ?? __('inboxes.no_subject') }}</span>
                                 <span class="mx-1 text-muted">-</span>
-                                <span>{{ Str::limit(strip_tags($inbox->body ?? 'No content...'), 60) }}</span>
+                                <span>{{ Str::limit(strip_tags($inbox->body ?? __('inboxes.no_content')), 60) }}</span>
                             </div>
                         </div>
                     </div>
@@ -45,8 +45,8 @@
                         <div class="empty-icon">
                             <i class="bi bi-inbox"></i>
                         </div>
-                        <h5>Your inbox is empty</h5>
-                        <p class="small">Messages from other researchers will appear here.</p>
+                        <h5>{{ __('inboxes.empty_title') }}</h5>
+                        <p class="small">{{ __('inboxes.empty_desc') }}</p>
                     </div>
                 @endforelse
             </div>
@@ -71,11 +71,11 @@
                             <i class="bi bi-check-lg custom-icon"></i>
                         </div>
 
-                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <h4 class="fw-bold mb-3 heading-text">{{ __('common.success') }}</h4>
                         <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
 
                         <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm" data-bs-dismiss="modal">
-                            CONTINUE
+                            {{ __('common.continue') }}
                         </button>
                     </div>
 

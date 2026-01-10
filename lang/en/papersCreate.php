@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => 'Create New Paper',
+    'header_title' => 'Create a new paper repository',
+    'header_desc' => 'A paper repository contains all your paper informations, and the final PDF version.',
+    'label_owner_title' => 'Owner & Paper Title',
+    'placeholder_title' => 'e.g. Analysis of AI Transformers',
+    'label_description' => 'Description',
+    'optional' => '(Optional)',
+    'placeholder_description' => 'Briefly describe what this research is about...',
+    'label_type' => 'Paper Type',
+    'select_type' => 'Select The Paper Type...',
+    'label_fields' => 'Research Fields',
+    'max_fields' => '(Max 3)',
+    'placeholder_fields' => 'Select or search...',
+    'error_fields' => 'Please select at least one research field.',
+    'label_visibility' => 'Visibility',
+    'vis_public' => 'Public',
+    'vis_public_desc' => 'Anyone on the internet can see this repository. You choose who can edit.',
+    'vis_private' => 'Private',
+    'vis_private_desc' => 'You choose who can see and edit to this repository.',
+    'btn_create' => 'Create Repository',
+    'btn_cancel' => 'Cancel',
+    'no_fields_found' => 'No fields found',
+    'max_tooltip' => 'Maximum 3 fields allowed',
+];

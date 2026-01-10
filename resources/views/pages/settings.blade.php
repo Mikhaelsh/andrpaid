@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Settings')
+@section('title', __('settings.title'))
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/setting.css') }}">
@@ -12,18 +12,18 @@
 
             <div class="col-md-3 d-none d-md-block">
                 <nav class="settings-sidebar position-sticky" style="top: 2rem;">
-                    <h5 class="fw-bold mb-4 px-3">Settings</h5>
+                    <h5 class="fw-bold mb-4 px-3">{{ __('settings.title') }}</h5>
                     <div class="list-group list-group-flush border-0">
                         <a href="#profile" class="list-group-item list-group-item-action border-0 rounded-3 mb-1">
-                            <i class="bi bi-person-circle me-2"></i> Public Profile
+                            <i class="bi bi-person-circle me-2"></i> {{ __('settings.menu_profile') }}
                         </a>
                         @lecturer
                             <a href="#academic" class="list-group-item list-group-item-action border-0 rounded-3 mb-1">
-                                <i class="bi bi-mortarboard me-2"></i> Academic Info
+                                <i class="bi bi-mortarboard me-2"></i> {{ __('settings.menu_academic') }}
                             </a>
                         @endlecturer
                         <a href="#account" class="list-group-item list-group-item-action border-0 rounded-3 mb-1">
-                            <i class="bi bi-shield-lock me-2"></i> Account & Security
+                            <i class="bi bi-shield-lock me-2"></i> {{ __('settings.menu_account') }}
                         </a>
                     </div>
                 </nav>
@@ -33,7 +33,7 @@
 
                 <section id="profile" class="mb-5 settings-section">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h3 class="fw-bold">Public Profile</h3>
+                        <h3 class="fw-bold">{{ __('settings.menu_profile') }}</h3>
                     </div>
 
                     <div class="card settings-card border-0 shadow-sm p-4">
@@ -44,9 +44,9 @@
                                         alt="Profile" class="rounded-circle profile-img">
                                 </div>
                                 <div>
-                                    <h5 class="fw-bold mb-1">Profile Picture</h5>
+                                    <h5 class="fw-bold mb-1">{{ __('settings.profile_picture') }}</h5>
                                     <p class="text-muted small mb-0">
-                                        Generated automatically based on your display name.
+                                        {{ __('settings.profile_picture_desc') }}
                                     </p>
                                 </div>
                             </div>
@@ -56,27 +56,28 @@
 
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Display Name</label>
+                                        <label class="form-label fw-semibold">{{ __('settings.display_name') }}</label>
                                         <input type="text" class="form-control" name="name"
                                             value="{{ $user->name }}" required>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Profile ID</label>
+                                        <label class="form-label fw-semibold">{{ __('settings.profile_id') }}</label>
                                         <input type="text" class="form-control bg-light text-muted"
                                             value="{{ $user->profileId }}" readonly disabled
                                             style="cursor: not-allowed; font-family: monospace;">
-                                        <div class="form-text">This is your unique system identifier.</div>
+                                        <div class="form-text">{{ __('settings.profile_id_desc') }}</div>
                                     </div>
 
                                     <div class="col-12">
-                                        <label class="form-label fw-semibold">About Me</label>
-                                        <textarea class="form-control" name="description" rows="4" placeholder="Tell us a little bit about yourself...">{{ $user->description }}</textarea>
+                                        <label class="form-label fw-semibold">{{ __('settings.about_me') }}</label>
+                                        <textarea class="form-control" name="description" rows="4"
+                                            placeholder="{{ __('settings.about_me_placeholder') }}">{{ $user->description }}</textarea>
                                     </div>
 
                                     @notadmin
                                         <div class="col-md-12">
-                                            <label class="form-label fw-semibold">Province / Location</label>
+                                            <label class="form-label fw-semibold">{{ __('settings.province') }}</label>
                                             <select class="form-select" name="province_id">
                                                 @foreach ($allProvinces as $eachProvince)
                                                     <option
@@ -91,7 +92,7 @@
 
                                     @lecturer
                                         <div class="col-md-6">
-                                            <label class="form-label fw-semibold">LinkedIn URL</label>
+                                            <label class="form-label fw-semibold">{{ __('settings.linkedin_url') }}</label>
                                             <div class="input-group">
                                                 <span class="input-group-text bg-white text-muted"><i
                                                         class="bi bi-linkedin"></i></span>
@@ -102,7 +103,7 @@
                                         </div>
 
                                         <div class="col-md-6">
-                                            <label class="form-label fw-semibold">Portfolio URL</label>
+                                            <label class="form-label fw-semibold">{{ __('settings.portfolio_url') }}</label>
                                             <div class="input-group">
                                                 <span class="input-group-text bg-white text-muted"><i
                                                         class="bi bi-globe"></i></span>
@@ -115,7 +116,7 @@
 
                                     @university
                                         <div class="col-md-6">
-                                            <label class="form-label fw-semibold">Website URL</label>
+                                            <label class="form-label fw-semibold">{{ __('settings.website_url') }}</label>
                                             <div class="input-group">
                                                 <span class="input-group-text bg-white text-muted"><i
                                                         class="bi bi-globe"></i></span>
@@ -128,7 +129,8 @@
                                 </div>
 
                                 <div class="d-flex justify-content-end mt-4">
-                                    <button type="submit" class="btn btn-primary px-4">Save Profile</button>
+                                    <button type="submit"
+                                        class="btn btn-primary px-4">{{ __('settings.btn_save_profile') }}</button>
                                 </div>
                             </form>
                         </div>
@@ -137,7 +139,7 @@
 
                 @lecturer
                     <section id="academic" class="mb-5 settings-section">
-                        <h3 class="fw-bold mb-4">Academic Information</h3>
+                        <h3 class="fw-bold mb-4">{{ __('settings.academic_info') }}</h3>
 
                         <div class="card settings-card border-0 shadow-sm p-4">
                             <div class="card-body">
@@ -157,7 +159,8 @@
                                             <div class="d-flex align-items-center gap-2 mb-2">
                                                 <span
                                                     class="badge bg-success bg-opacity-10 text-success border border-success px-2 rounded-pill">
-                                                    <i class="bi bi-patch-check-fill me-1"></i> Verified Affiliation
+                                                    <i class="bi bi-patch-check-fill me-1"></i>
+                                                    {{ __('settings.verified_affiliation') }}
                                                 </span>
                                             </div>
                                             <p class="text-muted small mb-0">
@@ -169,11 +172,8 @@
                                     <div class="alert alert-light border d-flex gap-3 align-items-start" role="alert">
                                         <i class="bi bi-info-circle-fill text-secondary mt-1"></i>
                                         <div class="small text-muted">
-                                            <strong>Affiliation Locked.</strong> Since your account is officially verified by
-                                            the university,
-                                            you cannot leave or change institutions manually. Please contact your university
-                                            administrator
-                                            if you need to revoke this status.
+                                            <strong>{{ __('settings.affiliation_locked') }}</strong>
+                                            {{ __('settings.affiliation_locked_desc') }}
                                         </div>
                                     </div>
                                 @elseif ($affiliation && $affiliation->status === 'pending')
@@ -186,26 +186,25 @@
                                             </div>
                                         </div>
 
-                                        <h5 class="fw-bold">Verification In Progress</h5>
+                                        <h5 class="fw-bold">{{ __('settings.verification_progress') }}</h5>
                                         <p class="text-muted col-md-8 mx-auto mb-4">
-                                            You have requested to join
-                                            <strong>{{ $affiliation->university->user->name ?? 'your university' }}</strong>.
-                                            We are waiting for their confirmation.
+                                            {!! __('settings.verification_progress_desc', [
+                                                'university' => $affiliation->university->user->name ?? 'your university',
+                                            ]) !!}
                                         </p>
 
                                         <form action="/settings/cancel-affiliation" method="POST">
                                             @csrf
                                             <button type="submit"
                                                 class="btn btn-outline-danger btn-sm px-4 fw-bold rounded-pill">
-                                                <i class="bi bi-x-lg me-1"></i> Cancel Request
+                                                <i class="bi bi-x-lg me-1"></i> {{ __('settings.btn_cancel_request') }}
                                             </button>
                                         </form>
                                     </div>
                                 @else
                                     <div class="mb-4 pb-3 border-bottom">
-                                        <h5 class="fw-bold mb-1">Connect Institution</h5>
-                                        <p class="text-muted small mb-0">Link your account to unlock verified lecturer
-                                            features.
+                                        <h5 class="fw-bold mb-1">{{ __('settings.connect_institution') }}</h5>
+                                        <p class="text-muted small mb-0">{{ __('settings.connect_institution_desc') }}
                                         </p>
                                     </div>
 
@@ -215,7 +214,8 @@
                                             <i class="bi bi-x-circle-fill text-danger fs-5 mt-1"></i>
                                             <div class="w-100">
                                                 <div class="d-flex justify-content-between align-items-start">
-                                                    <h6 class="fw-bold text-danger mb-1">Request Rejected</h6>
+                                                    <h6 class="fw-bold text-danger mb-1">{{ __('settings.request_rejected') }}
+                                                    </h6>
                                                     <span class="badge bg-danger text-white rounded-pill"
                                                         style="font-size: 0.7rem;">{{ $affiliation->updated_at->diffForHumans() }}</span>
                                                 </div>
@@ -227,11 +227,12 @@
                                                     <div
                                                         class="bg-white bg-opacity-50 p-2 rounded border border-danger border-opacity-25 mt-2">
                                                         <p class="small text-danger mb-0 fst-italic">
-                                                            <strong>Reason:</strong> "{{ $affiliation->rejection_reason }}"
+                                                            <strong>{{ __('settings.rejected_reason') }}</strong>
+                                                            "{{ $affiliation->rejection_reason }}"
                                                         </p>
                                                     </div>
                                                 @endif
-                                                <p class="small text-muted mt-2 mb-0">You can submit a new request below.</p>
+                                                <p class="small text-muted mt-2 mb-0">{{ __('settings.rejected_retry') }}</p>
                                             </div>
                                         </div>
                                     @endif
@@ -243,12 +244,13 @@
                                             <div class="col-md-7">
                                                 <label class="form-label fw-bold small text-uppercase text-muted"
                                                     style="font-size: 0.75rem; letter-spacing: 0.5px;">
-                                                    University / Institution
+                                                    {{ __('settings.label_university') }}
                                                 </label>
 
                                                 <select class="form-select border-2 py-2 bg-light" name="university_id"
                                                     required style="border-radius: 8px;">
-                                                    <option value="" selected disabled>Select your university...</option>
+                                                    <option value="" selected disabled>
+                                                        {{ __('settings.select_university') }}</option>
                                                     @foreach ($allUniversities ?? [] as $university)
                                                         <option value="{{ $university->id }}"
                                                             {{ $affiliation && $affiliation->university_id == $university->id ? 'selected' : '' }}>
@@ -261,9 +263,7 @@
                                                     <i class="bi bi-info-circle-fill text-muted mt-1"
                                                         style="font-size: 0.8rem;"></i>
                                                     <p class="form-text small text-muted mb-0" style="line-height: 1.4;">
-                                                        Universities listed here are registered partners.
-                                                        If yours is not listed, your institution has not registered an account
-                                                        yet.
+                                                        {{ __('settings.university_note') }}
                                                     </p>
                                                 </div>
                                             </div>
@@ -271,7 +271,7 @@
                                             <div class="col-md-5">
                                                 <label class="form-label fw-bold small text-uppercase text-muted"
                                                     style="font-size: 0.75rem; letter-spacing: 0.5px;">
-                                                    Lecturer ID (NIDN)
+                                                    {{ __('settings.label_nidn') }}
                                                 </label>
                                                 <input type="text" class="form-control border-2 py-2 bg-light"
                                                     name="nidn" placeholder="e.g. 00123456"
@@ -285,11 +285,9 @@
                                                     <i class="bi bi-exclamation-triangle-fill text-warning mt-1 fs-5"></i>
                                                     <div>
                                                         <h6 class="fw-bold text-dark mb-1" style="font-size: 0.9rem;">
-                                                            Important Notice</h6>
+                                                            {{ __('settings.important_notice') }}</h6>
                                                         <p class="small text-muted mb-0">
-                                                            Once your request is <strong>accepted</strong>, you cannot change
-                                                            affiliation manually.
-                                                            Only the university administrator can remove or update your status.
+                                                            {!! __('settings.important_notice_desc') !!}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -297,7 +295,7 @@
 
                                             <div class="col-12">
                                                 <button type="submit" class="btn btn-primary px-4 py-2 rounded-3">
-                                                    {{ $affiliation && $affiliation->status === 'rejected' ? 'Resubmit Request' : 'Send Affiliation Request' }}
+                                                    {{ $affiliation && $affiliation->status === 'rejected' ? __('settings.btn_resubmit') : __('settings.btn_send_request') }}
                                                 </button>
                                             </div>
                                         </div>
@@ -308,35 +306,35 @@
 
                         <div class="card settings-card border-0 shadow-sm p-4">
                             <div class="card-body">
-                                <h5 class="fw-bold mb-1">Research Interests</h5>
-                                <p class="text-muted small mb-4">Select the fields that best describe your research focus.
-                                    These appear on your public profile.</p>
+                                <h5 class="fw-bold mb-1">{{ __('settings.research_interests') }}</h5>
+                                <p class="text-muted small mb-4">{{ __('settings.research_interests_desc') }}</p>
 
                                 <form id="interestsForm" action="/settings/update-interests" method="POST">
                                     @csrf
 
                                     <div class="mb-4">
                                         <label class="form-label fw-bold small text-uppercase text-muted">
-                                            Select Fields (Max 5) <span class="text-danger">*</span>
+                                            {{ __('settings.select_fields') }} <span class="text-danger">*</span>
                                         </label>
 
                                         <div class="multi-select-wrapper" id="settings-interests-wrapper">
                                             <div class="multi-select-box">
-                                                <input type="text" class="search-input-tag" placeholder="Search fields..."
-                                                    autocomplete="off">
+                                                <input type="text" class="search-input-tag"
+                                                    placeholder="{{ __('settings.search_fields') }}" autocomplete="off">
                                             </div>
                                             <div class="multi-select-dropdown"></div>
                                             <div class="hidden-inputs"></div>
                                         </div>
 
                                         <div id="interests-error" class="text-danger small mt-2 d-none">
-                                            <i class="bi bi-exclamation-circle me-1"></i> Please select at least one research
-                                            interest.
+                                            <i class="bi bi-exclamation-circle me-1"></i>
+                                            {{ __('settings.error_select_one') }}
                                         </div>
                                     </div>
 
                                     <div class="d-flex justify-content-end">
-                                        <button type="submit" class="btn btn-primary px-4">Save Interests</button>
+                                        <button type="submit"
+                                            class="btn btn-primary px-4">{{ __('settings.btn_save_interests') }}</button>
                                     </div>
                                 </form>
                             </div>
@@ -345,18 +343,18 @@
                 @endlecturer
 
                 <section id="account" class="mb-5 settings-section">
-                    <h3 class="fw-bold mb-4">Account & Security</h3>
+                    <h3 class="fw-bold mb-4">{{ __('settings.menu_account') }}</h3>
                     <div class="card settings-card border-0 shadow-sm p-4">
                         <div class="card-body">
 
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h6 class="fw-bold mb-1">Email Address</h6>
+                                    <h6 class="fw-bold mb-1">{{ __('settings.email_address') }}</h6>
                                     <p class="text-muted mb-0">{{ $user->email }}</p>
                                 </div>
                                 <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapseEmail" aria-expanded="false" aria-controls="collapseEmail">
-                                    Change Email
+                                    {{ __('settings.btn_change_email') }}
                                 </button>
                             </div>
 
@@ -367,21 +365,23 @@
 
                                         <div class="row g-3">
                                             <div class="col-md-6">
-                                                <label class="form-label fw-semibold small">New Email Address</label>
+                                                <label
+                                                    class="form-label fw-semibold small">{{ __('settings.new_email') }}</label>
                                                 <input type="email" class="form-control" name="email"
                                                     placeholder="Enter new email" required>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label fw-semibold small">Confirm Password</label>
+                                                <label
+                                                    class="form-label fw-semibold small">{{ __('settings.confirm_password') }}</label>
                                                 <input type="password" class="form-control" name="password"
-                                                    placeholder="Required for security" required>
+                                                    placeholder="{{ __('settings.password_placeholder') }}" required>
                                             </div>
                                             <div class="col-12 text-end">
                                                 <button type="button" class="btn btn-sm btn-secondary me-1"
                                                     data-bs-toggle="collapse"
-                                                    data-bs-target="#collapseEmail">Cancel</button>
-                                                <button type="submit" class="btn btn-sm btn-primary">Update
-                                                    Email</button>
+                                                    data-bs-target="#collapseEmail">{{ __('settings.btn_cancel') }}</button>
+                                                <button type="submit"
+                                                    class="btn btn-sm btn-primary">{{ __('settings.btn_update_email') }}</button>
                                             </div>
                                         </div>
                                     </form>
@@ -392,14 +392,15 @@
 
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h6 class="fw-bold mb-1">Password</h6>
-                                    <p class="text-muted mb-0">Last changed
-                                        {{ $user->latest_password_updated_at->diffForHumans() }}</p>
+                                    <h6 class="fw-bold mb-1">{{ __('settings.password') }}</h6>
+                                    <p class="text-muted mb-0">
+                                        {{ __('settings.last_changed', ['time' => $user->latest_password_updated_at->diffForHumans()]) }}
+                                    </p>
                                 </div>
                                 <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapsePassword" aria-expanded="false"
                                     aria-controls="collapsePassword">
-                                    Change Password
+                                    {{ __('settings.btn_change_password') }}
                                 </button>
                             </div>
 
@@ -410,16 +411,19 @@
 
                                         <div class="row g-3">
                                             <div class="col-md-4">
-                                                <label class="form-label fw-semibold small">Current Password</label>
+                                                <label
+                                                    class="form-label fw-semibold small">{{ __('settings.current_password') }}</label>
                                                 <input type="password" class="form-control" name="current_password"
                                                     required>
                                             </div>
                                             <div class="col-md-4">
-                                                <label class="form-label fw-semibold small">New Password</label>
+                                                <label
+                                                    class="form-label fw-semibold small">{{ __('settings.new_password') }}</label>
                                                 <input type="password" class="form-control" name="new_password" required>
                                             </div>
                                             <div class="col-md-4">
-                                                <label class="form-label fw-semibold small">Confirm New Password</label>
+                                                <label
+                                                    class="form-label fw-semibold small">{{ __('settings.confirm_new_password') }}</label>
                                                 <input type="password" class="form-control"
                                                     name="new_password_confirmation" required>
                                             </div>
@@ -427,9 +431,9 @@
                                             <div class="col-12 text-end mt-3">
                                                 <button type="button" class="btn btn-sm btn-secondary me-1"
                                                     data-bs-toggle="collapse"
-                                                    data-bs-target="#collapsePassword">Cancel</button>
-                                                <button type="submit" class="btn btn-sm btn-primary">Update
-                                                    Password</button>
+                                                    data-bs-target="#collapsePassword">{{ __('settings.btn_cancel') }}</button>
+                                                <button type="submit"
+                                                    class="btn btn-sm btn-primary">{{ __('settings.btn_update_password') }}</button>
                                             </div>
                                         </div>
                                     </form>
@@ -441,22 +445,21 @@
                             @notadmin
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <h6 class="fw-bold mb-1 text-danger">Delete Account</h6>
-                                        <p class="text-muted mb-0 small">Permanently remove your account and all data.</p>
+                                        <h6 class="fw-bold mb-1 text-danger">{{ __('settings.delete_account') }}</h6>
+                                        <p class="text-muted mb-0 small">{{ __('settings.delete_account_desc') }}</p>
                                     </div>
                                     <button class="btn btn-outline-danger btn-sm" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapseDelete" aria-expanded="false"
                                         aria-controls="collapseDelete">
-                                        Delete
+                                        {{ __('settings.btn_delete') }}
                                     </button>
                                 </div>
 
                                 <div class="collapse mt-3" id="collapseDelete">
                                     <div class="card card-body border-danger bg-danger bg-opacity-10">
-                                        <h6 class="fw-bold text-danger mb-2">Are you absolutely sure?</h6>
+                                        <h6 class="fw-bold text-danger mb-2">{{ __('settings.are_you_sure') }}</h6>
                                         <p class="small text-danger mb-3">
-                                            This action cannot be undone. This will permanently delete your profile, papers, and
-                                            remove your data from our servers.
+                                            {{ __('settings.delete_warning') }}
                                         </p>
 
                                         <form action="/settings/delete-account" method="POST">
@@ -464,7 +467,7 @@
 
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold small text-danger">
-                                                    Type "<span class="user-select-all">DELETE ACCOUNT</span>" to confirm
+                                                    {!! __('settings.type_to_confirm') !!}
                                                 </label>
                                                 <input type="text" class="form-control border-danger"
                                                     id="deleteConfirmationInput" placeholder="DELETE ACCOUNT"
@@ -474,12 +477,12 @@
                                             <div class="d-flex justify-content-end gap-2">
                                                 <button type="button" class="btn btn-sm btn-light text-danger border"
                                                     data-bs-toggle="collapse" data-bs-target="#collapseDelete">
-                                                    Cancel
+                                                    {{ __('settings.btn_cancel') }}
                                                 </button>
 
                                                 <button type="submit" class="btn btn-sm btn-danger" id="finalDeleteBtn"
                                                     disabled>
-                                                    Delete Account
+                                                    {{ __('settings.btn_delete_confirm') }}
                                                 </button>
                                             </div>
                                         </form>
@@ -681,7 +684,6 @@
         @endpush
     @endlecturer
 
-    {{-- SUCCESS POP UP --}}
     @if (session('success'))
         <div class="modal fade custom-modal-backdrop" id="statusModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -694,12 +696,12 @@
                             <i class="bi bi-check-lg custom-icon"></i>
                         </div>
 
-                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <h4 class="fw-bold mb-3 heading-text">{{ __('common.success') }}</h4>
                         <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
 
                         <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm"
                             data-bs-dismiss="modal">
-                            CONTINUE
+                            {{ __('common.continue') }}
                         </button>
                     </div>
 
@@ -720,7 +722,6 @@
     @endif
 
 
-    {{-- ERROR POP UP --}}
     @if (session('error'))
         <div class="modal fade custom-modal-backdrop" id="statusModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -733,12 +734,12 @@
                             <i class="bi bi-x-lg custom-icon"></i>
                         </div>
 
-                        <h4 class="fw-bold mb-3 heading-text">Error!</h4>
+                        <h4 class="fw-bold mb-3 heading-text">{{ __('common.error') }}</h4>
                         <p class="text-muted mb-4 fs-5">{{ session('error') }}</p>
 
                         <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm"
                             data-bs-dismiss="modal">
-                            CONTINUE
+                            {{ __('common.continue') }}
                         </button>
                     </div>
 

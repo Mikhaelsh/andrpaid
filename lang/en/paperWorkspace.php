@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'title_prefix' => 'Workspace - ',
+    'header_title' => 'Research Workspace',
+    'header_desc' => 'Select a module to begin writing or editing.',
+    'status_finalized' => 'Finalized',
+    'status_in_progress' => 'In Progress',
+    'status_draft' => 'Draft',
+    'status_empty' => 'Empty',
+    'module_lit_review' => 'Literature Review',
+    'desc_lit_review' => 'Manage references, key points, and synthesize your theoretical framework.',
+    'footer_references' => ':count References',
+    'open' => 'Open',
+    'module_methodology' => 'Methodology',
+    'desc_methodology' => 'Design your research flow, diagram your process, and define variables.',
+    'footer_diagram_available' => 'Diagram available',
+    'footer_no_diagrams' => 'No diagrams yet',
+    'module_results' => 'Results & Analysis',
+    'desc_results' => 'Visualize your data using charts and tables, and interpret the findings.',
+    'footer_results_count' => ':tables Tables, :charts Charts',
+    'module_conclusion' => 'Conclusion',
+    'desc_conclusion' => 'Summarize findings, limitations, and propose future research directions.',
+    'footer_draft_started' => 'Draft started',
+    'footer_not_started' => 'Not started',
+];

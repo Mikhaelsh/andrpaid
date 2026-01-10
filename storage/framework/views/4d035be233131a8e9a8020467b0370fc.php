@@ -1,11 +1,12 @@
 <nav class="navbar navbar-expand-md navbar-dark modern-navbar sticky-top">
     <div class="container">
 
-        <a class="navbar-brand d-flex align-items-center" href="<?php echo e(route('dashboard', ['profileId' => Auth::user()->profileId])); ?>">
+        <a class="navbar-brand d-flex align-items-center"
+            href="<?php echo e(route('dashboard', ['profileId' => Auth::user()->profileId])); ?>">
             <div class="brand-logo-container me-2">
                 <img src="<?php echo e(asset('images/logo.jpeg')); ?>" alt="Logo" class="brand-logo">
             </div>
-            <span class="brand-text">AndRPaid</span>
+            <span class="brand-text"><?php echo e(__('navbar.brand')); ?></span>
         </a>
 
         <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
@@ -19,53 +20,64 @@
                 <?php if (\Illuminate\Support\Facades\Blade::check('admin')): ?>
                     <li class="nav-item">
                         <a class="nav-link px-3 <?php echo e(request()->is('admin-panel*') ? 'active' : ''); ?>" href="/admin-panel">
-                            <i class="bi bi-shield-lock-fill me-1"></i> Admin Panel
+                            <i class="bi bi-shield-lock-fill me-1"></i> <?php echo e(__('navbar.admin_panel')); ?>
+
                         </a>
                     </li>
                 <?php endif; ?>
 
                 <?php if (\Illuminate\Support\Facades\Blade::check('notadmin')): ?>
-                <li class="nav-item">
-                    <a class="nav-link px-3 <?php echo e(request()->routeIs('dashboard') ? 'active' : ''); ?>" href="<?php echo e(route('dashboard', ['profileId' => Auth::user()->profileId])); ?>">
-                        <i class="bi bi-speedometer2 me-1"></i> Dashboard
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 <?php echo e(request()->routeIs('dashboard') ? 'active' : ''); ?>"
+                            href="<?php echo e(route('dashboard', ['profileId' => Auth::user()->profileId])); ?>">
+                            <i class="bi bi-speedometer2 me-1"></i> <?php echo e(__('navbar.dashboard')); ?>
 
-                <li class="nav-item">
-                    <a class="nav-link px-3 <?php echo e(request()->is('find') ? 'active' : ''); ?>" href="/find">
-                        <i class="bi bi-search me-1"></i> Find
-                    </a>
-                </li>
+                        </a>
+                    </li>
 
-                <?php if (\Illuminate\Support\Facades\Blade::check('university')): ?>
-                <li class="nav-item">
-                    <a class="nav-link px-3 position-relative <?php echo e(request()->is('affiliations*') ? 'active' : ''); ?>"
-                        href="/affiliations">
-                        <i class="bi bi-person-check-fill me-1"></i> Affiliations
+                    <li class="nav-item">
+                        <a class="nav-link px-3 <?php echo e(request()->is('find') ? 'active' : ''); ?>" href="/find">
+                            <i class="bi bi-search me-1"></i> <?php echo e(__('navbar.find')); ?>
 
-                            <?php if(isset($pendingRequestsCount) && $pendingRequestsCount > 0): ?>
-                                <span class="position-absolute top-20 right-20 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" style="width: 10px; height: 10px;">
-                                <span class="visually-hidden">New requests</span>
-                            </span>
-                        <?php endif; ?>
-                    </a>
-                </li>
-                <?php endif; ?>
+                        </a>
+                    </li>
+
+                    <?php if (\Illuminate\Support\Facades\Blade::check('university')): ?>
+                        <li class="nav-item">
+                            <a class="nav-link px-3 position-relative <?php echo e(request()->is('affiliations*') ? 'active' : ''); ?>"
+                                href="/affiliations">
+                                <i class="bi bi-person-check-fill me-1"></i> <?php echo e(__('navbar.affiliations')); ?>
+
+
+                                <?php if(isset($pendingRequestsCount) && $pendingRequestsCount > 0): ?>
+                                    <span
+                                        class="position-absolute top-20 right-20 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"
+                                        style="width: 10px; height: 10px;">
+                                        <span class="visually-hidden"><?php echo e(__('navbar.new_requests')); ?></span>
+                                    </span>
+                                <?php endif; ?>
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 <?php endif; ?>
             </ul>
 
             <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item me-2">
-                    <a class="nav-link position-relative p-2 <?php echo e(request()->is('inboxes*') ? 'text-white active' : ''); ?>" href="/inboxes" title="Inbox">
+                    <a class="nav-link position-relative p-2 <?php echo e(request()->is('inboxes*') ? 'text-white active' : ''); ?>"
+                        href="/inboxes" title="<?php echo e(__('navbar.inbox')); ?>">
                         <i class="bi bi-inbox-fill" style="font-size: 1.3rem;"></i>
 
                         <?php
-                            $unreadInboxCount = \App\Models\Inbox::where("to_user_id", Auth::user()->id)->where("marked_read", false)->count();
+                            $unreadInboxCount = \App\Models\Inbox::where('to_user_id', Auth::user()->id)
+                                ->where('marked_read', false)
+                                ->count();
                         ?>
 
                         <?php if($unreadInboxCount != 0): ?>
-                            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                                <span class="visually-hidden">New alerts</span>
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                                <span class="visually-hidden"><?php echo e(__('navbar.new_alerts')); ?></span>
                             </span>
                         <?php endif; ?>
                     </a>
@@ -91,9 +103,11 @@
                         <li>
                             <h6 class="dropdown-header text-uppercase fw-bold">
                                 <?php if (\Illuminate\Support\Facades\Blade::check('university')): ?>
-                                    Organization Profile
+                                    <?php echo e(__('navbar.profile_org')); ?>
+
                                 <?php else: ?>
-                                    Personal Profile
+                                    <?php echo e(__('navbar.profile_personal')); ?>
+
                                 <?php endif; ?>
                             </h6>
                         </li>
@@ -101,19 +115,22 @@
                         <?php if (\Illuminate\Support\Facades\Blade::check('university')): ?>
                             <li>
                                 <a class="dropdown-item py-2" href="/<?php echo e(Auth::user()->profileId); ?>/overview">
-                                    <i class="bi bi-building me-3"></i> Overview
+                                    <i class="bi bi-building me-3"></i> <?php echo e(__('navbar.menu_overview')); ?>
+
                                 </a>
                             </li>
 
                             <li>
                                 <a class="dropdown-item py-2" href="/<?php echo e(Auth::user()->profileId); ?>/papers">
-                                    <i class="bi bi-journal-text me-3"></i> Publications
+                                    <i class="bi bi-journal-text me-3"></i> <?php echo e(__('navbar.menu_publications')); ?>
+
                                 </a>
                             </li>
 
                             <li>
                                 <a class="dropdown-item py-2" href="/<?php echo e(Auth::user()->profileId); ?>/researchers">
-                                    <i class="bi bi-people me-3"></i> Researchers
+                                    <i class="bi bi-people me-3"></i> <?php echo e(__('navbar.menu_researchers')); ?>
+
                                 </a>
                             </li>
                         <?php endif; ?>
@@ -121,17 +138,20 @@
                         <?php if (\Illuminate\Support\Facades\Blade::check('lecturer')): ?>
                             <li>
                                 <a class="dropdown-item py-2" href="/<?php echo e(Auth::user()->profileId); ?>/overview">
-                                    <i class="bi bi-person me-3"></i> Profile
+                                    <i class="bi bi-person me-3"></i> <?php echo e(__('navbar.menu_profile')); ?>
+
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item py-2" href="/<?php echo e(Auth::user()->profileId); ?>/papers">
-                                    <i class="bi bi-journal-code me-3"></i> Papers
+                                    <i class="bi bi-journal-code me-3"></i> <?php echo e(__('navbar.menu_papers')); ?>
+
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item py-2" href="/<?php echo e(Auth::user()->profileId); ?>/stars">
-                                    <i class="bi bi-star me-3"></i> Stars
+                                    <i class="bi bi-star me-3"></i> <?php echo e(__('navbar.menu_stars')); ?>
+
                                 </a>
                             </li>
                         <?php endif; ?>
@@ -142,7 +162,8 @@
 
                         <li>
                             <a class="dropdown-item py-2" href="/settings">
-                                <i class="bi bi-gear me-3"></i> Settings
+                                <i class="bi bi-gear me-3"></i> <?php echo e(__('navbar.menu_settings')); ?>
+
                             </a>
                         </li>
 
@@ -150,7 +171,8 @@
                             <form action="/logout" method="POST">
                                 <?php echo csrf_field(); ?>
                                 <button type="submit" class="dropdown-item py-2 text-danger fw-bold">
-                                    <i class="bi bi-box-arrow-right me-3"></i> Sign out
+                                    <i class="bi bi-box-arrow-right me-3"></i> <?php echo e(__('navbar.sign_out')); ?>
+
                                 </button>
                             </form>
                         </li>

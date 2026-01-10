@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'title' => 'Register',
+    'join_header' => 'Join AndRPaid',
+    'join_subheader' => 'Choose the role that best describes you.',
+    'role_lecturer' => 'Lecturer',
+    'desc_lecturer' => 'For lecturers seeking teaching and academic contracts.',
+    'btn_join_lecturer' => 'Join as Lecturer',
+    'role_university' => 'University',
+    'desc_university' => 'For Universities looking to hire and manage academic talent.',
+    'btn_join_university' => 'Join as University',
+    'already_have_account' => 'Already have an account?',
+    'sign_in_link' => 'Sign in here',
+    'sign_in' => 'Sign In',
+    'register_role_title' => ':role Register',
+    'create_account_subheader' => 'Create your new account.',
+    'placeholder_name_example' => 'Name (e.g., :example)',
+    'placeholder_email_example' => 'Email (e.g., :example)',
+    'placeholder_bio' => 'Short Bio (Optional, max 200 chars)',
+    'select_province' => 'Select Your Province...',
+    'placeholder_password' => 'Create a password',
+    'placeholder_confirm_password' => 'Confirm password',
+    'btn_register_role' => 'Register :role',
+    'back_to_roles' => 'Back to Role Selection',
+];

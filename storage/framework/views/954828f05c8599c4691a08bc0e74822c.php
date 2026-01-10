@@ -5,7 +5,7 @@
                 <li class="admin-nav-item">
                     <a href="/admin-panel" class="admin-nav-link <?php echo e(request()->is('admin-panel') ? 'active' : ''); ?>">
                         <i class="bi bi-grid-1x2-fill"></i>
-                        <span>Overview</span>
+                        <span><?php echo e(__('navbarAdmin.overview')); ?></span>
                     </a>
                 </li>
 
@@ -16,21 +16,25 @@
                         class="admin-nav-link dropdown-toggle <?php echo e(request()->is('admin-panel/master-data*') ? 'active' : ''); ?>"
                         id="masterDataDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-database-fill-gear"></i>
-                        <span>Master Data</span>
+                        <span><?php echo e(__('navbarAdmin.master_data')); ?></span>
                     </a>
                     <ul class="dropdown-menu admin-dropdown-menu" aria-labelledby="masterDataDropdown">
                         <li>
-                            <h6 class="dropdown-header text-uppercase small fw-bold text-muted mb-2 px-3">Publications
+                            <h6 class="dropdown-header text-uppercase small fw-bold text-muted mb-2 px-3">
+                                <?php echo e(__('navbarAdmin.publications')); ?>
+
                             </h6>
                         </li>
                         <li>
                             <a class="dropdown-item admin-dropdown-item" href="/admin-panel/master-data/research-fields">
-                                <i class="bi bi-lightbulb"></i> Research Fields
+                                <i class="bi bi-lightbulb"></i> <?php echo e(__('navbarAdmin.research_fields')); ?>
+
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item admin-dropdown-item" href="/admin-panel/master-data/paper-types">
-                                <i class="bi bi-file-earmark-text"></i> Paper Types
+                                <i class="bi bi-file-earmark-text"></i> <?php echo e(__('navbarAdmin.paper_types')); ?>
+
                             </a>
                         </li>
                     </ul>
@@ -45,15 +49,15 @@
                         class="admin-nav-link dropdown-toggle <?php echo e(request()->is('admin-panel/request*') ? 'active' : ''); ?>"
                         id="requestsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-inbox-fill"></i>
-                        <span>Request</span>
+                        <span><?php echo e(__('navbarAdmin.request')); ?></span>
                     </a>
                     <ul class="dropdown-menu admin-dropdown-menu" aria-labelledby="requestsDropdown">
                         <li>
                             <a class="dropdown-item admin-dropdown-item d-flex justify-content-between"
                                 href="/admin-panel/request/user-report">
-                                <span><i class="bi bi-chat-square-quote"></i> User Report</span>
+                                <span><i class="bi bi-chat-square-quote"></i> <?php echo e(__('navbarAdmin.user_report')); ?></span>
                                 <?php if($existNewReport): ?>
-                                    <span class="badge bg-danger rounded-pill">New</span>
+                                    <span class="badge bg-danger rounded-pill"><?php echo e(__('navbarAdmin.new')); ?></span>
                                 <?php endif; ?>
                             </a>
                         </li>
@@ -65,17 +69,19 @@
                         class="admin-nav-link dropdown-toggle <?php echo e(request()->is('admin-panel/monitoring*') ? 'active' : ''); ?>"
                         id="monitoringDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-activity"></i>
-                        <span>Monitoring</span>
+                        <span><?php echo e(__('navbarAdmin.monitoring')); ?></span>
                     </a>
                     <ul class="dropdown-menu admin-dropdown-menu" aria-labelledby="monitoringDropdown">
                         <li>
                             <a class="dropdown-item admin-dropdown-item" href="/admin-panel/monitoring/global-statistics">
-                                <i class="bi bi-bar-chart-line"></i> Global Statistics
+                                <i class="bi bi-bar-chart-line"></i> <?php echo e(__('navbarAdmin.global_statistics')); ?>
+
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item admin-dropdown-item" href="/admin-panel/monitoring/activity-logs">
-                                <i class="bi bi-clock-history"></i> User Activity Logs
+                                <i class="bi bi-clock-history"></i> <?php echo e(__('navbarAdmin.activity_logs')); ?>
+
                             </a>
                         </li>
                     </ul>

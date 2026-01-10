@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Reset Password')
+@section('title', __('reset.title'))
 @section('hideNavbar', true)
 @section('hideFooter', true)
 
@@ -11,6 +11,12 @@
 
 @section('content')
     <div class="login-page-wrapper">
+        <div class="auth-lang-switch shadow-sm">
+            <a href="{{ route('lang.switch', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
+            <span class="text-muted">|</span>
+            <a href="{{ route('lang.switch', 'id') }}" class="{{ app()->getLocale() == 'id' ? 'active' : '' }}">ID</a>
+        </div>
+
         <ul class="theme-picker">
             <li data-theme="barney" class="barney"></li>
             <li data-theme="firewatch" class="firewatch"></li>
@@ -26,8 +32,8 @@
 
             <div class="header-section">
                 <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="auth-logo">
-                <h1>Reset Password</h1>
-                <p>Create a new strong password</p>
+                <h1>{{ __('reset.header') }}</h1>
+                <p>{{ __('reset.subheader') }}</p>
             </div>
 
             @if (session('error') || $errors->any())
@@ -40,31 +46,32 @@
             @endif
 
             <div class="input-wrapper">
-                <input type="email" name="email" placeholder="Enter your email" required autocomplete="email"
-                    value="{{ old('email') }}" />
+                <input type="email" name="email" placeholder="{{ __('reset.placeholder_email') }}" required
+                    autocomplete="email" value="{{ old('email') }}" />
                 <i class="bx bxs-envelope"></i>
             </div>
 
             <div class="input-wrapper">
-                <input type="password" name="password" id="password" placeholder="New Password" required />
+                <input type="password" name="password" id="password" placeholder="{{ __('reset.placeholder_password') }}"
+                    required />
                 <i class="bx bx-lock-alt"></i>
             </div>
 
             <div class="input-wrapper">
                 <input type="password" name="password_confirmation" id="password_confirmation"
-                    placeholder="Confirm Password" required />
+                    placeholder="{{ __('reset.placeholder_confirm') }}" required />
                 <i class="bx bx-check-shield"></i>
             </div>
 
             <div class="button-wrapper">
                 <button type="button" id="btnTriggerCaptcha">
-                    Reset Password
+                    {{ __('reset.btn_reset') }}
                     <i class="bx bx-right-arrow-alt"></i>
                 </button>
             </div>
 
             <div class="form-footer">
-                <p>Remembered it? <a href="/login">Back to Login</a></p>
+                <p>{{ __('reset.remembered') }} <a href="/login">{{ __('reset.back_login') }}</a></p>
             </div>
         </form>
 
@@ -73,10 +80,10 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content custom-modal-content p-4 text-center">
                     <div class="modal-header border-0 pb-0 justify-content-center">
-                        <h5 class="modal-title fw-bold">Security Check</h5>
+                        <h5 class="modal-title fw-bold">{{ __('reset.security_check') }}</h5>
                     </div>
                     <div class="modal-body px-4 pt-2 pb-4">
-                        <p class="text-muted mb-3">Please solve this math problem to continue.</p>
+                        <p class="text-muted mb-3">{{ __('reset.security_desc') }}</p>
 
                         <div class="captcha-question bg-light rounded py-3 border">
                             <span id="mathQuestion" class="fs-4 fw-bold"></span>
@@ -86,17 +93,17 @@
                             <input type="number" id="captchaInput" class="form-control text-center form-control-lg"
                                 placeholder="?">
                             <div id="captchaError" class="text-danger small mt-2" style="display:none;">
-                                <i class="bi bi-x-circle me-1"></i> Incorrect. Try again.
+                                <i class="bi bi-x-circle me-1"></i> {{ __('reset.captcha_error') }}
                             </div>
                         </div>
 
                         <div class="d-grid gap-2 mt-4">
                             <button type="button" id="btnVerifyCaptcha" class="btn btn-primary fw-bold py-2">
-                                VERIFY & CHANGE
+                                {{ __('reset.btn_verify') }}
                             </button>
                             <button type="button" class="btn btn-link text-muted text-decoration-none"
                                 data-bs-dismiss="modal">
-                                Cancel
+                                {{ __('common.cancel') }}
                             </button>
                         </div>
                     </div>

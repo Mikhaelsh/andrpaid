@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $user->name . ' - Profile')
+@section('title', $user->name . ' - ' . __('profileOverview.title_suffix'))
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/profile.css') }}">
@@ -36,12 +36,12 @@
 
                         <div class="d-flex justify-content-center justify-content-md-start gap-2 mt-3">
                             <span class="badge bg-dark border border-secondary text-light px-3 py-2 rounded-pill">
-                                <i class="bi bi-person-badge me-1"></i> Lecturer
+                                <i class="bi bi-person-badge me-1"></i> {{ __('profileOverview.badge_lecturer') }}
                             </span>
                             @if ($user->lecturer && $user->lecturer->affiliation)
                                 <span
                                     class="badge bg-success bg-opacity-25 text-white border border-success px-3 py-2 rounded-pill">
-                                    <i class="bi bi-check-circle-fill me-1"></i> Verified
+                                    <i class="bi bi-check-circle-fill me-1"></i> {{ __('profileOverview.badge_verified') }}
                                 </span>
                             @endif
                         </div>
@@ -67,26 +67,26 @@
                                 @if ($paperCount == 1)
                                     <div class="text-center px-3 stat-item">
                                         <div class="h3 fw-bold text-white mb-0">{{ $paperCount }}</div>
-                                        <div class="small text-white-50">Paper</div>
+                                        <div class="small text-white-50">{{ __('profileOverview.stat_paper') }}</div>
                                     </div>
                                 @elseif ($paperCount > 1)
                                     <div class="text-center px-3 stat-item">
                                         <div class="h3 fw-bold text-white mb-0">{{ $paperCount }}</div>
-                                        <div class="small text-white-50">Papers</div>
+                                        <div class="small text-white-50">{{ __('profileOverview.stat_papers') }}</div>
                                     </div>
                                 @endif
 
                                 @if ($starCount > 0)
                                     <div class="text-center px-3 stat-item">
                                         <div class="h3 fw-bold text-warning mb-0">{{ $starCount }}</div>
-                                        <div class="small text-white-50">Total Stars</div>
+                                        <div class="small text-white-50">{{ __('profileOverview.stat_stars') }}</div>
                                     </div>
                                 @endif
 
                                 @if ($collabCount > 0)
                                     <div class="text-center px-3 stat-item">
                                         <div class="h3 fw-bold text-info mb-0">{{ $collabCount }}</div>
-                                        <div class="small text-white-50">Open Collabs</div>
+                                        <div class="small text-white-50">{{ __('profileOverview.stat_collabs') }}</div>
                                     </div>
                                 @endif
 
@@ -102,21 +102,23 @@
                 <div class="col-lg-4">
                     <div class="mb-5">
                         <h5 class="fw-bold text-dark mb-3 d-flex align-items-center">
-                            <i class="bi bi-person-lines-fill me-2 text-primary"></i> About Me
+                            <i class="bi bi-person-lines-fill me-2 text-primary"></i>
+                            {{ __('profileOverview.about_me') }}
                         </h5>
                         @if ($user->description)
                             <p class="text-muted" style="line-height: 1.7;">
                                 {{ $user->description }}
                             </p>
                         @else
-                            <p class="text-muted small fst-italic">This user hasn't written a bio yet.</p>
+                            <p class="text-muted small fst-italic">{{ __('profileOverview.bio_empty') }}</p>
                         @endif
                     </div>
 
                     @if ($user->lecturer && $user->lecturer->researchFields->count() > 0)
                         <div class="mb-5">
                             <h5 class="fw-bold text-dark mb-3 d-flex align-items-center">
-                                <i class="bi bi-lightbulb-fill me-2 text-primary"></i> Research Interests
+                                <i class="bi bi-lightbulb-fill me-2 text-primary"></i>
+                                {{ __('profileOverview.research_interests') }}
                             </h5>
                             <div class="d-flex flex-wrap gap-2">
                                 @foreach ($user->lecturer->researchFields as $researchField)
@@ -129,7 +131,7 @@
                     @endif
 
                     <div class="card border-0 bg-light rounded-4 p-4">
-                        <h6 class="fw-bold mb-3">Connect</h6>
+                        <h6 class="fw-bold mb-3">{{ __('profileOverview.connect') }}</h6>
                         <ul class="list-unstyled mb-0 d-flex flex-column gap-3">
                             <li>
                                 <a href="mailto:{{ $user->email }}"
@@ -148,7 +150,7 @@
                                         <div class="bg-white p-2 rounded-circle shadow-sm">
                                             <i class="bi bi-linkedin text-primary"></i>
                                         </div>
-                                        <span>LinkedIn Profile</span>
+                                        <span>{{ __('profileOverview.linkedin') }}</span>
                                     </a>
                                 </li>
                             @endif
@@ -160,7 +162,7 @@
                                         <div class="bg-white p-2 rounded-circle shadow-sm">
                                             <i class="bi bi-globe text-primary"></i>
                                         </div>
-                                        <span>Portfolio Website</span>
+                                        <span>{{ __('profileOverview.portfolio') }}</span>
                                     </a>
                                 </li>
                             @endif
@@ -173,11 +175,11 @@
                     <div class="mb-5">
                         <div class="d-flex justify-content-between align-items-end mb-4 border-bottom pb-2">
                             <h4 class="fw-bold text-dark mb-0">
-                                <i class="bi bi-trophy-fill text-warning me-2"></i> Top Rated Research
+                                <i class="bi bi-trophy-fill text-warning me-2"></i>
+                                {{ __('profileOverview.top_rated_research') }}
                             </h4>
                             <a href="/{{ $user->profileId }}/papers?sort=stars"
-                                class="text-decoration-none small fw-bold">View
-                                All</a>
+                                class="text-decoration-none small fw-bold">{{ __('profileOverview.view_all') }}</a>
                         </div>
 
                         <div class="d-flex flex-column gap-3">
@@ -190,7 +192,8 @@
                                                 <div class="d-flex align-items-center gap-2 mb-2">
                                                     <span
                                                         class="badge bg-warning bg-opacity-10 text-warning border border-warning rounded-pill small">
-                                                        <i class="bi bi-star-fill me-1"></i> Top Rated
+                                                        <i class="bi bi-star-fill me-1"></i>
+                                                        {{ __('profileOverview.badge_top_rated') }}
                                                     </span>
                                                     <span class="text-muted small px-2 border-start">
                                                         {{ $paper->paperType->name }}
@@ -213,8 +216,10 @@
                                             </div>
 
                                             <div class="text-center">
-                                                <h3 class="fw-bold text-warning mb-0">{{ $paper->paper_stars_count }}</h3>
-                                                <span class="small text-muted">Stars</span>
+                                                <h3 class="fw-bold text-warning mb-0">{{ $paper->paper_stars_count }}
+                                                </h3>
+                                                <span
+                                                    class="small text-muted">{{ __('profileOverview.label_stars') }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -223,7 +228,7 @@
                                 </div>
                             @empty
                                 <div class="text-center py-4 bg-light rounded-3 border border-dashed">
-                                    <p class="text-muted mb-0">No papers published yet.</p>
+                                    <p class="text-muted mb-0">{{ __('profileOverview.papers_empty') }}</p>
                                 </div>
                             @endforelse
                         </div>
@@ -232,11 +237,11 @@
                     <div class="mb-4">
                         <div class="d-flex justify-content-between align-items-end mb-4 border-bottom pb-2">
                             <h4 class="fw-bold text-dark mb-0">
-                                <i class="bi bi-people-fill text-primary me-2"></i> Open for Collaboration
+                                <i class="bi bi-people-fill text-primary me-2"></i>
+                                {{ __('profileOverview.open_for_collab') }}
                             </h4>
                             <a href="/{{ $user->profileId }}/papers?collab[]=1"
-                                class="text-decoration-none small fw-bold">View
-                                All</a>
+                                class="text-decoration-none small fw-bold">{{ __('profileOverview.view_all') }}</a>
                         </div>
 
                         <div class="d-flex flex-column gap-3">
@@ -248,10 +253,12 @@
                                             <div>
                                                 <div class="d-flex align-items-center gap-2 mb-2">
                                                     <span class="paper-status-badge collab-open">
-                                                        <i class="bi bi-people-fill me-1"></i> Looking for Collaborators
+                                                        <i class="bi bi-people-fill me-1"></i>
+                                                        {{ __('profileOverview.badge_looking_collab') }}
                                                     </span>
                                                     <span class="text-muted small">
-                                                        Updated {{ $paper->updated_at->diffForHumans() }}
+                                                        {{ __('profileOverview.updated') }}
+                                                        {{ $paper->updated_at->diffForHumans() }}
                                                     </span>
                                                 </div>
                                                 <h5 class="fw-bold mb-2">
@@ -265,14 +272,14 @@
                                             <a href="mailto:{{ $user->email }}?subject=Collaboration Interest: {{ $paper->title }}"
                                                 class="btn btn-primary btn-sm rounded-pill px-3 fw-bold ms-3"
                                                 style="white-space: nowrap;">
-                                                Contact
+                                                {{ __('profileOverview.btn_contact') }}
                                             </a>
                                         </div>
                                     </div>
                                 </div>
                             @empty
                                 <div class="text-center py-4 bg-light rounded-3 border border-dashed">
-                                    <p class="text-muted mb-0">No active collaboration requests at the moment.</p>
+                                    <p class="text-muted mb-0">{{ __('profileOverview.collab_empty') }}</p>
                                 </div>
                             @endforelse
                         </div>
@@ -309,7 +316,7 @@
 
                         <div class="d-flex justify-content-center justify-content-md-start gap-2">
                             <span class="badge bg-dark border border-secondary text-light px-3 py-2 rounded-pill">
-                                <i class="bi bi-building me-1"></i> University
+                                <i class="bi bi-building me-1"></i> {{ __('profileOverview.badge_university') }}
                             </span>
                         </div>
                     </div>
@@ -334,7 +341,8 @@
                                 @if ($totalInstitutionPapers > 0)
                                     <div class="text-center px-3 stat-item border-end-0">
                                         <div class="h3 fw-bold text-white mb-0">{{ $totalInstitutionPapers }}</div>
-                                        <div class="small text-white-50">Publications</div>
+                                        <div class="small text-white-50">{{ __('profileOverview.stat_publications') }}
+                                        </div>
                                     </div>
                                 @endif
 
@@ -342,7 +350,8 @@
                                     <div
                                         class="text-center px-3 stat-item {{ $totalInstitutionPapers > 0 ? 'border-start border-light border-opacity-25' : '' }}">
                                         <div class="h3 fw-bold text-warning mb-0">{{ $affiliatedLecturersCount }}</div>
-                                        <div class="small text-white-50">Researchers</div>
+                                        <div class="small text-white-50">{{ __('profileOverview.stat_researchers') }}
+                                        </div>
                                     </div>
                                 @endif
                             </div>
@@ -358,17 +367,18 @@
                 <div class="col-lg-4">
                     <div class="mb-5">
                         <h5 class="fw-bold text-dark mb-3 d-flex align-items-center">
-                            <i class="bi bi-info-circle-fill me-2 text-primary"></i> About Institution
+                            <i class="bi bi-info-circle-fill me-2 text-primary"></i>
+                            {{ __('profileOverview.about_institution') }}
                         </h5>
                         @if ($user->description)
                             <p class="text-muted" style="line-height: 1.7;">{{ $user->description }}</p>
                         @else
-                            <p class="text-muted small fst-italic">No description provided.</p>
+                            <p class="text-muted small fst-italic">{{ __('profileOverview.desc_empty') }}</p>
                         @endif
                     </div>
 
                     <div class="card border-0 bg-light rounded-4 p-4">
-                        <h6 class="fw-bold mb-3">Contact Information</h6>
+                        <h6 class="fw-bold mb-3">{{ __('profileOverview.contact_info') }}</h6>
                         <ul class="list-unstyled mb-0 d-flex flex-column gap-3">
                             <li>
                                 <a href="mailto:{{ $user->email }}"
@@ -384,7 +394,7 @@
                                         class="text-decoration-none text-muted d-flex align-items-center gap-2 hover-primary">
                                         <div class="bg-white p-2 rounded-circle shadow-sm"><i
                                                 class="bi bi-globe text-primary"></i></div>
-                                        <span>Visit Website</span>
+                                        <span>{{ __('profileOverview.visit_website') }}</span>
                                     </a>
                                 </li>
                             @endif
@@ -396,10 +406,11 @@
                     <div class="mb-5">
                         <div class="d-flex justify-content-between align-items-end mb-4 border-bottom pb-2">
                             <h4 class="fw-bold text-dark mb-0">
-                                <i class="bi bi-journal-text text-primary me-2"></i> Recent Publications
+                                <i class="bi bi-journal-text text-primary me-2"></i>
+                                {{ __('profileOverview.recent_publications') }}
                             </h4>
-                            <a href="/{{ $user->profileId }}/papers" class="text-decoration-none small fw-bold">View
-                                All</a>
+                            <a href="/{{ $user->profileId }}/papers"
+                                class="text-decoration-none small fw-bold">{{ __('profileOverview.view_all') }}</a>
                         </div>
 
                         <div class="d-flex flex-column gap-3">
@@ -415,7 +426,8 @@
                                             @if ($paper->openCollaboration)
                                                 <span
                                                     class="badge bg-success bg-opacity-10 text-success border border-success small">
-                                                    <i class="bi bi-people-fill me-1"></i> Open Collab
+                                                    <i class="bi bi-people-fill me-1"></i>
+                                                    {{ __('profileOverview.badge_open_collab') }}
                                                 </span>
                                             @endif
                                         </div>
@@ -443,7 +455,8 @@
                                             <img src="https://ui-avatars.com/api/?name={{ $paper->lecturer->user->name }}&background=random&size=32"
                                                 class="rounded-circle">
                                             <div style="line-height: 1.2;">
-                                                <span class="small text-muted d-block">Authored by</span>
+                                                <span
+                                                    class="small text-muted d-block">{{ __('profileOverview.authored_by') }}</span>
                                                 <a href="/{{ $paper->lecturer->user->profileId }}/overview"
                                                     class="fw-bold text-dark small text-decoration-none position-relative z-2 hover-underline">
                                                     {{ $paper->lecturer->user->name }}
@@ -456,7 +469,7 @@
                                 </div>
                             @empty
                                 <div class="text-center py-5 bg-light rounded-3 border border-dashed">
-                                    <p class="text-muted mb-0">No publications found for this institution yet.</p>
+                                    <p class="text-muted mb-0">{{ __('profileOverview.institution_papers_empty') }}</p>
                                 </div>
                             @endforelse
                         </div>

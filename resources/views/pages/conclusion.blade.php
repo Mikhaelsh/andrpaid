@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Conclusion - ' . $paper->title)
+@section('title', __('conclusion.title_prefix') . $paper->title)
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/paper.css') }}">
@@ -67,7 +67,7 @@
         <div class="mb-4">
             <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/workspace"
                 class="text-decoration-none text-muted small fw-bold">
-                <i class="bi bi-arrow-left me-1"></i> Back to Workspace
+                <i class="bi bi-arrow-left me-1"></i> {{ __('conclusion.back_workspace') }}
             </a>
         </div>
 
@@ -78,20 +78,19 @@
                         style="width: 45px; height: 45px; font-size: 1.2rem; display:flex; align-items:center; justify-content:center; border-radius:8px;">
                         <i class="bi bi-check-all"></i>
                     </div>
-                    <h3 class="fw-bold text-dark mb-0">Conclusion & Future Works</h3>
+                    <h3 class="fw-bold text-dark mb-0">{{ __('conclusion.header_title') }}</h3>
                 </div>
 
                 <div class="d-flex align-items-center gap-2">
-                    <p class="text-muted mb-0 ms-1">Summarize your findings, acknowledge limitations, and suggest next
-                        steps.</p>
+                    <p class="text-muted mb-0 ms-1">{{ __('conclusion.header_desc') }}</p>
 
                     @if ($isLocked)
                         <span
                             class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 ms-2">
-                            <i class="bi bi-lock-fill me-1"></i> Finalized
+                            <i class="bi bi-lock-fill me-1"></i> {{ __('conclusion.status_finalized') }}
                         </span>
                     @else
-                        <span class="badge bg-light text-secondary border ms-2">Draft Mode</span>
+                        <span class="badge bg-light text-secondary border ms-2">{{ __('conclusion.status_draft') }}</span>
                     @endif
                 </div>
             </div>
@@ -101,12 +100,13 @@
                     <form action="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/finalize-conclusion" method="POST">
                         @csrf
                         @if ($isLocked)
-                            <button type="submit" class="btn btn-outline-success btn-sm me-2" title="Click to Reopen">
-                                <i class="bi bi-check-circle-fill me-1"></i> Finalized
+                            <button type="submit" class="btn btn-outline-success btn-sm me-2"
+                                title="{{ __('conclusion.tooltip_reopen') }}">
+                                <i class="bi bi-check-circle-fill me-1"></i> {{ __('conclusion.status_finalized') }}
                             </button>
                         @else
                             <button type="submit" class="btn btn-dark btn-sm me-2">
-                                <i class="bi bi-check2-circle me-1"></i> Finalize Conclusion
+                                <i class="bi bi-check2-circle me-1"></i> {{ __('conclusion.btn_finalize') }}
                             </button>
                         @endif
                     </form>
@@ -124,18 +124,18 @@
                             <div class="section-icon bg-primary bg-opacity-10 text-primary">
                                 <i class="bi bi-card-text"></i>
                             </div>
-                            <h5 class="fw-bold mb-0">Summary of Findings</h5>
+                            <h5 class="fw-bold mb-0">{{ __('conclusion.section_summary') }}</h5>
                         </div>
 
                         @if ($isLocked)
                             <div class="finalized-text">
-                                {{ $paper->conclusion_summary ?? 'No summary provided.' }}
+                                {{ $paper->conclusion_summary ?? __('conclusion.no_summary') }}
                             </div>
                         @else
                             <textarea name="summary" class="form-control" rows="6"
-                                placeholder="Synthesize the key results of your research here..." {{ $canEdit ? '' : 'disabled' }}>{{ $paper->conclusion_summary }}</textarea>
-                            <div class="form-text mt-2"><i class="bi bi-info-circle me-1"></i> Briefly restate the problem
-                                and how your results addressed it.</div>
+                                placeholder="{{ __('conclusion.placeholder_summary') }}" {{ $canEdit ? '' : 'disabled' }}>{{ $paper->conclusion_summary }}</textarea>
+                            <div class="form-text mt-2"><i class="bi bi-info-circle me-1"></i>
+                                {{ __('conclusion.help_summary') }}</div>
                         @endif
                     </div>
                 </div>
@@ -146,17 +146,16 @@
                             <div class="section-icon bg-warning bg-opacity-10 text-warning">
                                 <i class="bi bi-exclamation-triangle"></i>
                             </div>
-                            <h5 class="fw-bold mb-0">Limitations</h5>
+                            <h5 class="fw-bold mb-0">{{ __('conclusion.section_limitations') }}</h5>
                         </div>
 
                         @if ($isLocked)
                             <div class="finalized-text">
-                                {{ $paper->conclusion_limitations ?? 'No limitations noted.' }}
+                                {{ $paper->conclusion_limitations ?? __('conclusion.no_limitations') }}
                             </div>
                         @else
                             <textarea name="limitations" class="form-control" rows="8"
-                                placeholder="What were the constraints? (e.g. Sample size, time, data availability)"
-                                {{ $canEdit ? '' : 'disabled' }}>{{ $paper->conclusion_limitations }}</textarea>
+                                placeholder="{{ __('conclusion.placeholder_limitations') }}" {{ $canEdit ? '' : 'disabled' }}>{{ $paper->conclusion_limitations }}</textarea>
                         @endif
                     </div>
                 </div>
@@ -167,16 +166,16 @@
                             <div class="section-icon bg-info bg-opacity-10 text-info">
                                 <i class="bi bi-signpost-split"></i>
                             </div>
-                            <h5 class="fw-bold mb-0">Future Works</h5>
+                            <h5 class="fw-bold mb-0">{{ __('conclusion.section_future_works') }}</h5>
                         </div>
 
                         @if ($isLocked)
                             <div class="finalized-text">
-                                {{ $paper->conclusion_future_works ?? 'No future works suggested.' }}
+                                {{ $paper->conclusion_future_works ?? __('conclusion.no_future_works') }}
                             </div>
                         @else
-                            <textarea name="future_works" class="form-control" rows="8" placeholder="Suggest avenues for further research..."
-                                {{ $canEdit ? '' : 'disabled' }}>{{ $paper->conclusion_future_works }}</textarea>
+                            <textarea name="future_works" class="form-control" rows="8"
+                                placeholder="{{ __('conclusion.placeholder_future_works') }}" {{ $canEdit ? '' : 'disabled' }}>{{ $paper->conclusion_future_works }}</textarea>
                         @endif
                     </div>
                 </div>
@@ -187,10 +186,10 @@
                     <div class="container d-flex justify-content-between align-items-center">
                         <span class="text-muted small">
                             <i class="bi bi-clock-history me-1"></i>
-                            Last saved: {{ $paper->updated_at->diffForHumans() }}
+                            {{ __('conclusion.last_saved', ['time' => $paper->updated_at->diffForHumans()]) }}
                         </span>
                         <button type="submit" class="btn btn-primary px-5">
-                            <i class="bi bi-save me-2"></i> Save Changes
+                            <i class="bi bi-save me-2"></i> {{ __('conclusion.btn_save') }}
                         </button>
                     </div>
                 </div>
@@ -212,11 +211,12 @@
                             <i class="bi bi-check-lg custom-icon"></i>
                         </div>
 
-                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <h4 class="fw-bold mb-3 heading-text">{{ __('common.success') }}</h4>
                         <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
 
-                        <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm" data-bs-dismiss="modal">
-                            CONTINUE
+                        <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm"
+                            data-bs-dismiss="modal">
+                            {{ __('common.continue') }}
                         </button>
                     </div>
 

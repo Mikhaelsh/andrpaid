@@ -2,7 +2,6 @@
     $profileId = $paper->lecturer->user->profileId;
 @endphp
 
-{{-- PART 1: CONTEXT HEADER (Scrolls away) --}}
 <div class="paper-context-header border-bottom bg-white pt-3 pb-3">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
@@ -26,8 +25,8 @@
 
                 @if($paper->openCollaboration)
                     <span class="badge rounded-pill ms-1 bg-primary bg-opacity-10 text-primary border border-primary-subtle"
-                          title="This project is accepting new researchers">
-                        <i class="bi bi-people-fill me-1"></i> Open Collab
+                          title="{{ __('navbarPaper.title_open_collab') }}">
+                        <i class="bi bi-people-fill me-1"></i> {{ __('navbarPaper.badge_open_collab') }}
                     </span>
                 @endif
             </div>
@@ -35,24 +34,23 @@
     </div>
 </div>
 
-{{-- PART 2: STICKY NAVIGATION TABS --}}
 <div class="paper-navbar-sticky border-bottom bg-white sticky-top">
     <div class="container">
         <div class="paper-nav-scroller">
             <nav class="nav paper-nav-underline">
                 <a class="nav-link {{ request()->is('*/overview') ? 'active' : '' }}"
                     href="/{{ $profileId }}/paper/{{ $paper->paperId }}/overview">
-                    <i class="bi bi-columns-gap me-2"></i>Overview
+                    <i class="bi bi-columns-gap me-2"></i>{{ __('navbarPaper.menu_overview') }}
                 </a>
 
                 <a class="nav-link {{ request()->is('*/workspace*') ? 'active' : '' }}"
                     href="/{{ $profileId }}/paper/{{ $paper->paperId }}/workspace">
-                    <i class="bi bi-book me-2"></i>Workspace
+                    <i class="bi bi-book me-2"></i>{{ __('navbarPaper.menu_workspace') }}
                 </a>
 
                 <a class="nav-link {{ request()->is('*/collaborations') ? 'active' : '' }}"
                     href="/{{ $profileId }}/paper/{{ $paper->paperId }}/collaborations">
-                    <i class="bi bi-people me-2"></i>Collaborations
+                    <i class="bi bi-people me-2"></i>{{ __('navbarPaper.menu_collaborations') }}
 
                     @if ($paper->joinRequests_count > 0 && Auth::id() == $paper->lecturer->user->id)
                         <span class="badge bg-danger rounded-pill ms-1"
@@ -63,7 +61,7 @@
                 @if (Auth::user()->isLecturer() && $paper->lecturer->id === Auth::user()->lecturer->id)
                     <a class="nav-link {{ request()->is('*/settings') ? 'active' : '' }}"
                         href="/{{ $profileId }}/paper/{{ $paper->paperId }}/settings">
-                        <i class="bi bi-gear me-2"></i>Settings
+                        <i class="bi bi-gear me-2"></i>{{ __('navbarPaper.menu_settings') }}
                     </a>
                 @endif
             </nav>

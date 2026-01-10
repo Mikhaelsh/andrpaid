@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Literature Review - ' . $paper->title)
+@section('title', __('literatureReview.title_prefix') . $paper->title)
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/paper.css') }}">
@@ -13,7 +13,7 @@
         <div class="mb-4">
             <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/workspace"
                 class="text-decoration-none text-muted small fw-bold">
-                <i class="bi bi-arrow-left me-1"></i> Back to Workspace
+                <i class="bi bi-arrow-left me-1"></i> {{ __('literatureReview.back_workspace') }}
             </a>
         </div>
 
@@ -24,9 +24,9 @@
                         style="width: 45px; height: 45px; font-size: 1.2rem;">
                         <i class="bi bi-book"></i>
                     </div>
-                    <h3 class="fw-bold text-dark mb-0">Literature Review</h3>
+                    <h3 class="fw-bold text-dark mb-0">{{ __('literatureReview.header_title') }}</h3>
                 </div>
-                <p class="text-muted mb-0 ms-1">Manage your bibliography and synthesize key themes.</p>
+                <p class="text-muted mb-0 ms-1">{{ __('literatureReview.header_desc') }}</p>
             </div>
 
             <div class="d-flex align-items-center gap-2">
@@ -40,12 +40,12 @@
 
                 <a href="/{{ $user->profileId }}/paper/{{ $paper->paperId }}/export-bibtex"
                     class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-download me-1"></i> Export BibTeX
+                    <i class="bi bi-download me-1"></i> {{ __('literatureReview.export_bibtex') }}
                 </a>
 
                 @if ($canEdit)
                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addSourceModal">
-                        <i class="bi bi-plus-lg me-1"></i> Add Source
+                        <i class="bi bi-plus-lg me-1"></i> {{ __('literatureReview.add_source') }}
                     </button>
                 @endif
             </div>
@@ -54,7 +54,7 @@
         <div class="row g-4">
             <div class="col-lg-4 order-lg-2">
                 <div class="workspace-card p-4 mb-4">
-                    <h6 class="fw-bold text-dark mb-3">Synthesis Progress</h6>
+                    <h6 class="fw-bold text-dark mb-3">{{ __('literatureReview.synthesis_progress') }}</h6>
                     <div class="mb-4">
                         @php
                             $totalRefs = !empty($paper->references_data) ? count($paper->references_data) : 0;
@@ -70,7 +70,7 @@
                         @endphp
 
                         <div class="d-flex justify-content-between small mb-1">
-                            <span class="text-muted">Sources Analyzed</span>
+                            <span class="text-muted">{{ __('literatureReview.sources_analyzed') }}</span>
                             <span class="fw-bold text-primary">{{ $analyzedRefs }}/{{ $totalRefs }}</span>
                         </div>
                         <div class="progress" style="height: 6px;">
@@ -83,7 +83,7 @@
                         <div class="d-grid">
                             <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#synthesisModal">
-                                <i class="bi bi-pencil-square me-2"></i>Write Synthesis
+                                <i class="bi bi-pencil-square me-2"></i>{{ __('literatureReview.btn_write_synthesis') }}
                             </button>
                         </div>
                     @endif
@@ -91,7 +91,7 @@
 
                 <div class="workspace-card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="fw-bold text-dark mb-0">Key Themes</h6>
+                        <h6 class="fw-bold text-dark mb-0">{{ __('literatureReview.key_themes') }}</h6>
                         @if ($canEdit)
                             <button class="btn btn-link p-0 text-decoration-none small" onclick="toggleThemeForm()">
                                 <i class="bi bi-plus-lg"></i>
@@ -116,13 +116,13 @@
                                 </form>
                             @endforeach
                         @else
-                            <span class="text-muted small fst-italic">No themes defined yet.</span>
+                            <span class="text-muted small fst-italic">{{ __('literatureReview.no_themes') }}</span>
                         @endif
 
                         @if ($canEdit)
                             <span class="badge bg-light text-secondary border rounded-pill px-3 py-2 border-dashed"
                                 id="addThemeBtn" style="cursor: pointer;" onclick="toggleThemeForm()">
-                                + Add Tag
+                                {{ __('literatureReview.add_tag') }}
                             </span>
                         @endif
 
@@ -130,8 +130,8 @@
                             id="addThemeForm" style="display: none;" class="w-100 mt-2">
                             @csrf
                             <div class="input-group input-group-sm">
-                                <input type="text" name="theme_name" class="form-control" placeholder="Theme name..."
-                                    required autofocus>
+                                <input type="text" name="theme_name" class="form-control"
+                                    placeholder="{{ __('literatureReview.placeholder_theme') }}" required autofocus>
                                 <button class="btn btn-primary" type="submit"><i class="bi bi-check"></i></button>
                                 <button class="btn btn-outline-secondary" type="button" onclick="toggleThemeForm()">
                                     <i class="bi bi-x"></i>
@@ -143,12 +143,12 @@
                 </div>
 
                 <div class="workspace-card p-4 mt-4">
-                    <h6 class="fw-bold text-dark mb-2">Review Status</h6>
+                    <h6 class="fw-bold text-dark mb-2">{{ __('literatureReview.review_status') }}</h6>
                     <p class="text-muted small mb-3">
                         @if ($paper->lit_review_finalized)
-                            This section is marked as complete. You can reopen it if you need to add more sources.
+                            {{ __('literatureReview.status_complete_desc') }}
                         @else
-                            Once you have synthesized your sources, mark this section as finalized.
+                            {{ __('literatureReview.status_incomplete_desc') }}
                         @endif
                     </p>
 
@@ -156,11 +156,11 @@
                         @csrf
                         @if ($paper->lit_review_finalized)
                             <button type="submit" class="btn btn-outline-success w-100">
-                                <i class="bi bi-check-circle-fill me-2"></i> Finalized
+                                <i class="bi bi-check-circle-fill me-2"></i> {{ __('literatureReview.btn_finalized') }}
                             </button>
                         @else
                             <button type="submit" class="btn btn-dark w-100">
-                                <i class="bi bi-check2-circle me-2"></i> Finalize Review
+                                <i class="bi bi-check2-circle me-2"></i> {{ __('literatureReview.btn_finalize') }}
                             </button>
                         @endif
                     </form>
@@ -172,13 +172,13 @@
                 @if (empty($paper->references_data))
                     <div class="text-center py-5 border rounded-3 bg-light">
                         <i class="bi bi-journal-bookmark-fill empty-state-icon"></i>
-                        <h5 class="fw-bold text-muted">No References Yet</h5>
-                        <p class="text-muted small mb-4">Start your research by adding your first source to the board.</p>
+                        <h5 class="fw-bold text-muted">{{ __('literatureReview.empty_title') }}</h5>
+                        <p class="text-muted small mb-4">{{ __('literatureReview.empty_desc') }}</p>
 
                         @if ($canEdit)
                             <button class="btn btn-outline-primary" data-bs-toggle="modal"
                                 data-bs-target="#addSourceModal">
-                                Add Reference
+                                {{ __('literatureReview.add_source') }}
                             </button>
                         @endif
                     </div>
@@ -204,7 +204,8 @@
                                                 @if (!empty($ref['pdf_path']))
                                                     <a href="{{ asset('storage/' . $ref['pdf_path']) }}" target="_blank"
                                                         class="btn btn-sm btn-outline-danger" title="View PDF">
-                                                        <i class="bi bi-file-earmark-pdf-fill"></i> PDF
+                                                        <i class="bi bi-file-earmark-pdf-fill"></i>
+                                                        {{ __('literatureReview.btn_view_pdf') }}
                                                     </a>
                                                 @endif
 
@@ -218,15 +219,15 @@
                                                                 value="{{ $ref['id'] }}">
                                                             <button type="submit" class="btn btn-sm btn-outline-success"
                                                                 title="Mark as Analyzed">
-                                                                <i class="bi bi-check2"></i> Mark Analyzed
+                                                                <i class="bi bi-check2"></i>
+                                                                {{ __('literatureReview.btn_mark_analyzed') }}
                                                             </button>
                                                         </form>
                                                     @endif
 
                                                     <div class="dropdown">
                                                         <button class="btn btn-sm btn-link text-secondary p-0 ms-1"
-                                                            type="button" data-bs-toggle="dropdown"
-                                                            aria-expanded="false"
+                                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
                                                             style="font-size: 1.2rem; line-height: 1;">
                                                             <i class="bi bi-three-dots-vertical"></i>
                                                         </button>
@@ -240,7 +241,8 @@
                                                                         value="{{ $ref['id'] }}">
                                                                     <button type="submit"
                                                                         class="dropdown-item text-danger d-flex align-items-center gap-2">
-                                                                        <i class="bi bi-trash"></i> Delete Reference
+                                                                        <i class="bi bi-trash"></i>
+                                                                        {{ __('literatureReview.btn_delete_ref') }}
                                                                     </button>
                                                                 </form>
                                                             </li>
@@ -260,7 +262,7 @@
                                         @if (!empty($ref['key_points']))
                                             <div class="mt-2 pt-2 border-top">
                                                 <span class="small fw-bold text-muted me-2"><i
-                                                        class="bi bi-pin-angle-fill me-1"></i>Key Points:</span>
+                                                        class="bi bi-pin-angle-fill me-1"></i>{{ __('literatureReview.label_key_points') }}</span>
                                                 @foreach ($ref['key_points'] as $point)
                                                     <span class="key-point-badge">{{ $point }}</span>
                                                 @endforeach
@@ -272,7 +274,8 @@
                                                 class="badge bg-secondary position-absolute top-0 start-0 translate-middle ms-3"
                                                 style="font-size: 0.6rem;" id="citation-badge">APA</span>
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <span class="citation-text fst-italic">Loading citation...</span>
+                                                <span
+                                                    class="citation-text fst-italic">{{ __('literatureReview.citation_loading') }}</span>
                                                 <button class="btn btn-link btn-sm p-0 ms-2 text-muted"
                                                     onclick="copyCitation(this)" title="Copy to clipboard">
                                                     <i class="bi bi-clipboard"></i>
@@ -301,35 +304,36 @@
                         <div class="dossier-container">
                             <div class="dossier-paper">
                                 <div class="dossier-title">
-                                    <span>Adding Reference</span>
+                                    <span>{{ __('literatureReview.modal_add_title') }}</span>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-12">
-                                        <label class="dossier-label">Title of Work</label>
+                                        <label class="dossier-label">{{ __('literatureReview.label_work_title') }}</label>
                                         <input type="text" name="title" class="dossier-input" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="dossier-label">Primary Author</label>
+                                        <label
+                                            class="dossier-label">{{ __('literatureReview.label_primary_author') }}</label>
                                         <input type="text" name="author" class="dossier-input" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="dossier-label">Publication Year</label>
+                                        <label class="dossier-label">{{ __('literatureReview.label_pub_year') }}</label>
                                         <input type="number" name="year" class="dossier-input" required>
                                     </div>
                                     <div class="col-12">
-                                        <label class="dossier-label">Journal / Conference</label>
+                                        <label class="dossier-label">{{ __('literatureReview.label_journal') }}</label>
                                         <input type="text" name="journal" class="dossier-input">
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="dossier-label">DOI / Link (Optional)</label>
+                                        <label class="dossier-label">{{ __('literatureReview.label_doi') }}</label>
                                         <input type="url" name="url" class="dossier-input">
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="dossier-label">Upload PDF (Optional)</label>
+                                        <label class="dossier-label">{{ __('literatureReview.label_upload_pdf') }}</label>
                                         <input type="file" name="pdf_file"
                                             class="form-control form-control-sm mt-1 dossier-file-input" accept=".pdf">
                                     </div>
@@ -339,11 +343,12 @@
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input" type="checkbox" name="is_analyzed"
                                                     id="flexSwitchCheckDefault">
-                                                <label class="form-check-label small" for="flexSwitchCheckDefault">Mark as
-                                                    "Analyzed"</label>
+                                                <label class="form-check-label small"
+                                                    for="flexSwitchCheckDefault">{{ __('literatureReview.switch_analyzed') }}</label>
                                             </div>
                                             <button type="submit" class="btn btn-dark px-4 rounded-pill">
-                                                Save Reference <i class="bi bi-arrow-right ms-1"></i>
+                                                {{ __('literatureReview.btn_save_ref') }} <i
+                                                    class="bi bi-arrow-right ms-1"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -352,13 +357,15 @@
 
                             <div class="dossier-board">
                                 <div class="board-header">
-                                    <i class="bi bi-pin-angle-fill text-danger"></i> Key Findings
+                                    <i class="bi bi-pin-angle-fill text-danger"></i>
+                                    {{ __('literatureReview.board_header') }}
                                 </div>
                                 <div class="sticky-note-container" id="stickyContainer"></div>
                                 <div class="add-note-wrapper">
-                                    <textarea id="noteInput" rows="2" class="note-input" placeholder="Type a key point..."></textarea>
+                                    <textarea id="noteInput" rows="2" class="note-input"
+                                        placeholder="{{ __('literatureReview.placeholder_sticky') }}"></textarea>
                                     <button type="button" class="btn-pin" onclick="addStickyNote()">
-                                        <i class="bi bi-pin-fill me-1"></i> Pin
+                                        <i class="bi bi-pin-fill me-1"></i> {{ __('literatureReview.btn_pin') }}
                                     </button>
                                 </div>
                             </div>
@@ -375,9 +382,11 @@
                         @csrf
                         <div class="synthesis-container">
                             <div class="synthesis-sources">
-                                <h5 class="mb-4"><i class="bi bi-layers-fill me-2"></i>Source Material</h5>
+                                <h5 class="mb-4"><i
+                                        class="bi bi-layers-fill me-2"></i>{{ __('literatureReview.source_material') }}
+                                </h5>
                                 @if (empty($paper->references_data))
-                                    <p class="text-white-50 small">No references added yet.</p>
+                                    <p class="text-white-50 small">{{ __('literatureReview.no_refs') }}</p>
                                 @else
                                     @foreach ($paper->references_data as $ref)
                                         @if (!empty($ref['key_points']))
@@ -397,16 +406,17 @@
                             </div>
                             <div class="synthesis-editor">
                                 <div class="synthesis-header">
-                                    <span>Synthesis Draft</span>
+                                    <span>{{ __('literatureReview.synthesis_draft') }}</span>
                                     <div class="d-flex gap-2">
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
                                 </div>
-                                <textarea name="synthesis_text" class="editor-textarea" placeholder="Start synthesizing your findings here...">{{ $paper->synthesis_text }}</textarea>
+                                <textarea name="synthesis_text" class="editor-textarea"
+                                    placeholder="{{ __('literatureReview.placeholder_synthesis') }}">{{ $paper->synthesis_text }}</textarea>
                                 <div class="mt-3 text-end">
                                     <button type="submit" class="btn btn-dark px-4">
-                                        <i class="bi bi-save me-1"></i> Save Draft
+                                        <i class="bi bi-save me-1"></i> {{ __('literatureReview.btn_save_draft') }}
                                     </button>
                                 </div>
                             </div>
@@ -429,12 +439,12 @@
                             <i class="bi bi-check-lg custom-icon"></i>
                         </div>
 
-                        <h4 class="fw-bold mb-3 heading-text">Success!</h4>
+                        <h4 class="fw-bold mb-3 heading-text">{{ __('common.success') }}</h4>
                         <p class="text-muted mb-4 fs-5">{{ session('success') }}</p>
 
                         <button type="button" class="btn btn-custom w-100 py-3 fw-bold shadow-sm"
                             data-bs-dismiss="modal">
-                            CONTINUE
+                            {{ __('common.continue') }}
                         </button>
                     </div>
 

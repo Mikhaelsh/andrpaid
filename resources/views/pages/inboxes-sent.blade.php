@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Sent Messages')
+@section('title', __('inboxesSent.title'))
 
 @section('additionalCSS')
     <link rel="stylesheet" href="{{ asset('styles/inboxes.css') }}">
@@ -13,9 +13,9 @@
         <div class="card border-0 shadow-sm overflow-hidden rounded-3">
             <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold text-secondary">
-                    <i class="bi bi-send me-2"></i>Sent
+                    <i class="bi bi-send me-2"></i>{{ __('inboxesSent.header') }}
                 </h5>
-                <span class="text-muted small">{{ $sentInboxes->total() }} messages</span>
+                <span class="text-muted small">{{ __('inboxesSent.sent_count', ['count' => $sentInboxes->total()]) }}</span>
             </div>
 
             <div class="list-group list-group-flush">
@@ -29,8 +29,8 @@
                         <div class="mail-content">
                             <div class="mail-header">
                                 <span class="sent-recipient">
-                                    <span class="prefix">To:</span>
-                                    {{ $sent->toUser->name ?? 'Unknown Recipient' }}
+                                    <span class="prefix">{{ __('inboxesSent.label_to') }}</span>
+                                    {{ $sent->toUser->name ?? __('inboxesSent.unknown_recipient') }}
                                 </span>
 
                                 <span class="mail-date">
@@ -40,11 +40,11 @@
 
                             <div class="mail-body-preview">
                                 <span class="mail-subject text-dark fw-medium">
-                                    {{ $sent->subject ?? '(No Subject)' }}
+                                    {{ $sent->subject ?? __('inboxesSent.no_subject') }}
                                 </span>
                                 <span class="mx-1 text-muted">-</span>
                                 <span>
-                                    {{ $sent->body ? Str::limit(strip_tags($sent->body), 60) : 'No content...' }}
+                                    {{ $sent->body ? Str::limit(strip_tags($sent->body), 60) : __('inboxesSent.no_content') }}
                                 </span>
                             </div>
                         </div>
@@ -55,10 +55,10 @@
                         <div class="empty-icon text-muted">
                             <i class="bi bi-send-x"></i>
                         </div>
-                        <h5>No sent messages</h5>
-                        <p class="small text-muted">Messages you send will appear here.</p>
-                        <a href="/inbox/compose" class="btn btn-outline-primary btn-sm mt-2 rounded-pill">
-                            Compose New
+                        <h5>{{ __('inboxesSent.empty_title') }}</h5>
+                        <p class="small text-muted">{{ __('inboxesSent.empty_desc') }}</p>
+                        <a href="/inboxes/compose" class="btn btn-outline-primary btn-sm mt-2 rounded-pill">
+                            {{ __('inboxesSent.btn_compose_new') }}
                         </a>
                     </div>
                 @endforelse

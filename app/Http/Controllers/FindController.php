@@ -49,9 +49,9 @@ class FindController extends Controller
         $provinces = Province::orderBy('name')->get();
 
         if(Auth::user()->lecturer){
-            $navbarProfileData = ProfileController::getNavbarProfileUniversityData(Auth::user()->profileId);
-        } else if(Auth::user()->university){
             $navbarProfileData = ProfileController::getNavbarProfileLecturerData(Auth::user()->profileId);
+        } else if(Auth::user()->university){
+            $navbarProfileData = ProfileController::getNavbarProfileUniversityData(Auth::user()->profileId);
         } else{
             $navbarProfileData = [];
         }
