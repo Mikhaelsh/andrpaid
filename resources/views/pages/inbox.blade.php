@@ -20,15 +20,6 @@
                                 <i class="bi bi-arrow-left me-1"></i> Back
                             </a>
                         </div>
-                        <div>
-                            <form action="/inboxes/{{ $inbox->inboxId }}/star" method="POST">
-                                @csrf
-                                @method('PATCH')
-                                <button type="submit" class="btn btn-light btn-sm border text-muted" title="Star this message">
-                                    <i class="bi {{ $inbox->is_starred ? 'bi-star-fill text-warning' : 'bi-star' }}"></i>
-                                </button>
-                            </form>
-                        </div>
                     </div>
 
                     <div class="message-header">

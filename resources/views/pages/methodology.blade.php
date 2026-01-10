@@ -438,210 +438,152 @@
                             <div class="mb-3">
                                 <label class="form-label">Embed Code / Iframe</label>
                                 <textarea name="embed_code" class="form-control font-monospace" rows="4"
-                                    placeholder="<script src='...'>
-                                        or < iframe src = '...' > "></textarea> <
-                                            div class = "form-text" > Paste the full embed code provided by the platform(Gist script or Colab iframe). <
-                                            /div> <
-                                            /div> <
-                                            div class = "mb-3" >
-                                            <
-                                            label class = "form-label" > Description < /label> <
-                                            input type = "text"
-                                        name = "description"
-                                        class = "form-control"
-                                        required >
-                                            <
-                                            /div> <
-                                            /div> <
-                                            div class = "modal-footer" >
-                                            <
-                                            button type = "submit"
-                                        class = "btn btn-dark" > Embed Code < /button> <
-                                            /div> <
-                                            /form> <
-                                            /div> <
-                                            /div> <
-                                            /div>
-                                        @endif
+                                    placeholder="<script src='...'> or <iframe src='...'>"></textarea>
+                                <div class="form-text">Paste the full embed code provided by the platform (Gist script or
+                                    Colab iframe).</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <input type="text" name="description" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-dark">Embed Code</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
 
-                                        @if (session('success'))
-                                            <
-                                            div class = "modal fade custom-modal-backdrop"
-                                            id = "statusModal"
-                                            tabindex = "-1"
-                                            aria - hidden = "true" >
-                                                <
-                                                div class = "modal-dialog modal-dialog-centered" >
-
-                                                <
-                                                div class = "modal-content custom-modal-content type-success text-center p-4" >
-
-                                                <
-                                                div class = "modal-body px-4 py-4" >
-
-                                                <
-                                                div class = "modal-icon-wrapper mb-4 mx-auto" >
-                                                <
-                                                i class = "bi bi-check-lg custom-icon" > < /i> <
-                                                /div>
-
-                                                <
-                                                h4 class = "fw-bold mb-3 heading-text" > Success! < /h4> <
-                                                p class = "text-muted mb-4 fs-5" > {{ session('success') }} < /p>
-
-                                                <
-                                                button type = "button"
-                                            class = "btn btn-custom w-100 py-3 fw-bold shadow-sm"
-                                            data - bs - dismiss = "modal" >
-                                                CONTINUE <
-                                                /button> <
-                                                /div>
-
-                                                <
-                                                /div> <
-                                                /div> <
-                                                /div>
-
-                                            @push('scripts')
-                                                <
-                                                script type = "module" >
-                                                    if (window.bootstrap) {
-                                                        setTimeout(() => {
-                                                            var myModal = new bootstrap.Modal(document.getElementById('statusModal'));
-                                                            myModal.show();
-                                                        }, 300);
-                                                    }
-                                    </script>
-    @endpush
- @endif
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-<script>
-    const iframe = document.getElementById('drawioFrame');
-    const existingXml = @json($paper->methodology_xml);
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script>
+        const iframe = document.getElementById('drawioFrame');
+        const existingXml = @json($paper->methodology_xml);
 
-    // JS Logic: User can edit ONLY if authorized AND not finalized
-    const isFinalized = @json($paper->methodology_finalized);
-    const userCanEdit = @json($canEdit);
-    const canInteract = userCanEdit && !isFinalized;
+        // JS Logic: User can edit ONLY if authorized AND not finalized
+        const isFinalized = @json($paper->methodology_finalized);
+        const userCanEdit = @json($canEdit);
+        const canInteract = userCanEdit && !isFinalized;
 
-    const configuration = {
-        compressXml: false,
-        ui: 'atlas'
-    };
+        const configuration = {
+            compressXml: false,
+            ui: 'atlas'
+        };
 
-    window.addEventListener('message', function(event) {
-        if (event.source !== iframe.contentWindow) return;
-        const msg = JSON.parse(event.data);
+        window.addEventListener('message', function(event) {
+            if (event.source !== iframe.contentWindow) return;
+            const msg = JSON.parse(event.data);
 
-        if (msg.event === 'configure') {
-            iframe.contentWindow.postMessage(JSON.stringify({
-                action: 'configure',
-                config: configuration
-            }), '*');
-        } else if (msg.event === 'init') {
-            iframe.contentWindow.postMessage(JSON.stringify({
-                action: 'load',
-                autosave: 0,
-                xml: existingXml || ''
-            }), '*');
-        } else if (msg.event === 'save' || msg.event === 'autosave') {
-            // Block saving if not allowed
-            if (!canInteract) return;
-            saveToBackend(msg.xml);
-        }
-    });
-
-    function saveToBackend(xmlData) {
-        fetch('/{{ $user->profileId }}/paper/{{ $paper->paperId }}/save-methodology', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    xml: xmlData
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const statusMsg = document.getElementById('statusMessage');
-                statusMsg.style.opacity = '1';
-                setTimeout(() => {
-                    statusMsg.style.opacity = '0';
-                }, 3000);
-            })
-            .catch(error => console.error('Error saving diagram:', error));
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-
-        // 1. Get Formula Data from PHP
-        const formulas = @json($paper->formulas ?? []);
-
-        // 2. Render each formula explicitly
-        formulas.forEach(form => {
-            const element = document.getElementById('formula-display-' + form.id);
-
-            if (element) {
-                // Safety: Remove $$ delimiters if user typed them in the input
-                // This ensures we get pure LaTeX: "a^2 + b^2" instead of "$$ a^2 + b^2 $$"
-                let rawLatex = form.latex || "";
-                rawLatex = rawLatex.replaceAll('$$', '').replaceAll('$', '');
-
-                try {
-                    katex.render(rawLatex, element, {
-                        throwOnError: false,
-                        displayMode: true // This centers it and makes fonts correct size
-                    });
-                } catch (e) {
-                    console.error(e);
-                    element.innerHTML = "<span class='text-danger small'>Invalid Formula Format</span>";
-                }
+            if (msg.event === 'configure') {
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    action: 'configure',
+                    config: configuration
+                }), '*');
+            } else if (msg.event === 'init') {
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    action: 'load',
+                    autosave: 0,
+                    xml: existingXml || ''
+                }), '*');
+            } else if (msg.event === 'save' || msg.event === 'autosave') {
+                // Block saving if not allowed
+                if (!canInteract) return;
+                saveToBackend(msg.xml);
             }
         });
-    });
 
-    // Render Preview in Modal (Input field logic)
-    function renderPreview() {
-        const input = document.getElementById('latexInput').value;
-        const preview = document.getElementById('latexPreview');
+        function saveToBackend(xmlData) {
+            fetch('/{{ $user->profileId }}/paper/{{ $paper->paperId }}/save-methodology', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        xml: xmlData
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const statusMsg = document.getElementById('statusMessage');
+                    statusMsg.style.opacity = '1';
+                    setTimeout(() => {
+                        statusMsg.style.opacity = '0';
+                    }, 3000);
+                })
+                .catch(error => console.error('Error saving diagram:', error));
+        }
 
-        // Clean input for preview as well
-        let cleanInput = input.replaceAll('$$', '').replaceAll('$', '');
+        document.addEventListener("DOMContentLoaded", function() {
 
-        preview.innerHTML = '';
+            // 1. Get Formula Data from PHP
+            const formulas = @json($paper->formulas ?? []);
 
-        try {
-            katex.render(cleanInput, preview, {
-                throwOnError: false,
-                displayMode: true
+            // 2. Render each formula explicitly
+            formulas.forEach(form => {
+                const element = document.getElementById('formula-display-' + form.id);
+
+                if (element) {
+                    // Safety: Remove $$ delimiters if user typed them in the input
+                    // This ensures we get pure LaTeX: "a^2 + b^2" instead of "$$ a^2 + b^2 $$"
+                    let rawLatex = form.latex || "";
+                    rawLatex = rawLatex.replaceAll('$$', '').replaceAll('$', '');
+
+                    try {
+                        katex.render(rawLatex, element, {
+                            throwOnError: false,
+                            displayMode: true // This centers it and makes fonts correct size
+                        });
+                    } catch (e) {
+                        console.error(e);
+                        element.innerHTML = "<span class='text-danger small'>Invalid Formula Format</span>";
+                    }
+                }
             });
-        } catch (e) {
-            preview.innerText = "Invalid LaTeX";
+        });
+
+        // Render Preview in Modal (Input field logic)
+        function renderPreview() {
+            const input = document.getElementById('latexInput').value;
+            const preview = document.getElementById('latexPreview');
+
+            // Clean input for preview as well
+            let cleanInput = input.replaceAll('$$', '').replaceAll('$', '');
+
+            preview.innerHTML = '';
+
+            try {
+                katex.render(cleanInput, preview, {
+                    throwOnError: false,
+                    displayMode: true
+                });
+            } catch (e) {
+                preview.innerText = "Invalid LaTeX";
+            }
         }
-    }
 
-    function openEditDatasetModal(dataset) {
-        document.getElementById('edit_ds_id').value = dataset.id;
-        document.getElementById('edit_ds_name').value = dataset.name;
-        document.getElementById('edit_ds_link').value = dataset.link || '';
-        document.getElementById('edit_ds_desc').value = dataset.description;
+        function openEditDatasetModal(dataset) {
+            document.getElementById('edit_ds_id').value = dataset.id;
+            document.getElementById('edit_ds_name').value = dataset.name;
+            document.getElementById('edit_ds_link').value = dataset.link || '';
+            document.getElementById('edit_ds_desc').value = dataset.description;
 
-        const previewDiv = document.getElementById('current_image_preview');
-        const imgTag = document.getElementById('edit_ds_img_preview');
+            const previewDiv = document.getElementById('current_image_preview');
+            const imgTag = document.getElementById('edit_ds_img_preview');
 
-        if (dataset.image_path) {
-            previewDiv.classList.remove('d-none');
-            imgTag.src = "/storage/" + dataset.image_path;
-        } else {
-            previewDiv.classList.add('d-none');
+            if (dataset.image_path) {
+                previewDiv.classList.remove('d-none');
+                imgTag.src = "/storage/" + dataset.image_path;
+            } else {
+                previewDiv.classList.add('d-none');
+            }
+
+            new bootstrap.Modal(document.getElementById('editDatasetModal')).show();
         }
-
-        new bootstrap.Modal(document.getElementById('editDatasetModal')).show();
-    }
-</script>
+    </script>
 @endpush

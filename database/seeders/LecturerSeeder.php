@@ -36,19 +36,19 @@ class LecturerSeeder extends Seeder
         ]);
 
         // Second User
-        $user = User::create([
-            'name'=> "LC140",
-            'email'=> "lc140-lcas@binus.edu",
-            'password' => bcrypt("aa"),
-            'description'=> "I am LC140 URAAAAA"
-        ]);
+        // $user = User::create([
+        //     'name'=> "LC140",
+        //     'email'=> "lc140-lcas@binus.edu",
+        //     'password' => bcrypt("aa"),
+        //     'description'=> "I am LC140 URAAAAA"
+        // ]);
 
-        $province = Province::where('provinceId', "banten" )->first();
+        // $province = Province::where('provinceId', "banten" )->first();
 
-        $lecturer = Lecturer::create([
-            "user_id"=> $user->id,
-            "province_id" => $province->id
-        ]);
+        // $lecturer = Lecturer::create([
+        //     "user_id"=> $user->id,
+        //     "province_id" => $province->id
+        // ]);
 
         // Best User (Top Funder)
 

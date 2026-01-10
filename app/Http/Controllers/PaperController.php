@@ -323,9 +323,15 @@ class PaperController extends Controller
             'year' => 'required|integer',
             'journal' => 'nullable|string',
             'url' => 'nullable|url',
+            'pdf_file' => 'nullable|file|mimes:pdf|max:10240',
             'key_points' => 'nullable|json',
             'is_analyzed' => 'nullable'
         ]);
+
+        $pdfPath = null;
+        if ($request->hasFile('pdf_file')) {
+            $pdfPath = $request->file('pdf_file')->store('reference_pdfs', 'public');
+        }
 
         $newRef = [
             'id' => uniqid(),
@@ -334,6 +340,7 @@ class PaperController extends Controller
             'year' => $validated['year'],
             'publication' => $validated['journal'] ?? '',
             'url' => $validated['url'] ?? '',
+            'pdf_path' => $pdfPath,
             'key_points' => json_decode($validated['key_points'] ?? '[]'),
             'is_analyzed' => $request->has('is_analyzed'),
             'added_by' => Auth::user()->name,
@@ -354,6 +361,75 @@ class PaperController extends Controller
         ]);
 
         return back()->with('success', 'Reference added successfully.');
+    }
+
+    public function removeReference(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $refId = $request->input('reference_id');
+        $references = $paper->references_data ?? [];
+
+        $refTitle = "Unknown Reference";
+        foreach ($references as $ref) {
+            if (isset($ref['id']) && $ref['id'] === $refId) {
+                $refTitle = $ref['title'];
+                break;
+            }
+        }
+
+        $updatedReferences = array_values(array_filter($references, function ($ref) use ($refId) {
+            return isset($ref['id']) && $ref['id'] !== $refId;
+        }));
+
+        $paper->references_data = $updatedReferences;
+        $paper->save();
+
+        PaperActivity::create([
+            'paper_id' => $paper->id,
+            'user_id' => Auth::id(),
+            'type' => 'module_update',
+            'description' => "Removed reference: " . Str::limit($refTitle, 30),
+        ]);
+
+        return back()->with('success', 'Reference removed successfully.');
+    }
+
+    public function markReferenceAnalyzed(Request $request, $profileId, $paperId)
+    {
+        $paper = Paper::where('paperId', $paperId)->firstOrFail();
+        $this->authorizeEditor($paper);
+
+        $refId = $request->input('reference_id');
+        $references = $paper->references_data ?? [];
+        $found = false;
+        $refTitle = "Unknown Reference";
+
+        foreach ($references as &$ref) {
+            if (isset($ref['id']) && $ref['id'] === $refId) {
+                $ref['is_analyzed'] = true;
+                $refTitle = $ref['title'];
+                $found = true;
+                break;
+            }
+        }
+
+        if ($found) {
+            $paper->references_data = $references;
+            $paper->save();
+
+            PaperActivity::create([
+                'paper_id' => $paper->id,
+                'user_id' => Auth::id(),
+                'type' => 'module_update',
+                'description' => "Marked reference as analyzed: " . Str::limit($refTitle, 30),
+            ]);
+
+            return back()->with('success', 'Reference marked as analyzed.');
+        }
+
+        return back()->with('error', 'Reference not found.');
     }
 
     public function saveSynthesis(Request $request, $profileId, $paperId)

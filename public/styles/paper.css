@@ -588,3 +588,35 @@ iframe {
     color: #fd7e14;
     border-color: #fd7e14;
 }
+
+.dossier-file-input {
+    border: 1px dashed #ced4da !important;
+    background-color: #f8f9fa;
+    padding: 6px !important;
+    border-radius: 8px !important;
+    height: auto !important;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.dossier-file-input:hover {
+    border-color: #6c757d !important;
+    background-color: #ffffff;
+}
+
+.dossier-file-input::file-selector-button {
+    border: none;
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dossier-file-input::file-selector-button:hover {
+    background-color: #23272b;
+}

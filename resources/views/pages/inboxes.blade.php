@@ -39,7 +39,6 @@
                                 <span>{{ Str::limit(strip_tags($inbox->body ?? 'No content...'), 60) }}</span>
                             </div>
                         </div>
-
                     </div>
                 @empty
                     <div class="empty-state">

@@ -23,9 +23,6 @@
                         <a href="#account" class="list-group-item list-group-item-action border-0 rounded-3 mb-1">
                             <i class="bi bi-shield-lock me-2"></i> Account & Security
                         </a>
-                        <a href="#preferences" class="list-group-item list-group-item-action border-0 rounded-3 mb-1">
-                            <i class="bi bi-sliders me-2"></i> Preferences
-                        </a>
                     </div>
                 </nav>
             </div>
@@ -492,98 +489,6 @@
                                     </div>
                                 </div>
                             <?php endif; ?>
-
-                        </div>
-                    </div>
-                </section>
-
-                <section id="preferences" class="mb-5 settings-section">
-                    <h3 class="fw-bold mb-4">Preferences</h3>
-
-                    <div class="card settings-card border-0 shadow-sm p-4">
-                        <div class="card-body">
-
-                            <h6 class="fw-bold text-primary mb-3">
-                                <i class="bi bi-bell-fill me-2"></i>Notifications
-                            </h6>
-
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <label class="form-check-label fw-medium" for="prefEmailDigest">Weekly Email
-                                        Digest</label>
-                                    <div class="text-muted small">Receive a summary of top papers in your field every
-                                        Monday.</div>
-                                </div>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="prefEmailDigest"
-                                        checked>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <label class="form-check-label fw-medium" for="prefNewFollower">New Follower
-                                        Alerts</label>
-                                    <div class="text-muted small">Get notified when someone follows your profile.</div>
-                                </div>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="prefNewFollower"
-                                        checked>
-                                </div>
-                            </div>
-
-                            <hr class="my-4">
-
-                            <h6 class="fw-bold text-primary mb-3">
-                                <i class="bi bi-eye-fill me-2"></i>Privacy
-                            </h6>
-
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <label class="form-check-label fw-medium" for="prefShowEmail">Show Email
-                                        Address</label>
-                                    <div class="text-muted small">Allow other users to see your email on your public
-                                        profile.</div>
-                                </div>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="prefShowEmail">
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <label class="form-check-label fw-medium" for="prefIndexing">Search Engine
-                                        Indexing</label>
-                                    <div class="text-muted small">Allow search engines (Google, Bing) to index your profile
-                                        page.</div>
-                                </div>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="prefIndexing"
-                                        checked>
-                                </div>
-                            </div>
-
-                            <hr class="my-4">
-
-                            <h6 class="fw-bold text-primary mb-3">
-                                <i class="bi bi-laptop me-2"></i>Interface
-                            </h6>
-
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <label class="form-check-label fw-medium" for="prefCompactMode">Compact List
-                                        View</label>
-                                    <div class="text-muted small">Reduce padding in paper lists to show more content at
-                                        once.</div>
-                                </div>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="prefCompactMode">
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-end mt-5">
-                                <button type="button" class="btn btn-primary px-4">Save Preferences</button>
-                            </div>
 
                         </div>
                     </div>

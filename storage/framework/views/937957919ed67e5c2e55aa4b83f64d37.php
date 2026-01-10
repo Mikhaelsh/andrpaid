@@ -39,7 +39,6 @@
                                 <span><?php echo e(Str::limit(strip_tags($inbox->body ?? 'No content...'), 60)); ?></span>
                             </div>
                         </div>
-
                     </div>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <div class="empty-state">

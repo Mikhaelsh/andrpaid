@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\LecturerMiddleware;
 use App\Http\Middleware\UniversityMiddleware;
 use Illuminate\Foundation\Application;
@@ -17,11 +18,12 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'lecturer' => LecturerMiddleware::class,
             'university' => UniversityMiddleware::class,
+            'admin' => AdminMiddleware::class,
         ]);
 
         $middleware->redirectUsersTo(function () {
             $user = Auth::user();
-            
+
             return $user ? route('dashboard', ['profileId' => $user->profileId]) : '/';
         });
 

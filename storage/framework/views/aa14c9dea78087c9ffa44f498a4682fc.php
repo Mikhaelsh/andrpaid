@@ -157,7 +157,7 @@
 
                             <div class="d-flex align-items-center gap-2 flex-wrap">
                                 <h5 class="mb-0 fw-bold paper-showcase-title me-2">
-                                    <a href="#" class="text-decoration-none stretched-link"><?php echo e($paper->title); ?></a>
+                                    <a href="/<?php echo e($paper->lecturer->user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/overview" class="text-decoration-none stretched-link"><?php echo e($paper->title); ?></a>
                                 </h5>
 
                                 <span class="paper-status-badge <?php echo e($paper->visibility); ?>">

@@ -159,7 +159,7 @@
 
                             <div class="d-flex align-items-center gap-2 flex-wrap">
                                 <h5 class="mb-0 fw-bold paper-showcase-title me-2">
-                                    <a href="#" class="text-decoration-none stretched-link">{{ $paper->title }}</a>
+                                    <a href="/{{ $paper->lecturer->user->profileId }}/paper/{{ $paper->paperId }}/overview" class="text-decoration-none stretched-link">{{ $paper->title }}</a>
                                 </h5>
 
                                 <span class="paper-status-badge {{ $paper->visibility }}">

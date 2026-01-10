@@ -18,15 +18,6 @@
                                 <i class="bi bi-arrow-left me-1"></i> Back
                             </a>
                         </div>
-                        <div>
-                            <form action="/inboxes/<?php echo e($inbox->inboxId); ?>/star" method="POST">
-                                <?php echo csrf_field(); ?>
-                                <?php echo method_field('PATCH'); ?>
-                                <button type="submit" class="btn btn-light btn-sm border text-muted" title="Star this message">
-                                    <i class="bi <?php echo e($inbox->is_starred ? 'bi-star-fill text-warning' : 'bi-star'); ?>"></i>
-                                </button>
-                            </form>
-                        </div>
                     </div>
 
                     <div class="message-header">

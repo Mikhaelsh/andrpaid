@@ -16,25 +16,6 @@
 
         <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link px-3 <?php echo e(request()->is('dashboard') ? 'active' : ''); ?>" href="<?php echo e(route('dashboard', ['profileId' => Auth::user()->profileId])); ?>">
-                        <i class="bi bi-speedometer2 me-1"></i> Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link px-3 <?php echo e(request()->is('find') ? 'active' : ''); ?>" href="/find">
-                        <i class="bi bi-search me-1"></i> Find
-                    </a>
-                </li>
-
-                <?php if (\Illuminate\Support\Facades\Blade::check('notadmin')): ?>
-                    <li class="nav-item">
-                        <a class="nav-link px-3 <?php echo e(request()->is('messages') ? 'active' : ''); ?>" href="/messages">
-                            <i class="bi bi-chat-dots-fill me-1"></i> Messages
-                        </a>
-                    </li>
-                <?php endif; ?>
-
                 <?php if (\Illuminate\Support\Facades\Blade::check('admin')): ?>
                     <li class="nav-item">
                         <a class="nav-link px-3 <?php echo e(request()->is('admin-panel*') ? 'active' : ''); ?>" href="/admin-panel">
@@ -42,6 +23,21 @@
                         </a>
                     </li>
                 <?php endif; ?>
+
+                <?php if (\Illuminate\Support\Facades\Blade::check('notadmin')): ?>
+                <li class="nav-item">
+                    <a class="nav-link px-3 <?php echo e(request()->is('dashboard') ? 'active' : ''); ?>" href="<?php echo e(route('dashboard', ['profileId' => Auth::user()->profileId])); ?>">
+                        <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                    </a>
+                </li>
+                <?php endif; ?>
+                
+                <li class="nav-item">
+                    <a class="nav-link px-3 <?php echo e(request()->is('find') ? 'active' : ''); ?>" href="/find">
+                        <i class="bi bi-search me-1"></i> Find
+                    </a>
+                </li>
+
             </ul>
 
             <ul class="navbar-nav ms-auto align-items-center">

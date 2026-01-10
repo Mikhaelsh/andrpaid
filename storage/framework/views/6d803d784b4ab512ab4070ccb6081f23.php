@@ -137,7 +137,7 @@
                         <button type="submit" class="btn btn-create-repo py-2 px-4">
                             Create Repository
                         </button>
-                        <a href="/dashboard" class="btn btn-link text-decoration-none text-secondary">Cancel</a>
+                        <a href="/<?php echo e(Auth::user()->profileId); ?>/papers" class="btn btn-link text-decoration-none text-secondary">Cancel</a>
                     </div>
 
                 </form>

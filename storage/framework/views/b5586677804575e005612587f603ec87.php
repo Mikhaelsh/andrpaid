@@ -198,14 +198,54 @@
                                     <div class="flex-grow-1">
                                         <div class="d-flex justify-content-between align-items-start">
                                             <h6 class="fw-bold text-dark mb-1"><?php echo e($ref['title']); ?></h6>
-                                            <div class="dropdown">
-                                                <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown">
-                                                    <i class="bi bi-three-dots-vertical"></i>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
-                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a>
-                                                    </li>
-                                                </ul>
+
+                                            <div class="d-flex align-items-center gap-2">
+                                                <?php if(!empty($ref['pdf_path'])): ?>
+                                                    <a href="<?php echo e(asset('storage/' . $ref['pdf_path'])); ?>" target="_blank"
+                                                        class="btn btn-sm btn-outline-danger" title="View PDF">
+                                                        <i class="bi bi-file-earmark-pdf-fill"></i> PDF
+                                                    </a>
+                                                <?php endif; ?>
+
+                                                <?php if($canEdit): ?>
+                                                    <?php if(!isset($ref['is_analyzed']) || !$ref['is_analyzed']): ?>
+                                                        <form
+                                                            action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/mark-reference-analyzed"
+                                                            method="POST">
+                                                            <?php echo csrf_field(); ?>
+                                                            <input type="hidden" name="reference_id"
+                                                                value="<?php echo e($ref['id']); ?>">
+                                                            <button type="submit" class="btn btn-sm btn-outline-success"
+                                                                title="Mark as Analyzed">
+                                                                <i class="bi bi-check2"></i> Mark Analyzed
+                                                            </button>
+                                                        </form>
+                                                    <?php endif; ?>
+
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-sm btn-link text-secondary p-0 ms-1"
+                                                            type="button" data-bs-toggle="dropdown"
+                                                            aria-expanded="false"
+                                                            style="font-size: 1.2rem; line-height: 1;">
+                                                            <i class="bi bi-three-dots-vertical"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                                            <li>
+                                                                <form
+                                                                    action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/remove-reference"
+                                                                    method="POST">
+                                                                    <?php echo csrf_field(); ?>
+                                                                    <input type="hidden" name="reference_id"
+                                                                        value="<?php echo e($ref['id']); ?>">
+                                                                    <button type="submit"
+                                                                        class="dropdown-item text-danger d-flex align-items-center gap-2">
+                                                                        <i class="bi bi-trash"></i> Delete Reference
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
 
@@ -252,7 +292,8 @@
         <div class="modal fade" id="addSourceModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-detective">
                 <div class="modal-content">
-                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/add-reference" method="POST">
+                    <form action="/<?php echo e($user->profileId); ?>/paper/<?php echo e($paper->paperId); ?>/add-reference" method="POST"
+                        enctype="multipart/form-data">
                         <?php echo csrf_field(); ?>
                         <input type="hidden" name="key_points" id="keyPointsJson">
 
@@ -280,10 +321,18 @@
                                         <label class="dossier-label">Journal / Conference</label>
                                         <input type="text" name="journal" class="dossier-input">
                                     </div>
-                                    <div class="col-12">
-                                        <label class="dossier-label">DOI / Link</label>
+
+                                    <div class="col-md-6">
+                                        <label class="dossier-label">DOI / Link (Optional)</label>
                                         <input type="url" name="url" class="dossier-input">
                                     </div>
+
+                                    <div class="col-md-6">
+                                        <label class="dossier-label">Upload PDF (Optional)</label>
+                                        <input type="file" name="pdf_file"
+                                            class="form-control form-control-sm mt-1 dossier-file-input" accept=".pdf">
+                                    </div>
+
                                     <div class="col-12 mt-4">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="form-check form-switch">
@@ -299,6 +348,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="dossier-board">
                                 <div class="board-header">
                                     <i class="bi bi-pin-angle-fill text-danger"></i> Key Findings

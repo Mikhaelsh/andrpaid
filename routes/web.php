@@ -104,10 +104,14 @@ Route::middleware('auth')->group(function () {
             Route::get("/overview", [PaperController::class,"paperOverview"]);
 
             Route::get("/workspace", [PaperController::class,"paperWorkspace"]);
-            
+
             Route::get("/lit-review", [PaperController::class, "LitReview"]);
 
             Route::post("/add-reference", [PaperController::class,"addReference"]);
+
+            Route::post("/remove-reference", [PaperController::class,"removeReference"]);
+
+            Route::post("/mark-reference-analyzed", [PaperController::class,"markReferenceAnalyzed"]);
 
             Route::post("/save-synthesis", [PaperController::class, "saveSynthesis"]);
 
@@ -118,9 +122,9 @@ Route::middleware('auth')->group(function () {
             Route::post("/remove-theme", [PaperController::class, "removeTheme"]);
 
             Route::post("/toggle-collaboration", [PaperController::class,"toggleCollaboration"]);
-            
+
             Route::get("/lit-review", [PaperController::class, "paperLitReview"]);
-            
+
             Route::post("/finalize-lit-review", [PaperController::class, "finalizeLitReview"]);
 
             Route::get("/methodology", [PaperController::class, "paperMethodology"]);
@@ -173,7 +177,7 @@ Route::middleware('auth')->group(function () {
 
             Route::prefix("/collaborations")->group(function(){
                 Route::get("/", [CollaborationController::class,"index"]);
-                
+
 
                 Route::post("/toggle-collaboration", [CollaborationController::class,"toggleCollaboration"]);
 
@@ -216,42 +220,44 @@ Route::middleware('auth')->group(function () {
         Route::post('/{paperId}/star', [PaperController::class, 'toggleStar']);
     });
 
-    Route::prefix("/admin-panel")->group(function () {
-        Route::get("/", [AdminController::class,"index"]);
+    Route::middleware('admin')->group(function() {
+        Route::prefix("/admin-panel")->group(function () {
+            Route::get("/", [AdminController::class,"index"]);
 
-        Route::prefix("/master-data")->group(function () {
-            Route::prefix("/research-fields")->group(function () {
-                Route::get("/", [AdminController::class,"indexResearchFields"]);
+            Route::prefix("/master-data")->group(function () {
+                Route::prefix("/research-fields")->group(function () {
+                    Route::get("/", [AdminController::class,"indexResearchFields"]);
 
-                Route::post("/create", [AdminController::class,"createResearchFields"]);
+                    Route::post("/create", [AdminController::class,"createResearchFields"]);
 
-                Route::post("/update", [AdminController::class,"updateResearchFields"]);
+                    Route::post("/update", [AdminController::class,"updateResearchFields"]);
 
-                Route::post("/delete", [AdminController::class,"deleteResearchFields"]);
+                    Route::post("/delete", [AdminController::class,"deleteResearchFields"]);
+                });
+
+                Route::prefix("/paper-types")->group(function () {
+                    Route::get("/", [AdminController::class,"indexPaperTypes"]);
+
+                    Route::post("/create", [AdminController::class,"createPaperTypes"]);
+
+                    Route::post("/update", [AdminController::class,"updatePaperTypes"]);
+
+                    Route::post("/delete", [AdminController::class,"deletePaperTypes"]);
+                });
             });
 
-            Route::prefix("/paper-types")->group(function () {
-                Route::get("/", [AdminController::class,"indexPaperTypes"]);
+            Route::prefix("/monitoring")->group(function () {
+                Route::get("/activity-logs", [AdminController::class,"indexActivityLogs"]);
 
-                Route::post("/create", [AdminController::class,"createPaperTypes"]);
-
-                Route::post("/update", [AdminController::class,"updatePaperTypes"]);
-
-                Route::post("/delete", [AdminController::class,"deletePaperTypes"]);
+                Route::get("/global-statistics", [AdminController::class,"indexGlobalStatistics"]);
             });
-        });
 
-        Route::prefix("/monitoring")->group(function () {
-            Route::get("/activity-logs", [AdminController::class,"indexActivityLogs"]);
+            Route::prefix("/request")->group(function () {
+                Route::prefix("/user-report")->group(function () {
+                    Route::get("/", [AdminController::class,"indexUserReport"]);
 
-            Route::get("/global-statistics", [AdminController::class,"indexGlobalStatistics"]);
-        });
-
-        Route::prefix("/request")->group(function () {
-            Route::prefix("/user-report")->group(function () {
-                Route::get("/", [AdminController::class,"indexUserReport"]);
-
-                Route::post("/{reportId}", [AdminController::class,"manageUserReport"]);
+                    Route::post("/{reportId}", [AdminController::class,"manageUserReport"]);
+                });
             });
         });
     });
