@@ -1,59 +1,190 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+readme_content = """
+# 🏛️ AndRPaid
+### Accredited Network for Distributed Research Partnerships And Institutional Development
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Laravel](https://img.shields.io/badge/Laravel-11-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white)
+![KaTeX](https://img.shields.io/badge/KaTeX-Math-green?style=for-the-badge)
 
-## About Laravel
+**AndRPaid** is a centralized research management platform designed to bridge the gap between Lecturers and Universities. 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Unlike fragmented tools (Google Docs for writing, Email for networking, Excel for data), AndRPaid provides a unified ecosystem for managing the entire research lifecycle—from idea generation and team formation to methodology design and final publication—while validating academic identities through a robust university affiliation system.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 📑 Table of Contents
+- [Problem Statement](#-problem-statement)
+- [Key Features](#-core-features)
+- [Technical Architecture](#-technical-architecture)
+- [Database Schema](#-database-schema)
+- [User Flows](#-user-flows)
+- [Installation & Setup](#-installation--setup)
+- [Roadmap](#-future-roadmap)
+- [Contributing](#-contribution)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🚩 Problem Statement
+The current academic research landscape is fragmented and inefficient:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1.  **Disconnected Workflows:** Researchers switch between dozens of apps (Overleaf, Trello, Excel, Email) to manage a single paper.
+2.  **Verification Trust Issues:** It is difficult to verify if a potential collaborator is actually an active faculty member at a claimed university.
+3.  **Collaboration Friction:** Finding researchers with specific interests (e.g., "Computer Vision in Jakarta") is manual and slow.
+4.  **University Oversight:** Institutions lack a real-time dashboard to track their faculty's ongoing research progress before publication.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🌟 Core Features
 
-### Premium Partners
+### 🔐 A. Authentication & Roles
+* **Dual-Role System:** Distinct workflows for **Lecturers** (Researchers) and **Universities** (Admins/Grantors).
+* **Profile Identification:** UUID-based profiles (e.g., `/019ba6d9-d9fc.../overview`) ensuring secure and unique portfolio links.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 📊 B. The Dashboard
+* **Lecturer View:** Tracks active papers, pending collaboration invites, and total star/citation metrics.
+* **University View:** Monitors affiliated lecturers, tracks total institutional research output, and manages incoming affiliation requests.
+* **Smart Recommendations:** Suggests collaborators based on research fields and university networks.
 
-## Contributing
+### 📝 C. The Research Workspace (The Core)
+A dedicated environment for every paper containing four key modules:
+1.  **Literature Review Matrix:** Dynamic synthesis table (Author, Year, Method, Result), Theme/Tag management, and BibTeX export.
+2.  **Methodology Studio:**
+    * **Dataset Manager:** Upload samples and describe data sources.
+    * **Formula Editor:** LaTeX integration (**KaTeX**) for rendering mathematical models.
+    * **Code Repository:** Embed executable notebooks or GitHub Gists.
+3.  **Results & Analysis:** Interactive chart and table builders with a drafting section for interpretation.
+4.  **Conclusion & Future Works:** Structured drafting for summary, limitations, and future directions with a "Finalize" locking mechanism.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 🌐 D. Networking & Discovery
+* **Researcher Directory:** A searchable database with filters for Name, University, Province, and Research Interests.
+* **Affiliation System:** Lecturers must request affiliation with a University. Universities act as "Gatekeepers," granting verification badges.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🏗 Technical Architecture
 
-## Security Vulnerabilities
+### Tech Stack
+| Component | Technology | Description |
+| :--- | :--- | :--- |
+| **Backend** | PHP (Laravel 11) | MVC Architecture, Eloquent ORM, Authentication |
+| **Frontend** | Blade Templates | Server-side rendering with Bootstrap 5 for UI |
+| **Database** | MySQL | Relational data integrity (Foreign Keys, JSON columns) |
+| **Math Engine** | KaTeX | Fast, client-side LaTeX rendering |
+| **Icons** | Bootstrap Icons | Visual cues for UI elements |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🗄 Database Schema
+Key models utilized in the application:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+* **Users:** Base login info (`email`, `password`, `profileId`).
+* **Lecturers:** Academic info (`user_id`, `province_id`, `bio`).
+* **Universities:** Institutional info (`user_id`, `location`, `website`).
+* **Papers:** The central entity (`title`, `status`, JSON fields for methodology/formulas).
+* **Collaborations:** Pivot table linking papers to lecturers with roles (e.g., "Editor", "Viewer").
+* **Affiliations:** Links lecturers to universities with status (`pending`, `verified`, `rejected`).
+
+---
+
+## 🔄 User Flows
+
+### Flow 1: The "New Project" Lifecycle
+1.  **Creation:** Lecturer clicks "New Project" on Dashboard → Enters Title & Visibility.
+2.  **Team Building:** Lecturer invites colleagues via email on the "Overview" page.
+3.  **Execution:** Team populates the Lit Review, adds Formulas, and embeds Python Code.
+4.  **Completion:** Sections are marked "Finalized" one by one.
+5.  **Export:** BibTeX is generated for citation managers.
+
+### Flow 2: The Verification Loop
+1.  **Sign Up:** New user registers as a Lecturer.
+2.  **Request:** User goes to Settings → "Affiliation" → Selects "University of Indonesia".
+3.  **Review:** The University Admin logs in → Sees badge "1 Pending Request".
+4.  **Decision:** Admin reviews profile → Clicks "Verify".
+5.  **Result:** Lecturer gets a "Verified" badge and their stats contribute to the University's dashboard.
+
+---
+
+## 🚀 Installation & Setup
+
+Follow these steps to run AndRPaid locally.
+
+### Prerequisites
+* PHP >= 8.2
+* Composer
+* Node.js & NPM
+* MySQL
+
+### 1. Clone the Repository
+```bash
+git clone [https://github.com/your-username/andrpaid.git](https://github.com/your-username/andrpaid.git)
+cd andrpaid
+```
+
+### 2. Install Dependencies
+Install backend and frontend packages.
+```bash
+composer install
+npm install
+```
+
+### 3. Environment Setup
+Duplicate the example environment file and generate the application key.
+```bash
+copy .env.example .env
+php artisan key:generate
+```
+
+### 4. Database Configuration
+Open the `.env` file in your text editor and set your database credentials. Make sure to create a database named `andrpaid` (or your preferred name) in your MySQL server first.
+
+```ini
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=andrpaid
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 5. Run Migrations & Seeders
+Create the database tables and populate them with dummy data (Users, Universities, Lecturers).
+```bash
+php artisan migrate
+php artisan db:seed
+```
+
+### 6. Build Frontend Assets
+```bash
+npm run build
+# Or for development with hot reload:
+npm run dev
+```
+
+### 7. Start the Server
+```bash
+php artisan serve
+```
+
+Access the application at: **[http://127.0.0.1:8000](http://127.0.0.1:8000)**
+
+---
+
+## 🔮 Future Roadmap
+* **AI Integration:** Auto-summarization of uploaded PDF literature using LLMs.
+* **Real-time Notifications:** WebSockets (Pusher) for "User X edited this section" alerts.
+* **Kanban Board:** Task assignment within the Workspace (To Do / In Progress / Done).
+* **Grant Marketplace:** Universities posting funding opportunities directly to the dashboard.
+
+---
+
+## 🤝 Contribution
+
+Contributions are welcome! Please fork the repository and create a pull request for any feature enhancements or bug fixes.
+
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
+"""
